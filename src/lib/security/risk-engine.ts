@@ -5,7 +5,7 @@ import { getSessionBehaviorEntropy } from './behavior-dna';
 import { hasSessionHitHoneyMaze } from './honey-maze';
 import { analyzeGraphIntent } from './graph-intent';
 import { verifyFingerprintConsistency } from './fingerprint';
-import { getActionForScore } from './policy';
+import { getActionForScore, chooseAdaptiveAction } from './policy';
 
 /**
  * Calculates a unified risk score from 0 to 100 for a given session.
@@ -150,8 +150,8 @@ export function evaluateSessionRisk(
   // Clamp final score between 0 and 100
   const finalScore = Math.max(0, Math.min(100, score));
 
-  // Determine standard defense action for this score
-  const recommendedAction = getActionForScore(finalScore);
+  // Determine standard defense action for this score, with adaptive friction escalation if bypassed
+  const recommendedAction = chooseAdaptiveAction(sessionId, finalScore);
 
   // Store the evaluation log
   logRiskResult(sessionId, finalScore, reasons, 0.95);

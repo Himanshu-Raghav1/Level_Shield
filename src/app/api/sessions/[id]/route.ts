@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/store/db';
 import { analyzeGraphIntent } from '@/lib/security/graph-intent';
+import { getSessionBehaviorEntropy } from '@/lib/security/behavior-dna';
+import { verifyFingerprintConsistency } from '@/lib/security/fingerprint';
 
 export async function GET(
   req: Request,
@@ -81,6 +83,10 @@ export async function GET(
     // 7. Graph of Intent navigation analysis
     const graphAnalysis = analyzeGraphIntent(sessionId);
 
+    // Calculate details for each of the 8 innovation layers
+    const behaviorEntropy = getSessionBehaviorEntropy(sessionId);
+    const fingerprintCheck = verifyFingerprintConsistency(sessionId, { 'user-agent': session.user_agent || '' });
+
     return NextResponse.json({
       session: {
         id: session.id,
@@ -100,6 +106,39 @@ export async function GET(
         agentBeacons,
       },
       graphAnalysis,
+      innovationLayers: {
+        behaviorDna: {
+          entropy: behaviorEntropy,
+          telemetrySubmittedCount: behaviors.length,
+          reasons: behaviors.length > 0 ? [] : ['no_telemetry_yet']
+        },
+        honeyMaze: {
+          hitCount: mazeHits.length,
+          hasHit: mazeHits.length > 0,
+        },
+        canaryTokens: {
+          generatedCount: (db.prepare('SELECT COUNT(*) as count FROM canary_tokens WHERE session_id = ?').get(sessionId) as any)?.count || 0,
+          exposedCount: canaryExposures.length,
+          hasExposed: canaryExposures.length > 0,
+        },
+        graphOfIntent: graphAnalysis,
+        fingerprint: {
+          value: session.fingerprint,
+          isConsistent: fingerprintCheck.isConsistent,
+          reasons: fingerprintCheck.reasons,
+        },
+        agentTrap: {
+          hitCount: agentBeacons.length,
+          hasHit: agentBeacons.length > 0,
+        },
+        goodBotLane: {
+          isGoodBot: session.is_good_bot === 1,
+        },
+        adaptiveFriction: {
+          previousActionsCount: defenses.length,
+          lastMitigation: defenses.length > 0 ? defenses[defenses.length - 1].action : 'none',
+        }
+      }
     });
 
   } catch (error: any) {
