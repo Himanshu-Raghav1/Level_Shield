@@ -295,7 +295,7 @@ export default function SalaryCompare() {
               </p>
             </div>
 
-            <div className="h-72 mt-2">
+            <div className="h-72 mt-2" style={{ minHeight: 288, minWidth: 0 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(30,41,59,0.6)" vertical={false} />
