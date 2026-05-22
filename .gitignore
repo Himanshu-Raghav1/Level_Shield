@@ -46,3 +46,7 @@ next-env.d.ts
 /level_shield.db-shm
 /level_shield.db-wal
 
+# Hackathon plans/convo logs
+PLAN-final.md
+plan-final.md
+codex-convo.md
