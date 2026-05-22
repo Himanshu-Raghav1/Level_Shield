@@ -16,9 +16,9 @@ interface ForumThread {
 }
 
 const CATEGORY_STYLES: Record<string, { color: string; bg: string; border: string }> = {
-  Negotiation: { color: "#a78bfa", bg: "rgba(139,92,246,0.08)", border: "rgba(139,92,246,0.2)" },
-  Promotions:  { color: "#38bdf8", bg: "rgba(14,165,233,0.08)",  border: "rgba(14,165,233,0.2)"  },
-  Compensation:{ color: "#34d399", bg: "rgba(16,185,129,0.08)",  border: "rgba(16,185,129,0.2)"  },
+  Negotiation:  { color: "#a78bfa", bg: "rgba(139,92,246,0.08)",  border: "rgba(139,92,246,0.2)"  },
+  Promotions:   { color: "#38bdf8", bg: "rgba(14,165,233,0.08)",   border: "rgba(14,165,233,0.2)"  },
+  Compensation: { color: "#34d399", bg: "rgba(16,185,129,0.08)",   border: "rgba(16,185,129,0.2)"  },
 };
 
 export default function CommunityForum() {
@@ -91,85 +91,61 @@ export default function CommunityForum() {
       t.category.toLowerCase().includes(search.toLowerCase())
   );
 
-  const navLinks = [
-    { label: "Product",          href: "/" },
-    { label: "Compensation",     href: "/compensation" },
-    { label: "Compare",          href: "/compare" },
-    { label: "Community",        href: "/community", active: true },
-    { label: "Shield Dashboard", href: "/shield" },
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "#0a0a0a", color: "#e4e4e7" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: "var(--background)" }}>
 
-      {/* ── Top Navigation ── */}
-      <header style={{ borderBottom: "1px solid #27272a", background: "#0a0a0a" }}>
-        {/* Brand row */}
-        <div className="flex items-center justify-between px-6 py-2.5">
-          <a href="/" className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: "#e4e4e7" }}>
-            <Shield size={15} style={{ color: "#10b981" }} />
-            Level Shield
-          </a>
-          <div className="flex items-center gap-1.5 text-xs" style={{ color: "#10b981" }}>
-            <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#10b981" }} />
-            Live
-          </div>
-        </div>
+      {/* ── Top Nav — matches homepage exactly ── */}
+      <header
+        className="flex items-center justify-between px-6 py-3 border-b"
+        style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+      >
+        <a href="/" className="flex items-center gap-2 font-bold text-base" style={{ color: "var(--accent-cyan)" }}>
+          <Shield size={20} />
+          Level Shield
+        </a>
 
-        {/* Tab row */}
-        <nav className="flex items-end px-6 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-          {navLinks.map((item) =>
-            item.active ? (
-              <span
-                key={item.label}
-                className="text-xs font-medium px-3 py-2 whitespace-nowrap cursor-default"
-                style={{ color: "#ffffff", borderBottom: "1px solid #ffffff", marginBottom: -1 }}
-              >
-                {item.label}
-              </span>
-            ) : (
-              <a
-                key={item.label}
-                href={item.href}
-                className="text-xs px-3 py-2 whitespace-nowrap transition-colors duration-150"
-                style={{ color: "#71717a", borderBottom: "1px solid transparent", marginBottom: -1 }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = "#a1a1aa"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = "#71717a"; }}
-              >
-                {item.label}
-              </a>
-            )
-          )}
+        <nav className="flex items-center gap-6 text-sm" style={{ color: "var(--muted)" }}>
+          <a href="/" className="hover:text-white transition-colors">Product</a>
+          <a href="/compensation" className="hover:text-white transition-colors">Compensation</a>
+          <a href="/compare" className="hover:text-white transition-colors">Compare</a>
+          <span className="text-white border-b-2 pb-0.5" style={{ borderColor: "var(--accent-cyan)" }}>Community</span>
+          <a href="/shield" className="hover:text-white transition-colors">Shield Dashboard</a>
         </nav>
+
+        <div className="flex items-center gap-2 text-xs" style={{ color: "var(--accent-green)" }}>
+          <span className="live-dot" />
+          <span className="ml-2">System Active</span>
+        </div>
       </header>
 
-      {/* ── Main ── */}
-      <main className="flex-1 w-full max-w-6xl mx-auto px-6 py-6 flex flex-col gap-5">
+      {/* ── Main Content — centred ── */}
+      <main className="flex-1 max-w-5xl mx-auto w-full px-6 py-8 flex flex-col gap-6">
 
-        {/* Header row */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h1 className="text-sm font-semibold" style={{ color: "#e4e4e7" }}>
+        {/* Page heading + search */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-xl font-bold text-white flex items-center gap-2">
+              <MessageSquare size={20} style={{ color: "var(--accent-cyan)" }} />
               Community Discussions
             </h1>
-            <p className="text-xs mt-0.5" style={{ color: "#71717a" }}>
-              Offers, negotiations, leveling. AI scraper telemetry active.
+            <p className="text-xs" style={{ color: "var(--muted)" }}>
+              Share offers, interview advice, and levelling discussions. AI scraper telemetry active.
             </p>
           </div>
 
           {/* Search */}
           <div
-            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs w-full sm:w-64 flex-shrink-0"
-            style={{ background: "#18181b", border: "1px solid #3f3f46" }}
+            className="flex items-center gap-2 px-3 py-2 rounded-md w-full sm:w-64 flex-shrink-0"
+            style={{ background: "rgba(0,0,0,0.3)", border: "1px solid var(--border)" }}
           >
-            <Search size={12} style={{ color: "#71717a", flexShrink: 0 }} />
+            <Search size={13} style={{ color: "var(--muted)", flexShrink: 0 }} />
             <input
               type="text"
               placeholder="Search discussions..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent outline-none w-full text-xs"
-              style={{ color: "#e4e4e7" }}
+              className="bg-transparent outline-none w-full text-xs text-white"
+              style={{ caretColor: "var(--accent-cyan)" }}
             />
           </div>
         </div>
@@ -184,17 +160,18 @@ export default function CommunityForum() {
           View Secret Restricted Internal Negotiation Spreadsheets
         </a>
 
-        {/* ── Content Grid ── */}
+        {/* ── Content grid ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 
-          {/* ── Thread List (2 cols) ── */}
-          <div className="md:col-span-2 flex flex-col">
+          {/* Thread list (2 of 3) */}
+          <div className="md:col-span-2 flex flex-col" style={{ border: "1px solid var(--border)", borderRadius: 8 }}>
+
             {/* Column headers */}
             <div
-              className="flex items-center justify-between px-3 py-1.5 text-xs"
-              style={{ borderBottom: "1px solid #27272a", color: "#52525b" }}
+              className="flex items-center justify-between px-4 py-2.5 text-xs rounded-t-lg"
+              style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)", color: "var(--muted)" }}
             >
-              <span>Discussion</span>
+              <span className="font-semibold">Discussion</span>
               <div className="flex items-center gap-5">
                 <span className="flex items-center gap-1"><ThumbsUp size={10} /> Likes</span>
                 <span className="flex items-center gap-1"><MessageSquare size={10} /> Replies</span>
@@ -202,71 +179,63 @@ export default function CommunityForum() {
               </div>
             </div>
 
+            {/* Rows */}
             {filteredThreads.length === 0 ? (
-              <div className="py-12 text-center text-xs" style={{ color: "#52525b" }}>
+              <div className="py-12 text-center text-xs" style={{ color: "var(--muted)" }}>
                 No threads matched your search.
               </div>
             ) : (
               filteredThreads.map((thread) => {
                 const cat = CATEGORY_STYLES[thread.category] ?? {
-                  color: "#a1a1aa", bg: "rgba(161,161,170,0.08)", border: "rgba(161,161,170,0.2)"
+                  color: "var(--muted)", bg: "rgba(100,100,100,0.08)", border: "rgba(100,100,100,0.2)"
                 };
                 return (
                   <div
                     key={thread.id}
-                    className="flex flex-col gap-2 px-3 py-3 cursor-pointer group transition-colors duration-100"
-                    style={{ borderBottom: "1px solid rgba(39,39,42,0.5)" }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = "rgba(39,39,42,0.4)"; }}
+                    className="flex flex-col gap-3 px-4 py-4 cursor-pointer group transition-colors duration-100"
+                    style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = "var(--surface)"; }}
                     onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
                   >
-                    {/* Top: category + time */}
+                    {/* Top row: category pill + time */}
                     <div className="flex items-center justify-between gap-2">
                       <span
-                        className="text-[10px] font-medium px-2 py-0.5 rounded uppercase tracking-wider"
+                        className="text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider"
                         style={{ background: cat.bg, color: cat.color, border: `1px solid ${cat.border}` }}
                       >
                         {thread.category}
                       </span>
-                      <span className="text-[10px] tabular-nums" style={{ color: "#52525b" }}>
+                      <span className="text-[10px] tabular-nums" style={{ color: "var(--muted)" }}>
                         {thread.timeAgo}
                       </span>
                     </div>
 
                     {/* Title + excerpt */}
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex flex-col gap-1 min-w-0">
-                        <h3
-                          className="text-xs font-semibold leading-snug flex items-center gap-1 group-hover:text-white transition-colors"
-                          style={{ color: "#d4d4d8" }}
-                        >
-                          {thread.title}
-                          <ArrowUpRight
-                            size={11}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
-                            style={{ color: "#71717a" }}
-                          />
-                        </h3>
-                        <p className="text-xs leading-relaxed line-clamp-2" style={{ color: "#71717a" }}>
-                          {thread.excerpt}
-                        </p>
-                      </div>
+                    <div className="flex flex-col gap-1.5">
+                      <h3 className="text-sm font-semibold text-white flex items-center gap-1.5 group-hover:text-cyan-400 transition-colors">
+                        {thread.title}
+                        <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" style={{ color: "var(--accent-cyan)" }} />
+                      </h3>
+                      <p className="text-xs leading-relaxed line-clamp-2" style={{ color: "var(--muted)" }}>
+                        {thread.excerpt}
+                      </p>
                     </div>
 
                     {/* Bottom: author + stats */}
-                    <div className="flex items-center justify-between text-[10px]" style={{ color: "#52525b" }}>
-                      <div className="flex items-center gap-1.5">
+                    <div className="flex items-center justify-between text-xs" style={{ color: "var(--muted)" }}>
+                      <div className="flex items-center gap-2">
                         <span
-                          className="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold uppercase"
-                          style={{ background: "#27272a", color: "#a1a1aa" }}
+                          className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold uppercase"
+                          style={{ background: "rgba(14,165,233,0.12)", color: "var(--accent-cyan)", border: "1px solid rgba(14,165,233,0.2)" }}
                         >
                           {thread.author[0]}
                         </span>
                         <span>@{thread.author}</span>
                       </div>
-                      <div className="flex items-center gap-4 tabular-nums font-mono">
-                        <span>{thread.likes}</span>
-                        <span>{thread.replies}</span>
-                        <span>{thread.views.toLocaleString()}</span>
+                      <div className="flex items-center gap-5 font-mono tabular-nums text-[11px]">
+                        <span className="flex items-center gap-1"><ThumbsUp size={10} /> {thread.likes}</span>
+                        <span className="flex items-center gap-1"><MessageSquare size={10} /> {thread.replies}</span>
+                        <span className="flex items-center gap-1"><Eye size={10} /> {thread.views.toLocaleString()}</span>
                       </div>
                     </div>
                   </div>
@@ -275,60 +244,56 @@ export default function CommunityForum() {
             )}
           </div>
 
-          {/* ── Sidebar ── */}
+          {/* Sidebar (1 of 3) */}
           <div className="flex flex-col gap-4">
 
-            {/* Cyber-defense notice */}
+            {/* Cyber-defense alert */}
             <div
-              className="rounded-md p-3 flex flex-col gap-2"
+              className="p-4 rounded-lg flex flex-col gap-3"
               style={{
-                background: "#111111",
-                border: "1px solid #27272a",
-                borderLeft: "2px solid #f59e0b",
+                background: "var(--surface)",
+                border: "1px solid var(--border)",
+                borderLeft: "2px solid var(--accent-yellow)",
               }}
             >
               <div className="flex items-center gap-1.5">
-                <AlertTriangle size={12} style={{ color: "#f59e0b" }} />
-                <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: "#f59e0b" }}>
+                <AlertTriangle size={13} style={{ color: "var(--accent-yellow)" }} />
+                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--accent-yellow)" }}>
                   Cyber-Defense Notice
                 </span>
               </div>
-              <p className="text-xs leading-relaxed" style={{ color: "#71717a" }}>
-                Sequential card hover metrics are tracked. Automated scrapers raise their behavior risk score.
+              <p className="text-xs leading-relaxed" style={{ color: "var(--muted)" }}>
+                Sequential card hover metrics are tracked. Automated scrapers raise their behaviour risk score automatically.
               </p>
             </div>
 
-            {/* Trending Topics */}
+            {/* Trending topics */}
             <div
-              className="rounded-md p-3 flex flex-col gap-3"
-              style={{ background: "#111111", border: "1px solid #27272a" }}
+              className="p-4 rounded-lg flex flex-col gap-3"
+              style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
             >
-              <span className="text-xs font-semibold" style={{ color: "#e4e4e7" }}>
-                Trending Topics
-              </span>
+              <span className="text-xs font-semibold text-white">Trending Topics</span>
               <ul className="flex flex-col gap-1">
                 {[
-                  { tag: "#FAANGOfferNegotiations", views: "1.2k" },
-                  { tag: "#VestingStockStrategies",  views: "980" },
-                  { tag: "#LevelsFyiScrapingBusted", views: "750" },
+                  { tag: "#FAANGOfferNegotiations", views: "1.2k views" },
+                  { tag: "#VestingStockStrategies",  views: "980 views"  },
+                  { tag: "#LevelsFyiScrapingBusted", views: "750 views"  },
                 ].map((item) => (
                   <li
                     key={item.tag}
-                    className="flex items-center justify-between px-2 py-1.5 rounded cursor-pointer text-xs transition-colors duration-100"
-                    style={{ color: "#71717a" }}
+                    className="flex items-center justify-between px-2 py-2 rounded-md cursor-pointer text-xs transition-colors duration-100"
+                    style={{ color: "var(--muted)" }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLLIElement).style.background = "#18181b";
-                      (e.currentTarget as HTMLLIElement).style.color = "#a1a1aa";
+                      (e.currentTarget as HTMLLIElement).style.background = "rgba(255,255,255,0.04)";
+                      (e.currentTarget as HTMLLIElement).style.color = "#e4e4e7";
                     }}
                     onMouseLeave={(e) => {
                       (e.currentTarget as HTMLLIElement).style.background = "transparent";
-                      (e.currentTarget as HTMLLIElement).style.color = "#71717a";
+                      (e.currentTarget as HTMLLIElement).style.color = "var(--muted)";
                     }}
                   >
                     <span>{item.tag}</span>
-                    <span className="font-mono tabular-nums text-[10px]" style={{ color: "#52525b" }}>
-                      {item.views}
-                    </span>
+                    <span className="font-mono tabular-nums text-[10px]">{item.views}</span>
                   </li>
                 ))}
               </ul>
@@ -338,7 +303,10 @@ export default function CommunityForum() {
       </main>
 
       {/* ── Footer ── */}
-      <footer className="px-6 py-4 text-xs" style={{ borderTop: "1px solid #27272a", color: "#3f3f46" }}>
+      <footer
+        className="py-4 border-t text-center text-xs"
+        style={{ borderColor: "var(--border)", background: "rgba(13,26,46,0.3)", color: "var(--muted)" }}
+      >
         Level Shield • Synthetic Salary Model
       </footer>
     </div>
