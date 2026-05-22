@@ -15,22 +15,10 @@ interface ForumThread {
   timeAgo: string;
 }
 
-const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  Negotiation: {
-    bg: "rgba(139,92,246,0.08)",
-    text: "#a78bfa",
-    border: "rgba(139,92,246,0.2)",
-  },
-  Promotions: {
-    bg: "rgba(14,165,233,0.08)",
-    text: "#38bdf8",
-    border: "rgba(14,165,233,0.2)",
-  },
-  Compensation: {
-    bg: "rgba(16,185,129,0.08)",
-    text: "#34d399",
-    border: "rgba(16,185,129,0.2)",
-  },
+const CATEGORY_STYLES: Record<string, { color: string; bg: string; border: string }> = {
+  Negotiation: { color: "#a78bfa", bg: "rgba(139,92,246,0.08)", border: "rgba(139,92,246,0.2)" },
+  Promotions:  { color: "#38bdf8", bg: "rgba(14,165,233,0.08)",  border: "rgba(14,165,233,0.2)"  },
+  Compensation:{ color: "#34d399", bg: "rgba(16,185,129,0.08)",  border: "rgba(16,185,129,0.2)"  },
 };
 
 export default function CommunityForum() {
@@ -103,139 +91,92 @@ export default function CommunityForum() {
       t.category.toLowerCase().includes(search.toLowerCase())
   );
 
+  const navLinks = [
+    { label: "Product",          href: "/" },
+    { label: "Compensation",     href: "/compensation" },
+    { label: "Compare",          href: "/compare" },
+    { label: "Community",        href: "/community", active: true },
+    { label: "Shield Dashboard", href: "/shield" },
+  ];
+
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "var(--background)" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: "#0a0a0a", color: "#e4e4e7" }}>
 
-      {/* ── Premium Sticky Header ── */}
-      <header
-        className="sticky top-0 z-50 flex items-center justify-between px-8 py-4 border-b"
-        style={{
-          borderColor: "rgba(255,255,255,0.04)",
-          background: "rgba(8,13,26,0.75)",
-          backdropFilter: "blur(20px) saturate(150%)",
-          WebkitBackdropFilter: "blur(20px) saturate(150%)",
-        }}
-      >
-        {/* Logo */}
-        <a
-          href="/"
-          className="flex items-center gap-2 font-bold text-sm tracking-wide transition-all duration-300 hover:scale-105"
-          style={{ color: "var(--accent-cyan)" }}
-        >
-          <Shield size={19} />
-          <span className="hidden sm:inline">Level Shield</span>
-        </a>
+      {/* ── Top Navigation ── */}
+      <header style={{ borderBottom: "1px solid #27272a", background: "#0a0a0a" }}>
+        {/* Brand row */}
+        <div className="flex items-center justify-between px-6 py-2.5">
+          <a href="/" className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: "#e4e4e7" }}>
+            <Shield size={15} style={{ color: "#10b981" }} />
+            Level Shield
+          </a>
+          <div className="flex items-center gap-1.5 text-xs" style={{ color: "#10b981" }}>
+            <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#10b981" }} />
+            Live
+          </div>
+        </div>
 
-        {/* Nav Links */}
-        <nav className="flex items-center gap-7 text-sm">
-          {[
-            { label: "Product", href: "/" },
-            { label: "Compensation", href: "/compensation" },
-            { label: "Compare", href: "/compare" },
-            { label: "Community", href: "/community", active: true },
-            { label: "Shield Dashboard", href: "/shield" },
-          ].map((item) =>
+        {/* Tab row */}
+        <nav className="flex items-end px-6 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+          {navLinks.map((item) =>
             item.active ? (
               <span
                 key={item.label}
-                className="relative text-white font-semibold pb-1"
-                style={{ textShadow: "0 0 20px rgba(14,165,233,0.4)" }}
+                className="text-xs font-medium px-3 py-2 whitespace-nowrap cursor-default"
+                style={{ color: "#ffffff", borderBottom: "1px solid #ffffff", marginBottom: -1 }}
               >
                 {item.label}
-                <span
-                  className="absolute bottom-0 left-0 right-0 h-[2px] rounded-full"
-                  style={{
-                    background: "linear-gradient(90deg, var(--accent-cyan), var(--accent-purple))",
-                    boxShadow: "0 0 8px rgba(14,165,233,0.7)",
-                  }}
-                />
               </span>
             ) : (
               <a
                 key={item.label}
                 href={item.href}
-                className="font-medium transition-all duration-300"
-                style={{ color: "var(--muted)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "white")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
+                className="text-xs px-3 py-2 whitespace-nowrap transition-colors duration-150"
+                style={{ color: "#71717a", borderBottom: "1px solid transparent", marginBottom: -1 }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "#a1a1aa"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "#71717a"; }}
               >
                 {item.label}
               </a>
             )
           )}
         </nav>
-
-        {/* Live Badge */}
-        <div
-          className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide"
-          style={{
-            background: "rgba(16,185,129,0.08)",
-            border: "1px solid rgba(16,185,129,0.25)",
-            color: "var(--accent-green)",
-            boxShadow: "0 0 12px rgba(16,185,129,0.08)",
-          }}
-        >
-          <span className="live-dot" />
-          <span className="ml-1">Active</span>
-        </div>
       </header>
 
-      {/* ── Main Forum Catalog ── */}
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-10 flex flex-col gap-7">
+      {/* ── Main ── */}
+      <main className="flex-1 w-full max-w-6xl mx-auto px-6 py-6 flex flex-col gap-5">
 
-        {/* Page Header Row */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
-          <div className="flex flex-col gap-1.5">
-            <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
-              <span
-                className="p-2 rounded-xl"
-                style={{
-                  background: "rgba(14,165,233,0.08)",
-                  border: "1px solid rgba(14,165,233,0.15)",
-                }}
-              >
-                <MessageSquare size={22} style={{ color: "var(--accent-cyan)" }} />
-              </span>
+        {/* Header row */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="text-sm font-semibold" style={{ color: "#e4e4e7" }}>
               Community Discussions
             </h1>
-            <p className="text-sm" style={{ color: "var(--muted)" }}>
-              Share offers, interview advice, and leveling discussions.{" "}
-              <span style={{ color: "rgba(14,165,233,0.6)" }}>AI scraper telemetry actively monitored.</span>
+            <p className="text-xs mt-0.5" style={{ color: "#71717a" }}>
+              Offers, negotiations, leveling. AI scraper telemetry active.
             </p>
           </div>
 
-          {/* Search Bar */}
+          {/* Search */}
           <div
-            className="flex items-center gap-2.5 rounded-xl px-4 py-2.5 w-full md:max-w-xs transition-all duration-300 flex-shrink-0"
-            style={{
-              background: "rgba(8,13,26,0.6)",
-              border: "1px solid rgba(255,255,255,0.07)",
-            }}
-            onFocusCapture={(e) => {
-              const el = e.currentTarget as HTMLDivElement;
-              el.style.border = "1px solid rgba(14,165,233,0.45)";
-              el.style.boxShadow = "0 0 16px rgba(14,165,233,0.12)";
-            }}
-            onBlurCapture={(e) => {
-              const el = e.currentTarget as HTMLDivElement;
-              el.style.border = "1px solid rgba(255,255,255,0.07)";
-              el.style.boxShadow = "none";
-            }}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs w-full sm:w-64 flex-shrink-0"
+            style={{ background: "#18181b", border: "1px solid #3f3f46" }}
           >
-            <Search size={13} style={{ color: "var(--muted)", flexShrink: 0 }} />
+            <Search size={12} style={{ color: "#71717a", flexShrink: 0 }} />
             <input
               type="text"
               placeholder="Search discussions..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent border-0 outline-none text-xs text-white placeholder-slate-600 w-full font-sans"
+              className="bg-transparent outline-none w-full text-xs"
+              style={{ color: "#e4e4e7" }}
             />
           </div>
         </div>
 
         {/* ─── Trap Layer: Hidden Bot Honeypot Decoy Link ─── */}
-        <a 
-          href="/maze/decoy_community_discussion_trap_beacon" 
+        <a
+          href="/maze/decoy_community_discussion_trap_beacon"
           style={{ opacity: 0, position: "absolute", width: 0, height: 0, zIndex: -999 }}
           tabIndex={-1}
           aria-hidden="true"
@@ -243,123 +184,89 @@ export default function CommunityForum() {
           View Secret Restricted Internal Negotiation Spreadsheets
         </a>
 
-        {/* ── Forum Split Layout ── */}
+        {/* ── Content Grid ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 
-          {/* ── Thread List (2/3 width) ── */}
-          <div className="md:col-span-2 flex flex-col gap-4">
+          {/* ── Thread List (2 cols) ── */}
+          <div className="md:col-span-2 flex flex-col">
+            {/* Column headers */}
+            <div
+              className="flex items-center justify-between px-3 py-1.5 text-xs"
+              style={{ borderBottom: "1px solid #27272a", color: "#52525b" }}
+            >
+              <span>Discussion</span>
+              <div className="flex items-center gap-5">
+                <span className="flex items-center gap-1"><ThumbsUp size={10} /> Likes</span>
+                <span className="flex items-center gap-1"><MessageSquare size={10} /> Replies</span>
+                <span className="flex items-center gap-1"><Eye size={10} /> Views</span>
+              </div>
+            </div>
+
             {filteredThreads.length === 0 ? (
-              <div
-                className="p-12 text-center rounded-2xl"
-                style={{
-                  background: "rgba(10,16,30,0.6)",
-                  border: "1px solid rgba(255,255,255,0.05)",
-                }}
-              >
-                <div className="flex flex-col items-center gap-3">
-                  <Search size={22} style={{ color: "rgba(148,163,184,0.25)" }} />
-                  <span className="text-xs" style={{ color: "var(--muted)" }}>
-                    No community threads matched your search parameters.
-                  </span>
-                </div>
+              <div className="py-12 text-center text-xs" style={{ color: "#52525b" }}>
+                No threads matched your search.
               </div>
             ) : (
               filteredThreads.map((thread) => {
-                const catColor = CATEGORY_COLORS[thread.category] || {
-                  bg: "rgba(14,165,233,0.08)",
-                  text: "var(--accent-cyan)",
-                  border: "rgba(14,165,233,0.2)",
+                const cat = CATEGORY_STYLES[thread.category] ?? {
+                  color: "#a1a1aa", bg: "rgba(161,161,170,0.08)", border: "rgba(161,161,170,0.2)"
                 };
                 return (
                   <div
                     key={thread.id}
-                    className="p-6 rounded-2xl flex flex-col gap-4 transition-all duration-300 cursor-pointer group relative"
-                    style={{
-                      background: "rgba(10,16,30,0.6)",
-                      border: "1px solid rgba(255,255,255,0.05)",
-                      backdropFilter: "blur(16px)",
-                    }}
-                    onMouseEnter={(e) => {
-                      const el = e.currentTarget as HTMLDivElement;
-                      el.style.border = "1px solid rgba(14,165,233,0.2)";
-                      el.style.transform = "translateY(-2px)";
-                      el.style.boxShadow = "0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(14,165,233,0.05)";
-                    }}
-                    onMouseLeave={(e) => {
-                      const el = e.currentTarget as HTMLDivElement;
-                      el.style.border = "1px solid rgba(255,255,255,0.05)";
-                      el.style.transform = "translateY(0)";
-                      el.style.boxShadow = "none";
-                    }}
+                    className="flex flex-col gap-2 px-3 py-3 cursor-pointer group transition-colors duration-100"
+                    style={{ borderBottom: "1px solid rgba(39,39,42,0.5)" }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = "rgba(39,39,42,0.4)"; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
                   >
-                    {/* Top Row: Category + Timestamp */}
-                    <div className="flex items-center justify-between">
+                    {/* Top: category + time */}
+                    <div className="flex items-center justify-between gap-2">
                       <span
-                        className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                        style={{
-                          background: catColor.bg,
-                          color: catColor.text,
-                          border: `1px solid ${catColor.border}`,
-                        }}
+                        className="text-[10px] font-medium px-2 py-0.5 rounded uppercase tracking-wider"
+                        style={{ background: cat.bg, color: cat.color, border: `1px solid ${cat.border}` }}
                       >
                         {thread.category}
                       </span>
-                      <span className="text-[11px] font-medium" style={{ color: "rgba(148,163,184,0.45)" }}>
+                      <span className="text-[10px] tabular-nums" style={{ color: "#52525b" }}>
                         {thread.timeAgo}
                       </span>
                     </div>
 
-                    {/* Thread Title + Excerpt */}
-                    <div className="flex flex-col gap-1.5">
-                      <h3
-                        className="text-sm font-bold text-white flex items-center gap-1.5 transition-colors duration-200 group-hover:text-cyan-300"
-                      >
-                        {thread.title}
-                        <ArrowUpRight
-                          size={13}
-                          className="opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-0 group-hover:translate-x-0.5"
-                          style={{ color: "var(--accent-cyan)", flexShrink: 0 }}
-                        />
-                      </h3>
-                      <p className="text-xs leading-relaxed" style={{ color: "rgba(148,163,184,0.65)" }}>
-                        {thread.excerpt}
-                      </p>
+                    {/* Title + excerpt */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex flex-col gap-1 min-w-0">
+                        <h3
+                          className="text-xs font-semibold leading-snug flex items-center gap-1 group-hover:text-white transition-colors"
+                          style={{ color: "#d4d4d8" }}
+                        >
+                          {thread.title}
+                          <ArrowUpRight
+                            size={11}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                            style={{ color: "#71717a" }}
+                          />
+                        </h3>
+                        <p className="text-xs leading-relaxed line-clamp-2" style={{ color: "#71717a" }}>
+                          {thread.excerpt}
+                        </p>
+                      </div>
                     </div>
 
-                    {/* Bottom Row: Author + Stats */}
-                    <div
-                      className="flex items-center justify-between pt-3"
-                      style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
-                    >
-                      {/* Author */}
-                      <div className="flex items-center gap-2 text-[11px]" style={{ color: "rgba(148,163,184,0.6)" }}>
+                    {/* Bottom: author + stats */}
+                    <div className="flex items-center justify-between text-[10px]" style={{ color: "#52525b" }}>
+                      <div className="flex items-center gap-1.5">
                         <span
-                          className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
-                          style={{
-                            background: "rgba(14,165,233,0.15)",
-                            border: "1px solid rgba(14,165,233,0.2)",
-                            color: "var(--accent-cyan)",
-                          }}
+                          className="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold uppercase"
+                          style={{ background: "#27272a", color: "#a1a1aa" }}
                         >
-                          {thread.author[0].toUpperCase()}
+                          {thread.author[0]}
                         </span>
                         <span>@{thread.author}</span>
                       </div>
-
-                      {/* Stats */}
-                      <div className="flex items-center gap-4 text-[11px]" style={{ color: "rgba(148,163,184,0.5)" }}>
-                        <span className="flex items-center gap-1.5 transition-colors duration-200 group-hover:text-slate-300">
-                          <ThumbsUp size={11} />
-                          {thread.likes}
-                        </span>
-                        <span className="flex items-center gap-1.5 transition-colors duration-200 group-hover:text-slate-300">
-                          <MessageSquare size={11} />
-                          {thread.replies}
-                        </span>
-                        <span className="flex items-center gap-1.5">
-                          <Eye size={11} />
-                          {thread.views.toLocaleString()}
-                        </span>
+                      <div className="flex items-center gap-4 tabular-nums font-mono">
+                        <span>{thread.likes}</span>
+                        <span>{thread.replies}</span>
+                        <span>{thread.views.toLocaleString()}</span>
                       </div>
                     </div>
                   </div>
@@ -371,80 +278,55 @@ export default function CommunityForum() {
           {/* ── Sidebar ── */}
           <div className="flex flex-col gap-4">
 
-            {/* Cybersecurity Alert Notice */}
+            {/* Cyber-defense notice */}
             <div
-              className="p-5 rounded-2xl flex flex-col gap-3"
+              className="rounded-md p-3 flex flex-col gap-2"
               style={{
-                background: "rgba(10,16,30,0.65)",
-                border: "1px solid rgba(245,158,11,0.12)",
-                borderLeft: "3px solid rgba(245,158,11,0.7)",
-                backdropFilter: "blur(16px)",
-                boxShadow: "-4px 0 20px rgba(245,158,11,0.04)",
+                background: "#111111",
+                border: "1px solid #27272a",
+                borderLeft: "2px solid #f59e0b",
               }}
             >
-              <div className="flex items-center gap-2">
-                <AlertTriangle size={14} style={{ color: "var(--accent-yellow)", flexShrink: 0 }} />
-                <h3
-                  className="text-xs font-bold uppercase tracking-widest"
-                  style={{ color: "var(--accent-yellow)" }}
-                >
+              <div className="flex items-center gap-1.5">
+                <AlertTriangle size={12} style={{ color: "#f59e0b" }} />
+                <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: "#f59e0b" }}>
                   Cyber-Defense Notice
-                </h3>
+                </span>
               </div>
-              <div
-                className="h-[1px]"
-                style={{ background: "linear-gradient(90deg, rgba(245,158,11,0.3), transparent)" }}
-              />
-              <p className="text-[11px] leading-relaxed" style={{ color: "rgba(148,163,184,0.65)" }}>
-                We actively track sequential card hover metrics. Automated extraction crawlers attempting to scrape user threads will raise their behavior risk scores.
+              <p className="text-xs leading-relaxed" style={{ color: "#71717a" }}>
+                Sequential card hover metrics are tracked. Automated scrapers raise their behavior risk score.
               </p>
             </div>
 
             {/* Trending Topics */}
             <div
-              className="p-5 rounded-2xl flex flex-col gap-4"
-              style={{
-                background: "rgba(10,16,30,0.65)",
-                border: "1px solid rgba(255,255,255,0.05)",
-                backdropFilter: "blur(16px)",
-              }}
+              className="rounded-md p-3 flex flex-col gap-3"
+              style={{ background: "#111111", border: "1px solid #27272a" }}
             >
-              <h3 className="text-xs font-bold uppercase tracking-widest text-white flex items-center gap-2">
-                <span
-                  className="w-1.5 h-1.5 rounded-full"
-                  style={{ background: "var(--accent-cyan)", boxShadow: "0 0 6px var(--accent-cyan)" }}
-                />
+              <span className="text-xs font-semibold" style={{ color: "#e4e4e7" }}>
                 Trending Topics
-              </h3>
-              <ul className="flex flex-col gap-2.5">
+              </span>
+              <ul className="flex flex-col gap-1">
                 {[
-                  { tag: "#FAANGOfferNegotiations", views: "1.2k views" },
-                  { tag: "#VestingStockStrategies", views: "980 views" },
-                  { tag: "#LevelsFyiScrapingBusted", views: "750 views" },
+                  { tag: "#FAANGOfferNegotiations", views: "1.2k" },
+                  { tag: "#VestingStockStrategies",  views: "980" },
+                  { tag: "#LevelsFyiScrapingBusted", views: "750" },
                 ].map((item) => (
                   <li
                     key={item.tag}
-                    className="flex justify-between items-center text-xs cursor-pointer transition-all duration-200 rounded-lg px-3 py-2 group"
-                    style={{ color: "rgba(148,163,184,0.65)" }}
+                    className="flex items-center justify-between px-2 py-1.5 rounded cursor-pointer text-xs transition-colors duration-100"
+                    style={{ color: "#71717a" }}
                     onMouseEnter={(e) => {
-                      const el = e.currentTarget as HTMLLIElement;
-                      el.style.background = "rgba(14,165,233,0.05)";
-                      el.style.color = "white";
+                      (e.currentTarget as HTMLLIElement).style.background = "#18181b";
+                      (e.currentTarget as HTMLLIElement).style.color = "#a1a1aa";
                     }}
                     onMouseLeave={(e) => {
-                      const el = e.currentTarget as HTMLLIElement;
-                      el.style.background = "transparent";
-                      el.style.color = "rgba(148,163,184,0.65)";
+                      (e.currentTarget as HTMLLIElement).style.background = "transparent";
+                      (e.currentTarget as HTMLLIElement).style.color = "#71717a";
                     }}
                   >
-                    <span className="font-medium">{item.tag}</span>
-                    <span
-                      className="text-[10px] px-2 py-0.5 rounded-full"
-                      style={{
-                        background: "rgba(255,255,255,0.05)",
-                        border: "1px solid rgba(255,255,255,0.06)",
-                      }}
-                    >
+                    <span>{item.tag}</span>
+                    <span className="font-mono tabular-nums text-[10px]" style={{ color: "#52525b" }}>
                       {item.views}
                     </span>
                   </li>
@@ -456,15 +338,8 @@ export default function CommunityForum() {
       </main>
 
       {/* ── Footer ── */}
-      <footer 
-        className="py-5 border-t text-center text-[11px] tracking-wide"
-        style={{
-          borderColor: "rgba(255,255,255,0.04)",
-          background: "rgba(8,13,26,0.5)",
-          color: "rgba(148,163,184,0.4)",
-        }}
-      >
-        <span>Level Shield Firewall Active • Synthetic Salary Model</span>
+      <footer className="px-6 py-4 text-xs" style={{ borderTop: "1px solid #27272a", color: "#3f3f46" }}>
+        Level Shield • Synthetic Salary Model
       </footer>
     </div>
   );
