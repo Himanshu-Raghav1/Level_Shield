@@ -3,19 +3,20 @@
 
 
 :root {
-  --background: #050a14;
-  --surface: #0d1a2e;
-  --surface-2: #112033;
-  --border: #1c3050;
-  --border-bright: #1e4080;
-  --foreground: #e2e8f0;
-  --muted: #64748b;
-  --accent-cyan: #00d4ff;
-  --accent-green: #00ff88;
-  --accent-red: #ff3366;
-  --accent-orange: #ff8c00;
-  --accent-yellow: #ffd700;
-  --accent-purple: #a855f7;
+  --background: #09090b;
+  --surface: rgba(18, 18, 22, 0.75);
+  --surface-2: rgba(24, 24, 28, 0.6);
+  --border: rgba(255, 255, 255, 0.06);
+  --border-bright: rgba(6, 182, 212, 0.2);
+  --foreground: #ffffff;
+  --muted: #71717a;
+  --accent-cyan: #06b6d4;
+  /* Redefining color variations to strictly fit the 4-color unified palette */
+  --accent-green: #06b6d4;
+  --accent-red: #ffffff;
+  --accent-orange: #71717a;
+  --accent-yellow: #ffffff;
+  --accent-purple: #71717a;
 }
 
 @theme inline {
@@ -42,23 +43,24 @@ body {
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--surface);
+  background: rgba(8, 13, 26, 0.5);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border-bright);
-  border-radius: 2px;
+  background: rgba(14, 165, 233, 0.3);
+  border-radius: 9999px;
 }
 
 /* Glass Card */
 .glass-card {
-  background: rgba(13, 26, 46, 0.7);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(12px);
-  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px) saturate(120%);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
 }
 
 /* Neon glow utilities */
@@ -77,20 +79,23 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--muted);
 }
-.badge-allow    { background: rgba(0, 255, 136, 0.12); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.3); }
-.badge-block    { background: rgba(255, 51, 102, 0.12); color: #ff3366; border: 1px solid rgba(255, 51, 102, 0.3); }
-.badge-throttle { background: rgba(255, 140, 0, 0.12); color: #ff8c00; border: 1px solid rgba(255, 140, 0, 0.3); }
-.badge-pow      { background: rgba(255, 215, 0, 0.12); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.3); }
-.badge-maze     { background: rgba(168, 85, 247, 0.12); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3); }
-.badge-tarpit   { background: rgba(255, 51, 102, 0.18); color: #ff6688; border: 1px solid rgba(255, 51, 102, 0.3); }
-.badge-good     { background: rgba(0, 212, 255, 0.12); color: #00d4ff; border: 1px solid rgba(0, 212, 255, 0.3); }
+.badge-allow    { background: rgba(6, 182, 212, 0.04); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.25); }
+.badge-block    { background: rgba(255, 255, 255, 0.08); color: var(--foreground); border: 1px solid var(--muted); }
+.badge-throttle { background: rgba(255, 255, 255, 0.02); color: var(--muted); border: 1px solid rgba(255, 255, 255, 0.05); }
+.badge-pow      { background: rgba(255, 255, 255, 0.02); color: var(--muted); border: 1px solid rgba(255, 255, 255, 0.05); }
+.badge-maze     { background: rgba(255, 255, 255, 0.02); color: var(--muted); border: 1px solid rgba(255, 255, 255, 0.05); }
+.badge-tarpit   { background: rgba(255, 255, 255, 0.08); color: var(--foreground); border: 1px solid var(--muted); }
+.badge-good     { background: rgba(6, 182, 212, 0.04); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.25); }
 
 /* Pulse animation for live indicator */
 @keyframes pulse-ring {
@@ -102,7 +107,7 @@ body {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: #00ff88;
+  background: var(--accent-cyan);
   animation: pulse-ring 1.5s ease-out infinite;
 }
 .live-dot {
@@ -110,7 +115,7 @@ body {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #00ff88;
+  background: var(--accent-cyan);
   display: inline-block;
 }
 

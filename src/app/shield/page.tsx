@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Shield, Activity, Users, Ban, AlertTriangle, Zap, Layers, ListChecks } from "lucide-react";
 import SimulatorPanel from "@/components/SimulatorPanel";
 import LiveTrafficFeed from "@/components/LiveTrafficFeed";
+import Navbar from "@/components/Navbar";
 import RiskScoreChart from "@/components/RiskScoreChart";
 import CanaryTokenTable from "@/components/CanaryTokenTable";
 import RiskScore from "@/components/RiskScore";
@@ -78,31 +79,7 @@ export default function ShieldDashboard() {
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "var(--background)" }}>
       {/* Top Nav */}
-      <header
-        className="flex items-center justify-between px-6 py-3 border-b"
-        style={{ borderColor: "var(--border)", background: "var(--surface)" }}
-      >
-        <a href="/" className="flex items-center gap-2 font-bold text-base" style={{ color: "var(--accent-cyan)" }}>
-          <Shield size={20} />
-          Level Shield
-        </a>
-        <nav className="flex items-center gap-6 text-sm" style={{ color: "var(--muted)" }}>
-          <a href="/" className="hover:text-white transition-colors">Product</a>
-          <a href="/compensation" className="hover:text-white transition-colors">Compensation</a>
-          <a href="/compare" className="hover:text-white transition-colors">Compare</a>
-          <a href="/community" className="hover:text-white transition-colors">Community</a>
-          <span
-            className="px-3 py-1 rounded-md text-xs font-semibold"
-            style={{ background: "rgba(0,212,255,0.12)", color: "var(--accent-cyan)", border: "1px solid rgba(0,212,255,0.3)" }}
-          >
-            Shield Dashboard
-          </span>
-        </nav>
-        <div className="flex items-center gap-2 text-xs" style={{ color: "var(--accent-green)" }}>
-          <span className="live-dot" />
-          <span className="ml-2">Live</span>
-        </div>
-      </header>
+      <Navbar />
 
       <div className="flex flex-1 overflow-hidden">
         {/* ─── Left Sidebar: Simulator ──────────────────────────────── */}
@@ -142,9 +119,9 @@ export default function ShieldDashboard() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
               { label: "Total Requests",      value: metrics.totalRequests.toLocaleString(),  icon: <Activity size={16} />, color: "var(--accent-cyan)" },
-              { label: "Bots Detected",       value: metrics.botsDetected.toLocaleString(),   icon: <AlertTriangle size={16} />, color: "var(--accent-red)" },
-              { label: "Blocked Requests",    value: metrics.blockedRequests.toLocaleString(), icon: <Ban size={16} />, color: "var(--accent-orange)" },
-              { label: "False Positive Rate", value: metrics.falsePositiveRate,               icon: <Zap size={16} />, color: "var(--accent-green)" },
+              { label: "Bots Detected",       value: metrics.botsDetected.toLocaleString(),   icon: <AlertTriangle size={16} />, color: "var(--foreground)" },
+              { label: "Blocked Requests",    value: metrics.blockedRequests.toLocaleString(), icon: <Ban size={16} />, color: "var(--foreground)" },
+              { label: "False Positive Rate", value: metrics.falsePositiveRate,               icon: <Zap size={16} />, color: "var(--accent-cyan)" },
             ].map(({ label, value, icon, color }) => (
               <div key={label} className="glass-card p-4 flex flex-col gap-2">
                 <div className="flex items-center justify-between">
@@ -159,10 +136,10 @@ export default function ShieldDashboard() {
           {/* Secondary stats row */}
           <div className="grid grid-cols-4 gap-3">
             {[
-              { label: "Throttled",     value: metrics.throttledRequests, color: "#ff8c00" },
-              { label: "PoW Challenges", value: metrics.powChallenges,    color: "#ffd700" },
-              { label: "Honey Maze Hits", value: metrics.honeyMazeHits,  color: "#a855f7" },
-              { label: "Real Users Protected", value: metrics.realUsersProtected, color: "#00ff88" },
+              { label: "Throttled",     value: metrics.throttledRequests, color: "var(--muted)" },
+              { label: "PoW Challenges", value: metrics.powChallenges,    color: "var(--muted)" },
+              { label: "Honey Maze Hits", value: metrics.honeyMazeHits,  color: "var(--accent-cyan)" },
+              { label: "Real Users Protected", value: metrics.realUsersProtected, color: "var(--foreground)" },
             ].map(({ label, value, color }) => (
               <div key={label} className="glass-card px-4 py-3 flex items-center justify-between">
                 <span className="text-xs" style={{ color: "var(--muted)" }}>{label}</span>
@@ -197,7 +174,7 @@ export default function ShieldDashboard() {
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-2">
                     <span className="live-dot" />
-                    <span className="text-xs font-semibold ml-2" style={{ color: "var(--accent-green)" }}>Live Feed</span>
+                    <span className="text-xs font-semibold ml-2" style={{ color: "var(--accent-cyan)" }}>Live Feed</span>
                     <span className="text-xs ml-auto" style={{ color: "var(--muted)" }}>{events.length} events</span>
                   </div>
                   <LiveTrafficFeed events={events} />
@@ -216,7 +193,7 @@ export default function ShieldDashboard() {
                         <div
                           key={r.sessionId}
                           className="flex items-center gap-3 px-3 py-2 rounded-lg"
-                          style={{ background: "rgba(17,32,51,0.5)", border: "1px solid var(--border)" }}
+                          style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
                         >
                           <RiskScore score={r.score} size="sm" />
                           <div className="flex flex-col flex-1 min-w-0">
@@ -240,7 +217,7 @@ export default function ShieldDashboard() {
                 <div className="grid md:grid-cols-2 gap-4">
                   {/* Canary Tokens */}
                   <div className="glass-card p-4">
-                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: "var(--accent-yellow)" }}>
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: "var(--accent-cyan)" }}>
                       🪤 Canary Token Attribution
                     </h3>
                     <CanaryTokenTable tokens={canaryTokens} />
@@ -248,7 +225,7 @@ export default function ShieldDashboard() {
 
                   {/* Honey Maze */}
                   <div className="glass-card p-4">
-                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: "var(--accent-purple)" }}>
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: "var(--accent-cyan)" }}>
                       🌀 Honey Maze Entries
                     </h3>
                     {honeyMazeHits.length === 0 ? (
@@ -259,9 +236,9 @@ export default function ShieldDashboard() {
                           <div
                             key={i}
                             className="flex items-center gap-3 px-3 py-2 rounded-lg"
-                            style={{ background: "rgba(168,85,247,0.08)", border: "1px solid rgba(168,85,247,0.2)" }}
+                            style={{ background: "rgba(6,182,212,0.04)", border: "1px solid rgba(6,182,212,0.15)" }}
                           >
-                            <span className="text-xs font-mono" style={{ color: "#a855f7" }}>
+                            <span className="text-xs font-mono" style={{ color: "var(--accent-cyan)" }}>
                               {h.sessionId.slice(0, 14)}…
                             </span>
                             <span className="text-xs ml-auto" style={{ color: "var(--muted)" }}>
@@ -275,12 +252,12 @@ export default function ShieldDashboard() {
 
                   {/* Innovation feature summary cards */}
                   {[
-                    { name: "Behavior DNA",          icon: "🧬", color: "#00ff88",  desc: "Mouse entropy, typing cadence, dwell" },
-                    { name: "Graph of Intent",        icon: "🕸️",  color: "#00d4ff",  desc: "Session nav graph: clean = bot" },
-                    { name: "JA4-Style Fingerprint",  icon: "🔬", color: "#ffd700",  desc: "Header + behavior consistency" },
-                    { name: "AI-Agent Trap Beacon",   icon: "⚡", color: "#ff8c00",  desc: "Hidden link triggers on decoy pages" },
-                    { name: "Adaptive Friction Brain", icon: "🧠", color: "#a855f7", desc: "allow → throttle → PoW → maze → block" },
-                    { name: "Signed Good-Bot Lane",   icon: "✅", color: "#00ff88",  desc: "Cryptographic crawler verification" },
+                    { name: "Behavior DNA",          icon: "🧬", color: "var(--foreground)",  desc: "Mouse entropy, typing cadence, dwell" },
+                    { name: "Graph of Intent",        icon: "🕸️",  color: "var(--accent-cyan)",  desc: "Session nav graph: clean = bot" },
+                    { name: "JA4-Style Fingerprint",  icon: "🔬", color: "var(--muted)",  desc: "Header + behavior consistency" },
+                    { name: "AI-Agent Trap Beacon",   icon: "⚡", color: "var(--accent-cyan)",  desc: "Hidden link triggers on decoy pages" },
+                    { name: "Adaptive Friction Brain", icon: "🧠", color: "var(--muted)", desc: "allow → throttle → PoW → maze → block" },
+                    { name: "Signed Good-Bot Lane",   icon: "✅", color: "var(--foreground)",  desc: "Cryptographic crawler verification" },
                   ].map(({ name, icon, color, desc }) => (
                     <div key={name} className="glass-card p-3 flex items-start gap-3">
                       <span className="text-xl">{icon}</span>

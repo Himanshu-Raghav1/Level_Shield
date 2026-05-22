@@ -73,9 +73,9 @@ export default function ProofOfWorkChallenge() {
           <div 
             className="w-12 h-12 rounded-full flex items-center justify-center mb-1"
             style={{ 
-              background: "rgba(0, 212, 255, 0.1)", 
+              background: "rgba(6, 182, 212, 0.1)", 
               border: "1px solid var(--accent-cyan)",
-              boxShadow: "0 0 15px rgba(0, 212, 255, 0.2)"
+              boxShadow: "0 0 15px rgba(6, 182, 212, 0.2)"
             }}
           >
             <Shield size={22} style={{ color: "var(--accent-cyan)" }} />
@@ -107,7 +107,7 @@ export default function ProofOfWorkChallenge() {
               <span 
                 className="font-bold"
                 style={{ 
-                  color: status === "solving" ? "var(--accent-yellow)" : status === "success" ? "var(--accent-green)" : "var(--muted)" 
+                  color: status === "solving" ? "var(--foreground)" : status === "success" ? "var(--accent-cyan)" : "var(--muted)" 
                 }}
               >
                 {status.toUpperCase()}
@@ -145,7 +145,7 @@ export default function ProofOfWorkChallenge() {
               {status === "solving" && (
                 <>
                   <span className="text-lg font-bold font-mono text-white">{progress}%</span>
-                  <span className="text-[9px] uppercase tracking-wider text-yellow-500 font-semibold flex items-center gap-1">
+                  <span className="text-[9px] uppercase tracking-wider text-white font-semibold flex items-center gap-1">
                     <RefreshCw size={8} className="animate-spin" />
                     Solving
                   </span>
@@ -153,8 +153,8 @@ export default function ProofOfWorkChallenge() {
               )}
               {status === "success" && (
                 <div className="flex flex-col items-center gap-0.5">
-                  <CheckCircle size={24} style={{ color: "var(--accent-green)" }} />
-                  <span className="text-[9px] uppercase tracking-wider font-extrabold" style={{ color: "var(--accent-green)" }}>Verified</span>
+                  <CheckCircle size={24} style={{ color: "var(--accent-cyan)" }} />
+                  <span className="text-[9px] uppercase tracking-wider font-extrabold" style={{ color: "var(--accent-cyan)" }}>Verified</span>
                 </div>
               )}
             </div>
@@ -168,7 +168,7 @@ export default function ProofOfWorkChallenge() {
               </span>
             )}
             {status === "success" && (
-              <span style={{ color: "var(--accent-green)" }}>
+              <span style={{ color: "var(--accent-cyan)" }}>
                 Cryptographic signature generated successfully! Redirecting...
               </span>
             )}

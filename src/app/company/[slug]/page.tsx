@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { Shield, ChevronLeft, Building2, MapPin, Database, Award, ArrowUpRight, Lock } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { mockSalaries, SalaryRecord, mockCanaryTokens } from "@/data/mock";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 interface CompanyPageProps {
   params: Promise<{ slug: string }>;
@@ -95,29 +97,11 @@ export default function CompanyDetail({ params }: CompanyPageProps) {
   return (
     <div className="min-h-screen flex flex-col justify-between" style={{ background: "var(--background)" }}>
       {/* Navbar */}
-      <header
-        className="flex items-center justify-between px-6 py-3 border-b"
-        style={{ borderColor: "var(--border)", background: "var(--surface)" }}
-      >
-        <a href="/" className="flex items-center gap-2 font-bold text-base" style={{ color: "var(--accent-cyan)" }}>
-          <Shield size={20} />
-          Level Shield
-        </a>
-        <nav className="flex items-center gap-6 text-sm" style={{ color: "var(--muted)" }}>
-          <a href="/" className="hover:text-white transition-colors">Product</a>
-          <a href="/compensation" className="hover:text-white transition-colors">Compensation</a>
-          <a href="/compare" className="hover:text-white transition-colors">Compare</a>
-          <a href="/community" className="hover:text-white transition-colors">Community</a>
-          <a href="/shield" className="hover:text-white transition-colors">Shield Dashboard</a>
-        </nav>
-        <div className="flex items-center gap-2 text-xs" style={{ color: "var(--accent-green)" }}>
-          <span className="live-dot" />
-          <span className="ml-2">Active</span>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Main Container */}
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8 flex flex-col gap-6">
+      <div style={{ display: "flex", justifyContent: "center", width: "100%", flex: 1 }}>
+        <main className="w-full px-4 py-8 flex flex-col gap-6" style={{ maxWidth: "1024px" }}>
         {/* Navigation Breadcrumb */}
         <div>
           <button
@@ -147,31 +131,31 @@ export default function CompanyDetail({ params }: CompanyPageProps) {
               className="w-14 h-14 rounded-lg flex items-center justify-center border"
               style={{ background: "var(--surface-2)", borderColor: "var(--border)" }}
             >
-              <Building2 size={28} style={{ color: "var(--accent-cyan)" }} />
+              <Building2 size={28} className="text-cyan-400" />
             </div>
             <div>
-              <h1 className="text-3xl font-extrabold text-white flex items-center gap-2">
+              <h1 className="text-xl font-bold text-white flex items-center gap-2">
                 {companyName}
-                <span className="text-xs font-semibold px-2 py-0.5 rounded border uppercase tracking-wider" style={{ background: "rgba(0, 212, 255, 0.1)", color: "var(--accent-cyan)", borderColor: "rgba(0, 212, 255, 0.3)" }}>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded border uppercase tracking-wider bg-cyan-950/20 text-cyan-400 border-cyan-500/25">
                   Verified
                 </span>
               </h1>
-              <p className="text-xs" style={{ color: "var(--muted)" }}>
+              <p className="text-xs text-zinc-400">
                 Software Engineer leveling structure and breakdown stats.
               </p>
             </div>
           </div>
 
           <div className="flex gap-4 flex-wrap">
-            <div className="bg-black/35 px-4 py-2.5 rounded-lg border text-left" style={{ borderColor: "var(--border)" }}>
-              <span className="text-[10px] block uppercase tracking-wider font-semibold" style={{ color: "var(--muted)" }}>Average Comp</span>
-              <span className="text-lg font-bold font-mono" style={{ color: "var(--accent-green)" }}>
+            <div className="bg-zinc-900/60 px-4 py-2.5 rounded border text-left" style={{ borderColor: "var(--border)" }}>
+              <span className="text-[10px] block uppercase tracking-wider font-mono font-bold text-zinc-500">Average Comp</span>
+              <span className="text-lg font-bold font-mono text-white">
                 ${avgSalary.toLocaleString()}
               </span>
             </div>
-            <div className="bg-black/35 px-4 py-2.5 rounded-lg border text-left" style={{ borderColor: "var(--border)" }}>
-              <span className="text-[10px] block uppercase tracking-wider font-semibold" style={{ color: "var(--muted)" }}>Max Level Comp</span>
-              <span className="text-lg font-bold font-mono" style={{ color: "var(--accent-yellow)" }}>
+            <div className="bg-zinc-900/60 px-4 py-2.5 rounded border text-left" style={{ borderColor: "var(--border)" }}>
+              <span className="text-[10px] block uppercase tracking-wider font-mono font-bold text-zinc-500">Max Level Comp</span>
+              <span className="text-lg font-bold font-mono text-cyan-400">
                 ${maxSalary.toLocaleString()}
               </span>
             </div>
@@ -183,11 +167,11 @@ export default function CompanyDetail({ params }: CompanyPageProps) {
           {/* Left Column: Recharts Stacking Bar Chart */}
           <div className="glass-card p-5 flex flex-col gap-4">
             <div>
-              <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                <Award size={14} style={{ color: "var(--accent-cyan)" }} />
+              <h2 className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <Award size={14} className="text-cyan-400" />
                 Level Salary Distribution
               </h2>
-              <p className="text-[10px]" style={{ color: "var(--muted)" }}>
+              <p className="text-[10px] text-zinc-500">
                 Total breakdown showing Base, Stock, and Bonus combinations.
               </p>
             </div>
@@ -195,17 +179,23 @@ export default function CompanyDetail({ params }: CompanyPageProps) {
             <div className="h-64 mt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1c3050" />
-                  <XAxis dataKey="level" tick={{ fill: "#64748b", fontSize: 10 }} stroke="#1c3050" />
-                  <YAxis tick={{ fill: "#64748b", fontSize: 10 }} stroke="#1c3050" tickFormatter={(v) => `$${v/1000}k`} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.04)" />
+                  <XAxis dataKey="level" tick={{ fill: "#71717a", fontSize: 10, fontFamily: "monospace" }} stroke="rgba(255, 255, 255, 0.06)" />
+                  <YAxis tick={{ fill: "#71717a", fontSize: 10, fontFamily: "monospace" }} stroke="rgba(255, 255, 255, 0.06)" tickFormatter={(v) => `$${v/1000}k`} />
                   <Tooltip 
-                    contentStyle={{ background: "#0d1a2e", border: "1px solid #1c3050", borderRadius: 8, fontSize: 11 }}
+                    contentStyle={{
+                      background: "rgba(18, 18, 22, 0.95)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 4,
+                      fontSize: 11,
+                      color: "#ffffff",
+                    }}
                     formatter={(value) => [`$${Number(value).toLocaleString()}`]}
                   />
-                  <Legend wrapperStyle={{ fontSize: 9, paddingTop: 10 }} />
-                  <Bar dataKey="Base" stackId="a" fill="#00ff88" />
-                  <Bar dataKey="Stock" stackId="a" fill="#00d4ff" />
-                  <Bar dataKey="Bonus" stackId="a" fill="#a855f7" />
+                  <Legend wrapperStyle={{ fontSize: 9, fontFamily: "monospace", textTransform: "uppercase" }} />
+                  <Bar dataKey="Base" stackId="a" fill="#71717a" />
+                  <Bar dataKey="Stock" stackId="a" fill="#06b6d4" />
+                  <Bar dataKey="Bonus" stackId="a" fill="#ffffff" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -214,11 +204,11 @@ export default function CompanyDetail({ params }: CompanyPageProps) {
           {/* Right Column: Mini Salary Detail Table */}
           <div className="glass-card p-5 flex flex-col justify-between">
             <div className="flex flex-col gap-1 mb-3">
-              <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                <Database size={14} style={{ color: "var(--accent-green)" }} />
+              <h2 className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <Database size={14} className="text-cyan-400" />
                 Active Salary Database
               </h2>
-              <p className="text-[10px]" style={{ color: "var(--muted)" }}>
+              <p className="text-[10px] text-zinc-500">
                 All records matching {companyName}. Active canary detection layer applied.
               </p>
             </div>
@@ -227,40 +217,40 @@ export default function CompanyDetail({ params }: CompanyPageProps) {
               <table className="w-full text-xs text-left">
                 <thead>
                   <tr className="border-b" style={{ borderColor: "var(--border)", color: "var(--muted)" }}>
-                    <th className="py-2 px-3 font-semibold">Level</th>
-                    <th className="py-2 px-3 font-semibold">Experience</th>
-                    <th className="py-2 px-3 font-semibold text-right">Base / Stock</th>
-                    <th className="py-2 px-3 font-semibold text-right">Total</th>
+                    <th className="py-2 px-3 text-[10px] uppercase font-mono tracking-wider font-bold">Level</th>
+                    <th className="py-2 px-3 text-[10px] uppercase font-mono tracking-wider font-bold">Experience</th>
+                    <th className="py-2 px-3 text-[10px] uppercase font-mono tracking-wider font-bold text-right">Base / Stock</th>
+                    <th className="py-2 px-3 text-[10px] uppercase font-mono tracking-wider font-bold text-right">Total</th>
                   </tr>
                 </thead>
                 <tbody>
                   {allRows.map((r) => (
                     <tr 
                       key={r.id} 
-                      className="border-b hover:bg-white/5 transition-colors"
+                      className="border-b transition-colors hover:bg-white/[0.02]"
                       style={{ 
                         borderColor: "var(--border)",
-                        background: r.isCanary ? "rgba(255, 215, 0, 0.04)" : "transparent"
+                        background: r.isCanary ? "rgba(255, 255, 255, 0.02)" : "transparent"
                       }}
                     >
                       <td className="py-3 px-3">
                         <div className="flex flex-col">
-                          <span className="font-bold text-white flex items-center gap-1">
+                          <span className="font-bold text-white flex items-center gap-1.5">
                             {r.level}
                             {r.isCanary && (
                               <span title="Decoy Canary Token Injected">
-                                <Lock size={10} style={{ color: "var(--accent-yellow)" }} />
+                                <Lock size={10} className="text-cyan-400" />
                               </span>
                             )}
                           </span>
-                          <span className="text-[9px]" style={{ color: "var(--muted)" }}>{r.title}</span>
+                          <span className="text-[9px] text-zinc-500 font-mono uppercase tracking-wider">{r.title}</span>
                         </div>
                       </td>
-                      <td className="py-3 px-3 text-white">{r.experience}</td>
-                      <td className="py-3 px-3 text-right font-mono text-[10px]" style={{ color: "var(--muted)" }}>
+                      <td className="py-3 px-3 text-zinc-300">{r.experience}</td>
+                      <td className="py-3 px-3 text-right font-mono text-[10px] text-zinc-500">
                         {r.base} / {r.stock}
                       </td>
-                      <td className="py-3 px-3 text-right font-bold font-mono" style={{ color: r.isCanary ? "var(--accent-yellow)" : "var(--accent-green)" }}>
+                      <td className="py-3 px-3 text-right font-bold font-mono text-white">
                         {r.totalComp}
                       </td>
                     </tr>
@@ -269,21 +259,17 @@ export default function CompanyDetail({ params }: CompanyPageProps) {
               </table>
             </div>
 
-            <div className="mt-4 flex items-center gap-2 text-[10px] bg-[#112033]/50 p-2.5 rounded-lg border border-yellow-500/20 text-yellow-500/90 font-mono">
-              <Lock size={12} className="flex-shrink-0" />
+            <div className="mt-4 flex items-center gap-2 text-[10px] bg-zinc-900/60 p-2.5 rounded border border-zinc-800 text-zinc-400 font-mono">
+              <Lock size={12} className="text-cyan-400 shrink-0" />
               <span>Canary signature active. Scraping is traced back to specific sessions.</span>
             </div>
           </div>
         </div>
-      </main>
+        </main>
+      </div>
 
       {/* Footer */}
-      <footer 
-        className="py-4 border-t text-center text-xs mt-12" 
-        style={{ borderColor: "var(--border)", background: "rgba(13,26,46,0.3)", color: "var(--muted)" }}
-      >
-        <span>Level Shield Firewall Active • Synthetic Salary Model</span>
-      </footer>
+      <Footer />
     </div>
   );
 }

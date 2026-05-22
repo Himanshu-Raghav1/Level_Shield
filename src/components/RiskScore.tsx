@@ -26,7 +26,7 @@ export default function RiskScore({ score, size = "md" }: Props) {
           cy={ring / 2}
           r={radius}
           fill="none"
-          stroke="#1c3050"
+          stroke="var(--border)"
           strokeWidth={stroke}
         />
         <circle
