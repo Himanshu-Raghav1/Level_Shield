@@ -34,6 +34,16 @@ export function verifyFingerprintConsistency(
   const reasons: string[] = [];
   let isConsistent = true;
 
+  // Check if client User-Agent claims to be Googlebot but lacks active signature verification
+  const session = db.prepare('SELECT is_good_bot FROM sessions WHERE id = ?').get(sessionId) as { is_good_bot: number } | undefined;
+  const isVerifiedGoodBot = session?.is_good_bot === 1;
+  const ua = (headers['user-agent'] || '').toLowerCase();
+  
+  if (ua.includes('googlebot') && !isVerifiedGoodBot) {
+    isConsistent = false;
+    reasons.push('unverified_googlebot');
+  }
+
   // Retrieve latest submitted telemetry for this session
   const latestTelemetryRow = db.prepare(`
     SELECT details FROM behavior_events

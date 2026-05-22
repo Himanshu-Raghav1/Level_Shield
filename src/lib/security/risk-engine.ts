@@ -41,8 +41,8 @@ export function evaluateSessionRisk(
   
   const recentRequestsCount = (db.prepare(`
     SELECT COUNT(*) as count FROM request_events
-    WHERE session_id = ? AND timestamp > ?
-  `).get(sessionId, tenSecondsAgo) as any)?.count || 0;
+    WHERE session_id = ? AND timestamp > strftime('%Y-%m-%d %H:%M:%S', 'now', '-10 seconds')
+  `).get(sessionId) as any)?.count || 0;
 
   // Signal: Rapid requests (+20)
   if (recentRequestsCount > 8) {
@@ -98,8 +98,8 @@ export function evaluateSessionRisk(
   // F. Bulk Salary Extraction (+20)
   const recentCompensationSearches = (db.prepare(`
     SELECT COUNT(*) as count FROM request_events
-    WHERE session_id = ? AND url LIKE '%/api/compensation/search%' AND timestamp > ?
-  `).get(sessionId, tenSecondsAgo) as any)?.count || 0;
+    WHERE session_id = ? AND url LIKE '%/api/compensation/search%' AND timestamp > strftime('%Y-%m-%d %H:%M:%S', 'now', '-10 seconds')
+  `).get(sessionId) as any)?.count || 0;
 
   if (recentCompensationSearches > 4) {
     score += 20;

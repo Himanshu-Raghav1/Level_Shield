@@ -127,7 +127,27 @@ export function getSessionBehaviorEntropy(sessionId: string): number {
   `).all(sessionId) as Array<{ details: string }>;
 
   if (events.length === 0) {
-    return 100; // Assume okay until telemetry is received
+    // Check if the session has made requests and has a suspicious bot-like User Agent
+    const requestCountRow = db.prepare(`
+      SELECT COUNT(*) as count FROM request_events WHERE session_id = ?
+    `).get(sessionId) as { count: number } | undefined;
+    
+    const requestCount = requestCountRow?.count || 0;
+    
+    if (requestCount > 0) {
+      const sessionRow = db.prepare(`
+        SELECT user_agent FROM sessions WHERE id = ?
+      `).get(sessionId) as { user_agent: string } | undefined;
+      
+      const ua = (sessionRow?.user_agent || '').toLowerCase();
+      const isBotUa = ua.includes('bot') || ua.includes('crawler') || ua.includes('headless') || ua.includes('python') || ua.includes('playwright');
+      
+      if (isBotUa || requestCount > 2) {
+        return 0; // Return zero entropy for bot UAs or multi-request clients with no telemetry
+      }
+    }
+
+    return 100; // Assume okay for initial page loads of humans
   }
 
   // Calculate average entropy from recent telemetry submissions
