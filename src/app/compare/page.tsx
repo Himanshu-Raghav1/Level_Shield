@@ -78,39 +78,110 @@ export default function SalaryCompare() {
   const seniorDiff = Math.abs(Number(chartData[2][companyA]) - Number(chartData[2][companyB]));
   const maxDiff = Math.max(entryDiff, midDiff, seniorDiff);
 
+  const selectStyle = {
+    background: "rgba(15,23,42,0.85)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    color: "white",
+    outline: "none",
+  };
+
   return (
-    <div className="min-h-screen flex flex-col justify-between" style={{ background: "var(--background)" }}>
-      {/* Navbar */}
+    <div className="min-h-screen flex flex-col" style={{ background: "var(--background)" }}>
+
+      {/* ── Premium Sticky Header ── */}
       <header
-        className="flex items-center justify-between px-6 py-3 border-b"
-        style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+        className="sticky top-0 z-50 flex items-center justify-between px-8 py-4 border-b"
+        style={{
+          borderColor: "rgba(255,255,255,0.04)",
+          background: "rgba(8,13,26,0.75)",
+          backdropFilter: "blur(20px) saturate(150%)",
+          WebkitBackdropFilter: "blur(20px) saturate(150%)",
+        }}
       >
-        <a href="/" className="flex items-center gap-2 font-bold text-base" style={{ color: "var(--accent-cyan)" }}>
-          <Shield size={20} />
-          Level Shield
+        {/* Logo */}
+        <a
+          href="/"
+          className="flex items-center gap-2 font-bold text-sm tracking-wide transition-all duration-300 hover:scale-105"
+          style={{ color: "var(--accent-cyan)" }}
+        >
+          <Shield size={19} />
+          <span className="hidden sm:inline">Level Shield</span>
         </a>
-        <nav className="flex items-center gap-6 text-sm" style={{ color: "var(--muted)" }}>
-          <a href="/" className="hover:text-white transition-colors">Product</a>
-          <a href="/compensation" className="hover:text-white transition-colors">Compensation</a>
-          <span className="text-white border-b-2 pb-0.5" style={{ borderColor: "var(--accent-cyan)" }}>Compare</span>
-          <a href="/community" className="hover:text-white transition-colors">Community</a>
-          <a href="/shield" className="hover:text-white transition-colors">Shield Dashboard</a>
+
+        {/* Nav Links */}
+        <nav className="flex items-center gap-7 text-sm">
+          {[
+            { label: "Product", href: "/" },
+            { label: "Compensation", href: "/compensation" },
+            { label: "Compare", href: "/compare", active: true },
+            { label: "Community", href: "/community" },
+            { label: "Shield Dashboard", href: "/shield" },
+          ].map((item) =>
+            item.active ? (
+              <span
+                key={item.label}
+                className="relative text-white font-semibold pb-1"
+                style={{ textShadow: "0 0 20px rgba(14,165,233,0.4)" }}
+              >
+                {item.label}
+                <span
+                  className="absolute bottom-0 left-0 right-0 h-[2px] rounded-full"
+                  style={{
+                    background: "linear-gradient(90deg, var(--accent-cyan), var(--accent-purple))",
+                    boxShadow: "0 0 8px rgba(14,165,233,0.7)",
+                  }}
+                />
+              </span>
+            ) : (
+              <a
+                key={item.label}
+                href={item.href}
+                className="font-medium transition-all duration-300"
+                style={{ color: "var(--muted)" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "white")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
+              >
+                {item.label}
+              </a>
+            )
+          )}
         </nav>
-        <div className="flex items-center gap-2 text-xs" style={{ color: "var(--accent-green)" }}>
+
+        {/* Live Badge */}
+        <div
+          className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide"
+          style={{
+            background: "rgba(16,185,129,0.08)",
+            border: "1px solid rgba(16,185,129,0.25)",
+            color: "var(--accent-green)",
+            boxShadow: "0 0 12px rgba(16,185,129,0.08)",
+          }}
+        >
           <span className="live-dot" />
-          <span className="ml-2">Active</span>
+          <span className="ml-1">Active</span>
         </div>
       </header>
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8 flex flex-col gap-6">
-        <div>
-          <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
-            <Scale size={24} style={{ color: "var(--accent-cyan)" }} />
+      {/* ── Main Container ── */}
+      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-10 flex flex-col gap-7">
+
+        {/* Page Header */}
+        <div className="flex flex-col gap-1.5">
+          <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+            <span
+              className="p-2 rounded-xl"
+              style={{
+                background: "rgba(14,165,233,0.08)",
+                border: "1px solid rgba(14,165,233,0.15)",
+              }}
+            >
+              <Scale size={22} style={{ color: "var(--accent-cyan)" }} />
+            </span>
             Compare Compensations
           </h1>
-          <p className="text-xs" style={{ color: "var(--muted)" }}>
-            Compare software engineering salary packages side-by-side. Interact with elements to trigger client-side telemetry.
+          <p className="text-sm" style={{ color: "var(--muted)" }}>
+            Compare software engineering salary packages side-by-side.{" "}
+            <span style={{ color: "rgba(14,165,233,0.6)" }}>Interact with elements to trigger client-side telemetry.</span>
           </p>
         </div>
 
@@ -124,120 +195,234 @@ export default function SalaryCompare() {
           View Secret Unreleased Salary Comparison spreadsheets for Tier-1 Tech
         </a>
 
-        {/* Company Selector Dropdowns */}
-        <div className="glass-card p-5 flex flex-col sm:flex-row gap-6 items-center justify-between glow-cyan">
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <span className="text-xs font-semibold" style={{ color: "var(--muted)" }}>Compare</span>
-            <select
-              value={companyA}
-              onChange={(e) => {
-                if (e.target.value !== companyB) setCompanyA(e.target.value);
-              }}
-              className="bg-opacity-50 border rounded-md px-4 py-2 text-sm text-white font-semibold cursor-pointer w-full sm:w-44 font-sans"
-              style={{ background: "var(--surface)", borderColor: "var(--border)" }}
-            >
-              {availableCompanies.map((c) => (
-                <option key={c} value={c} disabled={c === companyB}>{c}</option>
-              ))}
-            </select>
+        {/* ── Company Selector Card ── */}
+        <div
+          className="p-6 flex flex-col sm:flex-row gap-6 items-center justify-between rounded-2xl"
+          style={{
+            background: "rgba(15,23,42,0.55)",
+            border: "1px solid rgba(255,255,255,0.05)",
+            backdropFilter: "blur(16px)",
+            boxShadow: "0 0 30px rgba(14,165,233,0.05)",
+          }}
+        >
+          <div className="flex items-center gap-4 w-full sm:w-auto">
+            {/* Company A Selector */}
+            <div className="flex flex-col gap-1 flex-1 sm:flex-none">
+              <label className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "rgba(148,163,184,0.5)" }}>
+                Company A
+              </label>
+              <select
+                value={companyA}
+                onChange={(e) => {
+                  if (e.target.value !== companyB) setCompanyA(e.target.value);
+                }}
+                className="rounded-xl px-4 py-2.5 text-sm font-semibold cursor-pointer font-sans transition-all duration-300 w-full sm:w-44"
+                style={selectStyle}
+              >
+                {availableCompanies.map((c) => (
+                  <option key={c} value={c} disabled={c === companyB}>{c}</option>
+                ))}
+              </select>
+            </div>
 
-            <span className="text-xs font-bold" style={{ color: "var(--muted)" }}>VS</span>
-
-            <select
-              value={companyB}
-              onChange={(e) => {
-                if (e.target.value !== companyA) setCompanyB(e.target.value);
+            {/* VS Divider */}
+            <div
+              className="flex items-center justify-center w-9 h-9 rounded-full text-xs font-extrabold tracking-wider self-end mb-0.5"
+              style={{
+                background: "rgba(139,92,246,0.1)",
+                border: "1px solid rgba(139,92,246,0.25)",
+                color: "var(--accent-purple)",
               }}
-              className="bg-opacity-50 border rounded-md px-4 py-2 text-sm text-white font-semibold cursor-pointer w-full sm:w-44 font-sans"
-              style={{ background: "var(--surface)", borderColor: "var(--border)" }}
             >
-              {availableCompanies.map((c) => (
-                <option key={c} value={c} disabled={c === companyA}>{c}</option>
-              ))}
-            </select>
+              VS
+            </div>
+
+            {/* Company B Selector */}
+            <div className="flex flex-col gap-1 flex-1 sm:flex-none">
+              <label className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "rgba(148,163,184,0.5)" }}>
+                Company B
+              </label>
+              <select
+                value={companyB}
+                onChange={(e) => {
+                  if (e.target.value !== companyA) setCompanyB(e.target.value);
+                }}
+                className="rounded-xl px-4 py-2.5 text-sm font-semibold cursor-pointer font-sans transition-all duration-300 w-full sm:w-44"
+                style={selectStyle}
+              >
+                {availableCompanies.map((c) => (
+                  <option key={c} value={c} disabled={c === companyA}>{c}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          <div className="flex items-center gap-2 text-xs" style={{ color: "var(--accent-green)" }}>
-            <Sparkles size={14} />
-            <span>Interactive charts support hover analysis.</span>
+          <div
+            className="flex items-center gap-2 text-xs px-3 py-2 rounded-lg"
+            style={{
+              background: "rgba(16,185,129,0.05)",
+              border: "1px solid rgba(16,185,129,0.12)",
+              color: "var(--accent-green)",
+            }}
+          >
+            <Sparkles size={13} />
+            <span>Hover chart bars to analyze data.</span>
           </div>
         </div>
 
-        {/* Comparison Layout Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Chart Column (Span 2) */}
-          <div className="glass-card p-6 md:col-span-2 flex flex-col gap-4">
+        {/* ── Comparison Grid ── */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+          {/* Chart Column (2/3) */}
+          <div
+            className="md:col-span-2 p-6 rounded-2xl flex flex-col gap-5"
+            style={{
+              background: "rgba(10,16,30,0.65)",
+              border: "1px solid rgba(255,255,255,0.05)",
+              backdropFilter: "blur(20px)",
+              boxShadow: "0 25px 50px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)",
+            }}
+          >
             <div>
-              <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <TrendingUp size={16} style={{ color: "var(--accent-cyan)" }} />
+              <h2
+                className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-white"
+              >
+                <TrendingUp size={15} style={{ color: "var(--accent-cyan)" }} />
                 Standardized Total Compensation (USD)
               </h2>
-              <p className="text-[10px]" style={{ color: "var(--muted)" }}>
+              <p className="text-[11px] mt-1" style={{ color: "var(--muted)" }}>
                 Aggregated statistics based on leveling standards.
               </p>
             </div>
 
-            <div className="h-72 mt-4">
+            <div className="h-72 mt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1c3050" />
-                  <XAxis dataKey="levelCategory" tick={{ fill: "#64748b", fontSize: 9 }} stroke="#1c3050" />
-                  <YAxis tick={{ fill: "#64748b", fontSize: 10 }} stroke="#1c3050" tickFormatter={(v) => `$${v/1000}k`} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(30,41,59,0.6)" vertical={false} />
+                  <XAxis
+                    dataKey="levelCategory"
+                    tick={{ fill: "#475569", fontSize: 9 }}
+                    stroke="rgba(30,41,59,0.4)"
+                    tickLine={false}
+                    axisLine={{ stroke: "rgba(30,41,59,0.4)" }}
+                  />
+                  <YAxis
+                    tick={{ fill: "#475569", fontSize: 10 }}
+                    stroke="rgba(30,41,59,0.4)"
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(v) => `$${v/1000}k`}
+                  />
                   <Tooltip
-                    contentStyle={{ background: "#0d1a2e", border: "1px solid #1c3050", borderRadius: 8, fontSize: 11, color: "#fff" }}
+                    contentStyle={{
+                      background: "rgba(8,13,26,0.95)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      borderRadius: 12,
+                      fontSize: 11,
+                      color: "#fff",
+                      backdropFilter: "blur(16px)",
+                      boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
+                    }}
+                    cursor={{ fill: "rgba(14,165,233,0.04)" }}
                     formatter={(value) => [`$${Number(value).toLocaleString()}`]}
                   />
-                  <Legend wrapperStyle={{ fontSize: 10, paddingTop: 12 }} />
-                  <Bar dataKey={companyA} fill="var(--accent-cyan)" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey={companyB} fill="var(--accent-green)" radius={[4, 4, 0, 0]} />
+                  <Legend
+                    wrapperStyle={{ fontSize: 11, paddingTop: 16, color: "#94a3b8" }}
+                  />
+                  <Bar dataKey={companyA} fill="var(--accent-cyan)" radius={[6, 6, 0, 0]} opacity={0.85} />
+                  <Bar dataKey={companyB} fill="var(--accent-green)" radius={[6, 6, 0, 0]} opacity={0.85} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* Quick Insights Column */}
-          <div className="glass-card p-6 flex flex-col justify-between">
-            <div className="flex flex-col gap-4">
-              <h2 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                <AlertCircle size={15} style={{ color: "var(--accent-yellow)" }} />
-                Shield Insights
-              </h2>
-              
-              <div className="space-y-4">
-                <div className="bg-black/30 p-3 rounded-lg border text-xs" style={{ borderColor: "var(--border)" }}>
-                  <span className="font-semibold text-white block mb-1">Max Leverage Difference</span>
-                  <p style={{ color: "var(--muted)" }}>
-                    The largest salary difference across comparable levels is {" "}
-                    <span className="font-bold font-mono" style={{ color: "var(--accent-yellow)" }}>
-                      ${maxDiff.toLocaleString()}
-                    </span>
-                    .
-                  </p>
+          {/* Shield Insights Column — Cybersecurity Alert Card */}
+          <div
+            className="p-6 rounded-2xl flex flex-col justify-between"
+            style={{
+              background: "rgba(10,16,30,0.65)",
+              border: "1px solid rgba(255,255,255,0.05)",
+              borderLeft: "3px solid rgba(245,158,11,0.7)",
+              backdropFilter: "blur(20px)",
+              boxShadow: "0 25px 50px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04), -4px 0 20px rgba(245,158,11,0.04)",
+            }}
+          >
+            {/* Header */}
+            <div className="flex flex-col gap-5">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <AlertCircle size={14} style={{ color: "var(--accent-yellow)" }} />
+                  <h2
+                    className="text-xs font-bold uppercase tracking-widest"
+                    style={{ color: "var(--accent-yellow)" }}
+                  >
+                    Shield Insights
+                  </h2>
                 </div>
+                <div
+                  className="h-[1px] w-full mt-2"
+                  style={{ background: "linear-gradient(90deg, rgba(245,158,11,0.3), transparent)" }}
+                />
+              </div>
 
-                <div className="bg-black/30 p-3 rounded-lg border text-xs" style={{ borderColor: "var(--border)" }}>
-                  <span className="font-semibold text-white block mb-1">Behavior Cadence Logging</span>
-                  <p style={{ color: "var(--muted)" }}>
-                    Chart hover counts and mouse velocities are currently being analyzed by our client telemetry engine.
-                  </p>
-                </div>
+              {/* Max Leverage Insight */}
+              <div
+                className="p-4 rounded-xl flex flex-col gap-2"
+                style={{
+                  background: "rgba(245,158,11,0.04)",
+                  border: "1px solid rgba(245,158,11,0.1)",
+                }}
+              >
+                <span className="text-xs font-bold text-white">Max Leverage Difference</span>
+                <p className="text-[11px] leading-relaxed" style={{ color: "var(--muted)" }}>
+                  Largest salary gap across comparable levels:
+                </p>
+                <span
+                  className="font-mono font-extrabold text-xl tracking-wide"
+                  style={{
+                    color: "var(--accent-yellow)",
+                    textShadow: "0 0 20px rgba(245,158,11,0.4)",
+                  }}
+                >
+                  ${maxDiff.toLocaleString()}
+                </span>
+              </div>
+
+              {/* Behavior Logging Insight */}
+              <div
+                className="p-4 rounded-xl flex flex-col gap-2"
+                style={{
+                  background: "rgba(14,165,233,0.03)",
+                  border: "1px solid rgba(14,165,233,0.08)",
+                }}
+              >
+                <span className="text-xs font-bold text-white">Behavior Cadence Logging</span>
+                <p className="text-[11px] leading-relaxed" style={{ color: "var(--muted)" }}>
+                  Chart hover counts and mouse velocities are currently being analyzed by our client telemetry engine.
+                </p>
               </div>
             </div>
 
-            <div className="mt-6 border-t pt-4" style={{ borderColor: "var(--border)" }}>
-              <div className="flex items-center justify-between text-xs">
-                <span style={{ color: "var(--muted)" }}>Compare Session Status:</span>
-                <span className="badge badge-allow">Allowed</span>
-              </div>
+            {/* Session Status Footer */}
+            <div
+              className="mt-4 pt-4 flex items-center justify-between text-xs"
+              style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
+            >
+              <span style={{ color: "var(--muted)" }}>Session Status:</span>
+              <span className="badge badge-allow">Allowed</span>
             </div>
           </div>
         </div>
       </main>
 
-      {/* Footer */}
+      {/* ── Footer ── */}
       <footer 
-        className="py-4 border-t text-center text-xs mt-12" 
-        style={{ borderColor: "var(--border)", background: "rgba(13,26,46,0.3)", color: "var(--muted)" }}
+        className="py-5 border-t text-center text-[11px] tracking-wide"
+        style={{
+          borderColor: "rgba(255,255,255,0.04)",
+          background: "rgba(8,13,26,0.5)",
+          color: "rgba(148,163,184,0.4)",
+        }}
       >
         <span>Level Shield Firewall Active • Synthetic Salary Model</span>
       </footer>

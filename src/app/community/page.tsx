@@ -15,6 +15,24 @@ interface ForumThread {
   timeAgo: string;
 }
 
+const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
+  Negotiation: {
+    bg: "rgba(139,92,246,0.08)",
+    text: "#a78bfa",
+    border: "rgba(139,92,246,0.2)",
+  },
+  Promotions: {
+    bg: "rgba(14,165,233,0.08)",
+    text: "#38bdf8",
+    border: "rgba(14,165,233,0.2)",
+  },
+  Compensation: {
+    bg: "rgba(16,185,129,0.08)",
+    text: "#34d399",
+    border: "rgba(16,185,129,0.2)",
+  },
+};
+
 export default function CommunityForum() {
   const [search, setSearch] = useState("");
   const [mounted, setMounted] = useState(false);
@@ -86,50 +104,131 @@ export default function CommunityForum() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col justify-between" style={{ background: "var(--background)" }}>
-      {/* Top Nav */}
+    <div className="min-h-screen flex flex-col" style={{ background: "var(--background)" }}>
+
+      {/* ── Premium Sticky Header ── */}
       <header
-        className="flex items-center justify-between px-6 py-3 border-b"
-        style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+        className="sticky top-0 z-50 flex items-center justify-between px-8 py-4 border-b"
+        style={{
+          borderColor: "rgba(255,255,255,0.04)",
+          background: "rgba(8,13,26,0.75)",
+          backdropFilter: "blur(20px) saturate(150%)",
+          WebkitBackdropFilter: "blur(20px) saturate(150%)",
+        }}
       >
-        <a href="/" className="flex items-center gap-2 font-bold text-base" style={{ color: "var(--accent-cyan)" }}>
-          <Shield size={20} />
-          Level Shield
+        {/* Logo */}
+        <a
+          href="/"
+          className="flex items-center gap-2 font-bold text-sm tracking-wide transition-all duration-300 hover:scale-105"
+          style={{ color: "var(--accent-cyan)" }}
+        >
+          <Shield size={19} />
+          <span className="hidden sm:inline">Level Shield</span>
         </a>
-        <nav className="flex items-center gap-6 text-sm" style={{ color: "var(--muted)" }}>
-          <a href="/" className="hover:text-white transition-colors">Product</a>
-          <a href="/compensation" className="hover:text-white transition-colors">Compensation</a>
-          <a href="/compare" className="hover:text-white transition-colors">Compare</a>
-          <span className="text-white border-b-2 pb-0.5" style={{ borderColor: "var(--accent-cyan)" }}>Community</span>
-          <a href="/shield" className="hover:text-white transition-colors">Shield Dashboard</a>
+
+        {/* Nav Links */}
+        <nav className="flex items-center gap-7 text-sm">
+          {[
+            { label: "Product", href: "/" },
+            { label: "Compensation", href: "/compensation" },
+            { label: "Compare", href: "/compare" },
+            { label: "Community", href: "/community", active: true },
+            { label: "Shield Dashboard", href: "/shield" },
+          ].map((item) =>
+            item.active ? (
+              <span
+                key={item.label}
+                className="relative text-white font-semibold pb-1"
+                style={{ textShadow: "0 0 20px rgba(14,165,233,0.4)" }}
+              >
+                {item.label}
+                <span
+                  className="absolute bottom-0 left-0 right-0 h-[2px] rounded-full"
+                  style={{
+                    background: "linear-gradient(90deg, var(--accent-cyan), var(--accent-purple))",
+                    boxShadow: "0 0 8px rgba(14,165,233,0.7)",
+                  }}
+                />
+              </span>
+            ) : (
+              <a
+                key={item.label}
+                href={item.href}
+                className="font-medium transition-all duration-300"
+                style={{ color: "var(--muted)" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "white")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
+              >
+                {item.label}
+              </a>
+            )
+          )}
         </nav>
-        <div className="flex items-center gap-2 text-xs" style={{ color: "var(--accent-green)" }}>
+
+        {/* Live Badge */}
+        <div
+          className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide"
+          style={{
+            background: "rgba(16,185,129,0.08)",
+            border: "1px solid rgba(16,185,129,0.25)",
+            color: "var(--accent-green)",
+            boxShadow: "0 0 12px rgba(16,185,129,0.08)",
+          }}
+        >
           <span className="live-dot" />
-          <span className="ml-2">Active</span>
+          <span className="ml-1">Active</span>
         </div>
       </header>
 
-      {/* Main Forum catalog */}
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8 flex flex-col gap-6">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
-              <MessageSquare size={24} style={{ color: "var(--accent-cyan)" }} />
+      {/* ── Main Forum Catalog ── */}
+      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-10 flex flex-col gap-7">
+
+        {/* Page Header Row */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div className="flex flex-col gap-1.5">
+            <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+              <span
+                className="p-2 rounded-xl"
+                style={{
+                  background: "rgba(14,165,233,0.08)",
+                  border: "1px solid rgba(14,165,233,0.15)",
+                }}
+              >
+                <MessageSquare size={22} style={{ color: "var(--accent-cyan)" }} />
+              </span>
               Community Discussions
             </h1>
-            <p className="text-xs" style={{ color: "var(--muted)" }}>
-              Share offers, interview advice, and leveling discussions. AI scraper telemetry actively monitored.
+            <p className="text-sm" style={{ color: "var(--muted)" }}>
+              Share offers, interview advice, and leveling discussions.{" "}
+              <span style={{ color: "rgba(14,165,233,0.6)" }}>AI scraper telemetry actively monitored.</span>
             </p>
           </div>
 
-          <div className="flex items-center gap-2 bg-black/30 border rounded-lg px-3 py-1.5 w-full md:max-w-xs" style={{ borderColor: "var(--border)" }}>
-            <Search size={14} style={{ color: "var(--muted)" }} />
+          {/* Search Bar */}
+          <div
+            className="flex items-center gap-2.5 rounded-xl px-4 py-2.5 w-full md:max-w-xs transition-all duration-300 flex-shrink-0"
+            style={{
+              background: "rgba(8,13,26,0.6)",
+              border: "1px solid rgba(255,255,255,0.07)",
+            }}
+            onFocusCapture={(e) => {
+              const el = e.currentTarget as HTMLDivElement;
+              el.style.border = "1px solid rgba(14,165,233,0.45)";
+              el.style.boxShadow = "0 0 16px rgba(14,165,233,0.12)";
+            }}
+            onBlurCapture={(e) => {
+              const el = e.currentTarget as HTMLDivElement;
+              el.style.border = "1px solid rgba(255,255,255,0.07)";
+              el.style.boxShadow = "none";
+            }}
+          >
+            <Search size={13} style={{ color: "var(--muted)", flexShrink: 0 }} />
             <input
               type="text"
               placeholder="Search discussions..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent border-0 outline-none text-xs text-white placeholder-gray-500 w-full font-sans"
+              className="bg-transparent border-0 outline-none text-xs text-white placeholder-slate-600 w-full font-sans"
             />
           </div>
         </div>
@@ -144,97 +243,226 @@ export default function CommunityForum() {
           View Secret Restricted Internal Negotiation Spreadsheets
         </a>
 
-        {/* Forum Layout split */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Threads list (Span 2) */}
+        {/* ── Forum Split Layout ── */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+          {/* ── Thread List (2/3 width) ── */}
           <div className="md:col-span-2 flex flex-col gap-4">
             {filteredThreads.length === 0 ? (
-              <div className="glass-card p-8 text-center text-xs" style={{ color: "var(--muted)" }}>
-                No community threads matched your search parameters.
+              <div
+                className="p-12 text-center rounded-2xl"
+                style={{
+                  background: "rgba(10,16,30,0.6)",
+                  border: "1px solid rgba(255,255,255,0.05)",
+                }}
+              >
+                <div className="flex flex-col items-center gap-3">
+                  <Search size={22} style={{ color: "rgba(148,163,184,0.25)" }} />
+                  <span className="text-xs" style={{ color: "var(--muted)" }}>
+                    No community threads matched your search parameters.
+                  </span>
+                </div>
               </div>
             ) : (
-              filteredThreads.map((thread) => (
-                <div key={thread.id} className="glass-card p-5 hover:border-bright transition-all duration-300 relative group flex flex-col gap-3">
-                  <div className="flex items-center justify-between">
-                    <span 
-                      className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider" 
-                      style={{ 
-                        background: "var(--surface-2)", 
-                        color: "var(--accent-cyan)",
-                        border: "1px solid var(--border)"
-                      }}
-                    >
-                      {thread.category}
-                    </span>
-                    <span className="text-[10px]" style={{ color: "var(--muted)" }}>{thread.timeAgo}</span>
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm font-bold text-white group-hover:text-cyan-400 transition-colors flex items-center gap-1.5 cursor-pointer">
-                      {thread.title}
-                      <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: "var(--accent-cyan)" }} />
-                    </h3>
-                    <p className="text-xs mt-1.5 leading-relaxed" style={{ color: "var(--muted)" }}>{thread.excerpt}</p>
-                  </div>
-
-                  <div className="flex items-center justify-between border-t pt-3 mt-1" style={{ borderColor: "rgba(28,48,80,0.4)" }}>
-                    <div className="flex items-center gap-1.5 text-[10px]" style={{ color: "var(--muted)" }}>
-                      <span className="w-4 h-4 rounded-full bg-cyan-500/20 flex items-center justify-center text-[9px] font-bold text-cyan-300">
-                        {thread.author[0].toUpperCase()}
+              filteredThreads.map((thread) => {
+                const catColor = CATEGORY_COLORS[thread.category] || {
+                  bg: "rgba(14,165,233,0.08)",
+                  text: "var(--accent-cyan)",
+                  border: "rgba(14,165,233,0.2)",
+                };
+                return (
+                  <div
+                    key={thread.id}
+                    className="p-6 rounded-2xl flex flex-col gap-4 transition-all duration-300 cursor-pointer group relative"
+                    style={{
+                      background: "rgba(10,16,30,0.6)",
+                      border: "1px solid rgba(255,255,255,0.05)",
+                      backdropFilter: "blur(16px)",
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLDivElement;
+                      el.style.border = "1px solid rgba(14,165,233,0.2)";
+                      el.style.transform = "translateY(-2px)";
+                      el.style.boxShadow = "0 20px 40px rgba(0,0,0,0.3), 0 0 30px rgba(14,165,233,0.05)";
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLDivElement;
+                      el.style.border = "1px solid rgba(255,255,255,0.05)";
+                      el.style.transform = "translateY(0)";
+                      el.style.boxShadow = "none";
+                    }}
+                  >
+                    {/* Top Row: Category + Timestamp */}
+                    <div className="flex items-center justify-between">
+                      <span
+                        className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                        style={{
+                          background: catColor.bg,
+                          color: catColor.text,
+                          border: `1px solid ${catColor.border}`,
+                        }}
+                      >
+                        {thread.category}
                       </span>
-                      <span>By @{thread.author}</span>
+                      <span className="text-[11px] font-medium" style={{ color: "rgba(148,163,184,0.45)" }}>
+                        {thread.timeAgo}
+                      </span>
                     </div>
 
-                    <div className="flex items-center gap-4 text-[10px]" style={{ color: "var(--muted)" }}>
-                      <span className="flex items-center gap-1"><ThumbsUp size={11} /> {thread.likes}</span>
-                      <span className="flex items-center gap-1"><MessageSquare size={11} /> {thread.replies}</span>
-                      <span className="flex items-center gap-1"><Eye size={11} /> {thread.views}</span>
+                    {/* Thread Title + Excerpt */}
+                    <div className="flex flex-col gap-1.5">
+                      <h3
+                        className="text-sm font-bold text-white flex items-center gap-1.5 transition-colors duration-200 group-hover:text-cyan-300"
+                      >
+                        {thread.title}
+                        <ArrowUpRight
+                          size={13}
+                          className="opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-0 group-hover:translate-x-0.5"
+                          style={{ color: "var(--accent-cyan)", flexShrink: 0 }}
+                        />
+                      </h3>
+                      <p className="text-xs leading-relaxed" style={{ color: "rgba(148,163,184,0.65)" }}>
+                        {thread.excerpt}
+                      </p>
+                    </div>
+
+                    {/* Bottom Row: Author + Stats */}
+                    <div
+                      className="flex items-center justify-between pt-3"
+                      style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
+                    >
+                      {/* Author */}
+                      <div className="flex items-center gap-2 text-[11px]" style={{ color: "rgba(148,163,184,0.6)" }}>
+                        <span
+                          className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
+                          style={{
+                            background: "rgba(14,165,233,0.15)",
+                            border: "1px solid rgba(14,165,233,0.2)",
+                            color: "var(--accent-cyan)",
+                          }}
+                        >
+                          {thread.author[0].toUpperCase()}
+                        </span>
+                        <span>@{thread.author}</span>
+                      </div>
+
+                      {/* Stats */}
+                      <div className="flex items-center gap-4 text-[11px]" style={{ color: "rgba(148,163,184,0.5)" }}>
+                        <span className="flex items-center gap-1.5 transition-colors duration-200 group-hover:text-slate-300">
+                          <ThumbsUp size={11} />
+                          {thread.likes}
+                        </span>
+                        <span className="flex items-center gap-1.5 transition-colors duration-200 group-hover:text-slate-300">
+                          <MessageSquare size={11} />
+                          {thread.replies}
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <Eye size={11} />
+                          {thread.views.toLocaleString()}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
 
-          {/* Forum Sidebar Column */}
+          {/* ── Sidebar ── */}
           <div className="flex flex-col gap-4">
-            {/* Shield Telemetry Warnings */}
-            <div className="glass-card p-5 border-l-2 border-l-yellow-500/80 bg-yellow-500/[0.02] flex flex-col gap-3">
-              <h3 className="text-xs font-bold text-yellow-500 uppercase tracking-wider flex items-center gap-1.5">
-                <AlertTriangle size={14} />
-                Cyber-Defense Notice
-              </h3>
-              <p className="text-[11px] leading-relaxed" style={{ color: "var(--muted)" }}>
+
+            {/* Cybersecurity Alert Notice */}
+            <div
+              className="p-5 rounded-2xl flex flex-col gap-3"
+              style={{
+                background: "rgba(10,16,30,0.65)",
+                border: "1px solid rgba(245,158,11,0.12)",
+                borderLeft: "3px solid rgba(245,158,11,0.7)",
+                backdropFilter: "blur(16px)",
+                boxShadow: "-4px 0 20px rgba(245,158,11,0.04)",
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <AlertTriangle size={14} style={{ color: "var(--accent-yellow)", flexShrink: 0 }} />
+                <h3
+                  className="text-xs font-bold uppercase tracking-widest"
+                  style={{ color: "var(--accent-yellow)" }}
+                >
+                  Cyber-Defense Notice
+                </h3>
+              </div>
+              <div
+                className="h-[1px]"
+                style={{ background: "linear-gradient(90deg, rgba(245,158,11,0.3), transparent)" }}
+              />
+              <p className="text-[11px] leading-relaxed" style={{ color: "rgba(148,163,184,0.65)" }}>
                 We actively track sequential card hover metrics. Automated extraction crawlers attempting to scrape user threads will raise their behavior risk scores.
               </p>
             </div>
 
-            {/* Popular Topics Box */}
-            <div className="glass-card p-5 flex flex-col gap-3">
-              <h3 className="text-xs font-bold text-white uppercase tracking-wider">Trending Topics</h3>
-              <ul className="text-xs space-y-2.5" style={{ color: "var(--muted)" }}>
-                <li className="hover:text-white cursor-pointer transition-colors flex justify-between items-center">
-                  <span>#FAANGOfferNegotiations</span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/40">1.2k views</span>
-                </li>
-                <li className="hover:text-white cursor-pointer transition-colors flex justify-between items-center">
-                  <span>#VestingStockStrategies</span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/40">980 views</span>
-                </li>
-                <li className="hover:text-white cursor-pointer transition-colors flex justify-between items-center">
-                  <span>#LevelsFyiScrapingBusted</span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/40">750 views</span>
-                </li>
+            {/* Trending Topics */}
+            <div
+              className="p-5 rounded-2xl flex flex-col gap-4"
+              style={{
+                background: "rgba(10,16,30,0.65)",
+                border: "1px solid rgba(255,255,255,0.05)",
+                backdropFilter: "blur(16px)",
+              }}
+            >
+              <h3 className="text-xs font-bold uppercase tracking-widest text-white flex items-center gap-2">
+                <span
+                  className="w-1.5 h-1.5 rounded-full"
+                  style={{ background: "var(--accent-cyan)", boxShadow: "0 0 6px var(--accent-cyan)" }}
+                />
+                Trending Topics
+              </h3>
+              <ul className="flex flex-col gap-2.5">
+                {[
+                  { tag: "#FAANGOfferNegotiations", views: "1.2k views" },
+                  { tag: "#VestingStockStrategies", views: "980 views" },
+                  { tag: "#LevelsFyiScrapingBusted", views: "750 views" },
+                ].map((item) => (
+                  <li
+                    key={item.tag}
+                    className="flex justify-between items-center text-xs cursor-pointer transition-all duration-200 rounded-lg px-3 py-2 group"
+                    style={{ color: "rgba(148,163,184,0.65)" }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLLIElement;
+                      el.style.background = "rgba(14,165,233,0.05)";
+                      el.style.color = "white";
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLLIElement;
+                      el.style.background = "transparent";
+                      el.style.color = "rgba(148,163,184,0.65)";
+                    }}
+                  >
+                    <span className="font-medium">{item.tag}</span>
+                    <span
+                      className="text-[10px] px-2 py-0.5 rounded-full"
+                      style={{
+                        background: "rgba(255,255,255,0.05)",
+                        border: "1px solid rgba(255,255,255,0.06)",
+                      }}
+                    >
+                      {item.views}
+                    </span>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
         </div>
       </main>
 
-      {/* Footer */}
+      {/* ── Footer ── */}
       <footer 
-        className="py-4 border-t text-center text-xs mt-12" 
-        style={{ borderColor: "var(--border)", background: "rgba(13,26,46,0.3)", color: "var(--muted)" }}
+        className="py-5 border-t text-center text-[11px] tracking-wide"
+        style={{
+          borderColor: "rgba(255,255,255,0.04)",
+          background: "rgba(8,13,26,0.5)",
+          color: "rgba(148,163,184,0.4)",
+        }}
       >
         <span>Level Shield Firewall Active • Synthetic Salary Model</span>
       </footer>
