@@ -97,7 +97,7 @@ export async function POST(
       const detailsStr = JSON.stringify(details);
       db.prepare(`
         INSERT INTO behavior_events (id, session_id, event_type, details, timestamp)
-        VALUES (?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
       `).run(id, sessionId, type, detailsStr, timestamp);
     };
 
