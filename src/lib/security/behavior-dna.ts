@@ -1,5 +1,6 @@
 import { BehaviorTelemetry } from '@/types/security';
-import { logBehavior, db } from '../store/sessionStore';
+import { logBehavior } from '../store/sessionStore';
+import { db } from '../store/db';
 
 export interface BehaviorScore {
   entropy: number; // 0 to 100 (lower means more automated/bot-like)

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyRequest } from '@/lib/security/verify';
+import { verifyRequest } from '@/lib/security/verify-request';
 
 export async function POST(req: NextRequest) {
   try {

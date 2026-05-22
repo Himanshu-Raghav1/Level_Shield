@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { db } from '../store/sessionStore';
+import { db } from '../store/db';
 import { BehaviorTelemetry } from '@/types/security';
 
 export interface FingerprintAnalysis {

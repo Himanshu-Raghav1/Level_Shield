@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid';
-import { logHoneyMazeHit, db } from '../store/sessionStore';
+import { logHoneyMazeHit } from '../store/sessionStore';
+import { db } from '../store/db';
 
 export interface HoneyLinkInfo {
   token: string;

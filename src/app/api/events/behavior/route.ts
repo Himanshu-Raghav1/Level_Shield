@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyRequest } from '@/lib/security/verify';
+import { verifyRequest } from '@/lib/security/verify-request';
 import { evaluateBehaviorTelemetry } from '@/lib/security/behavior-dna';
 import { BehaviorTelemetry } from '@/types/security';
 

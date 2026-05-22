@@ -59,10 +59,36 @@ export interface RequestEvent {
   timestamp: string;
 }
 
-export interface BehaviorEventLog {
+export interface BehaviorEvent {
   id: string;
   sessionId: string;
   eventType: string;
   details: string;
   timestamp: string;
+}
+
+export interface SessionSummary {
+  id: string;
+  createdAt: string;
+  userAgent: string;
+  ipAddress: string;
+  score: number;
+  reasons: RiskReason[];
+  isGoodBot: boolean;
+}
+
+export interface DashboardMetrics {
+  totalRequests: number;
+  totalSessions: number;
+  botRequests: number;
+  blockedRequests: number;
+  throttledRequests: number;
+  powChallenges: number;
+  powSolved: number;
+  falsePositiveEstimate: number;
+  honeyMazeHits: number;
+  canaryInjected: number;
+  canaryExposed: number;
+  agentBeacons: number;
+  goodBotsVerified: number;
 }

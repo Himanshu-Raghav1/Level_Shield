@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies as getCookies, headers as getHeaders } from 'next/headers';
-import { getOrCreateSession, logRequest, setSessionGoodBot, checkDefenseActionResolved } from '../store/sessionStore';
+import { createOrGetSession, insertRequestEvent } from '../store/events';
+import { setSessionGoodBot, checkDefenseActionResolved } from '../store/sessionStore';
 import { evaluateSessionRisk } from './risk-engine';
 import { verifyGoodBotSignature } from './good-bot';
+import { triggerHoneyMazeHit } from './honey-maze';
 import { RiskResult } from '@/types/security';
 
 const COOKIE_NAME = 'level_shield_session';
@@ -78,16 +80,24 @@ export async function verifyRequest(req: NextRequest): Promise<VerifyResult> {
 
   // Get or create session
   const fingerprint = headers['sec-ch-ua'] || 'generic-fp';
-  const session = getOrCreateSession(sessionCookie, userAgent, ipAddress, fingerprint);
+  const session = createOrGetSession(sessionCookie, userAgent, ipAddress, fingerprint);
   const sessionId = session.id;
 
   if (isGoodBotValid) {
     setSessionGoodBot(sessionId);
   }
 
+  // Intercept Honey Maze hits
+  if (url.startsWith('/maze/')) {
+    const token = url.split('/').pop() || '';
+    if (token) {
+      triggerHoneyMazeHit(sessionId, token);
+    }
+  }
+
   // Log request in database
   const referrer = headers['referer'] || headers['referrer'] || '';
-  logRequest(sessionId, url, method, referrer);
+  insertRequestEvent(sessionId, url, method, referrer);
 
   // Evaluate risk
   const riskResult = evaluateSessionRisk(sessionId, headers, url, method);
@@ -161,12 +171,20 @@ export async function verifyServerPage(currentPath: string): Promise<VerifyResul
 
   // Get or create session
   const fingerprint = headers['sec-ch-ua'] || 'generic-fp';
-  const session = getOrCreateSession(sessionCookie, userAgent, ipAddress, fingerprint);
+  const session = createOrGetSession(sessionCookie, userAgent, ipAddress, fingerprint);
   const sessionId = session.id;
+
+  // Intercept Honey Maze hits
+  if (currentPath.startsWith('/maze/')) {
+    const token = currentPath.split('/').pop() || '';
+    if (token) {
+      triggerHoneyMazeHit(sessionId, token);
+    }
+  }
 
   // Log page view in database
   const referrer = headers['referer'] || headers['referrer'] || '';
-  logRequest(sessionId, currentPath, 'GET', referrer);
+  insertRequestEvent(sessionId, currentPath, 'GET', referrer);
 
   // Evaluate risk
   const riskResult = evaluateSessionRisk(sessionId, headers, currentPath, 'GET');
