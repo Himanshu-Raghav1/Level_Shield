@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Shield, MessageSquare, ThumbsUp, Eye, Search, AlertTriangle, ArrowUpRight } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 interface ForumThread {
   id: string;
@@ -16,9 +18,9 @@ interface ForumThread {
 }
 
 const CATEGORY_STYLES: Record<string, { color: string; bg: string; border: string }> = {
-  Negotiation:  { color: "#a78bfa", bg: "rgba(139,92,246,0.08)",  border: "rgba(139,92,246,0.2)"  },
-  Promotions:   { color: "#38bdf8", bg: "rgba(14,165,233,0.08)",   border: "rgba(14,165,233,0.2)"  },
-  Compensation: { color: "#34d399", bg: "rgba(16,185,129,0.08)",   border: "rgba(16,185,129,0.2)"  },
+  Negotiation:  { color: "var(--foreground)", bg: "rgba(255,255,255,0.04)", border: "rgba(255,255,255,0.12)" },
+  Promotions:   { color: "var(--accent-cyan)", bg: "rgba(6,182,212,0.04)",  border: "rgba(6,182,212,0.15)" },
+  Compensation: { color: "var(--muted)",       bg: "rgba(255,255,255,0.02)", border: "rgba(255,255,255,0.08)" },
 };
 
 export default function CommunityForum() {
@@ -95,31 +97,11 @@ export default function CommunityForum() {
     <div className="min-h-screen flex flex-col" style={{ background: "var(--background)" }}>
 
       {/* ── Top Nav — matches homepage exactly ── */}
-      <header
-        className="flex items-center justify-between px-6 py-3 border-b"
-        style={{ borderColor: "var(--border)", background: "var(--surface)" }}
-      >
-        <a href="/" className="flex items-center gap-2 font-bold text-base" style={{ color: "var(--accent-cyan)" }}>
-          <Shield size={20} />
-          Level Shield
-        </a>
-
-        <nav className="flex items-center gap-6 text-sm" style={{ color: "var(--muted)" }}>
-          <a href="/" className="hover:text-white transition-colors">Product</a>
-          <a href="/compensation" className="hover:text-white transition-colors">Compensation</a>
-          <a href="/compare" className="hover:text-white transition-colors">Compare</a>
-          <span className="text-white border-b-2 pb-0.5" style={{ borderColor: "var(--accent-cyan)" }}>Community</span>
-          <a href="/shield" className="hover:text-white transition-colors">Shield Dashboard</a>
-        </nav>
-
-        <div className="flex items-center gap-2 text-xs" style={{ color: "var(--accent-green)" }}>
-          <span className="live-dot" />
-          <span className="ml-2">System Active</span>
-        </div>
-      </header>
+      <Navbar />
 
       {/* ── Main Content — centred ── */}
-      <main className="flex-1 max-w-5xl mx-auto w-full px-6 py-8 flex flex-col gap-6">
+      <div style={{ display: "flex", justifyContent: "center", width: "100%", flex: 1 }}>
+        <main className="w-full px-6 py-8 flex flex-col gap-6" style={{ maxWidth: "1024px" }}>
 
         {/* Page heading + search */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -226,7 +208,7 @@ export default function CommunityForum() {
                       <div className="flex items-center gap-2">
                         <span
                           className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold uppercase"
-                          style={{ background: "rgba(14,165,233,0.12)", color: "var(--accent-cyan)", border: "1px solid rgba(14,165,233,0.2)" }}
+                          style={{ background: "rgba(6,182,212,0.12)", color: "var(--accent-cyan)", border: "1px solid rgba(6,182,212,0.2)" }}
                         >
                           {thread.author[0]}
                         </span>
@@ -253,12 +235,12 @@ export default function CommunityForum() {
               style={{
                 background: "var(--surface)",
                 border: "1px solid var(--border)",
-                borderLeft: "2px solid var(--accent-yellow)",
+                borderLeft: "2px solid var(--accent-cyan)",
               }}
             >
               <div className="flex items-center gap-1.5">
-                <AlertTriangle size={13} style={{ color: "var(--accent-yellow)" }} />
-                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--accent-yellow)" }}>
+                <Shield size={13} style={{ color: "var(--accent-cyan)" }} />
+                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--accent-cyan)" }}>
                   Cyber-Defense Notice
                 </span>
               </div>
@@ -300,15 +282,11 @@ export default function CommunityForum() {
             </div>
           </div>
         </div>
-      </main>
+        </main>
+      </div>
 
       {/* ── Footer ── */}
-      <footer
-        className="py-4 border-t text-center text-xs"
-        style={{ borderColor: "var(--border)", background: "rgba(13,26,46,0.3)", color: "var(--muted)" }}
-      >
-        Level Shield • Synthetic Salary Model
-      </footer>
+      <Footer />
     </div>
   );
 }

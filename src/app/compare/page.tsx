@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Shield, Sparkles, Scale, AlertCircle, TrendingUp } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { mockSalaries } from "@/data/mock";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 interface CompComparisonPoint {
   levelCategory: string;
@@ -71,9 +73,9 @@ export default function SalaryCompare() {
   const maxDiff = Math.max(entryDiff, midDiff, seniorDiff);
 
   const selectStyle: React.CSSProperties = {
-    background: "rgba(0,0,0,0.3)",
+    background: "rgba(18, 18, 22, 0.8)",
     border: "1px solid var(--border)",
-    color: "#e4e4e7",
+    color: "#ffffff",
     outline: "none",
     cursor: "pointer",
   };
@@ -82,39 +84,19 @@ export default function SalaryCompare() {
     <div className="min-h-screen flex flex-col" style={{ background: "var(--background)" }}>
 
       {/* ── Top Nav — matches homepage exactly ── */}
-      <header
-        className="flex items-center justify-between px-6 py-3 border-b"
-        style={{ borderColor: "var(--border)", background: "var(--surface)" }}
-      >
-        <a href="/" className="flex items-center gap-2 font-bold text-base" style={{ color: "var(--accent-cyan)" }}>
-          <Shield size={20} />
-          Level Shield
-        </a>
-
-        <nav className="flex items-center gap-6 text-sm" style={{ color: "var(--muted)" }}>
-          <a href="/" className="hover:text-white transition-colors">Product</a>
-          <a href="/compensation" className="hover:text-white transition-colors">Compensation</a>
-          <span className="text-white border-b-2 pb-0.5" style={{ borderColor: "var(--accent-cyan)" }}>Compare</span>
-          <a href="/community" className="hover:text-white transition-colors">Community</a>
-          <a href="/shield" className="hover:text-white transition-colors">Shield Dashboard</a>
-        </nav>
-
-        <div className="flex items-center gap-2 text-xs" style={{ color: "var(--accent-green)" }}>
-          <span className="live-dot" />
-          <span className="ml-2">System Active</span>
-        </div>
-      </header>
+      <Navbar />
 
       {/* ── Main Content — centred ── */}
-      <main className="flex-1 max-w-5xl mx-auto w-full px-6 py-8 flex flex-col gap-6">
+      <div style={{ display: "flex", justifyContent: "center", width: "100%", flex: 1 }}>
+        <main className="w-full px-6 py-8 flex flex-col gap-6" style={{ maxWidth: "1024px" }}>
 
         {/* Page heading */}
         <div className="flex flex-col gap-1">
           <h1 className="text-xl font-bold text-white flex items-center gap-2">
-            <Scale size={20} style={{ color: "var(--accent-cyan)" }} />
+            <Scale size={20} className="text-cyan-400" />
             Compare Compensations
           </h1>
-          <p className="text-xs" style={{ color: "var(--muted)" }}>
+          <p className="text-xs text-zinc-400">
             Side-by-side total compensation across levels. Interactions trigger client-side telemetry.
           </p>
         </div>
@@ -131,16 +113,16 @@ export default function SalaryCompare() {
 
         {/* ── Company Selector Row ── */}
         <div
-          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-lg"
+          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded"
           style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
         >
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="text-xs font-semibold" style={{ color: "var(--muted)" }}>Compare</span>
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500">Compare</span>
 
             <select
               value={companyA}
               onChange={(e) => { if (e.target.value !== companyB) setCompanyA(e.target.value); }}
-              className="rounded-md px-3 py-2 text-sm font-semibold"
+              className="rounded px-2.5 py-1.5 text-xs font-semibold"
               style={selectStyle}
             >
               {availableCompanies.map((c) => (
@@ -148,12 +130,12 @@ export default function SalaryCompare() {
               ))}
             </select>
 
-            <span className="text-xs font-bold font-mono" style={{ color: "var(--muted)" }}>vs</span>
+            <span className="text-xs font-bold font-mono text-zinc-500">vs</span>
 
             <select
               value={companyB}
               onChange={(e) => { if (e.target.value !== companyA) setCompanyB(e.target.value); }}
-              className="rounded-md px-3 py-2 text-sm font-semibold"
+              className="rounded px-2.5 py-1.5 text-xs font-semibold"
               style={selectStyle}
             >
               {availableCompanies.map((c) => (
@@ -162,7 +144,7 @@ export default function SalaryCompare() {
             </select>
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs sm:ml-auto" style={{ color: "var(--accent-green)" }}>
+          <div className="flex items-center gap-1.5 text-xs text-cyan-400 sm:ml-auto">
             <Sparkles size={12} />
             Hover bars to analyse
           </div>
@@ -173,15 +155,15 @@ export default function SalaryCompare() {
 
           {/* Chart column (2 of 3) */}
           <div
-            className="md:col-span-2 p-5 rounded-lg flex flex-col gap-4"
+            className="md:col-span-2 p-5 rounded flex flex-col gap-4"
             style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
           >
             <div className="flex flex-col gap-0.5">
-              <p className="text-sm font-semibold text-white flex items-center gap-2">
-                <TrendingUp size={15} style={{ color: "var(--accent-cyan)" }} />
+              <p className="text-xs font-mono font-bold uppercase tracking-wider text-white flex items-center gap-2">
+                <TrendingUp size={15} className="text-cyan-400" />
                 Total Compensation by Level (USD)
               </p>
-              <p className="text-xs" style={{ color: "var(--muted)" }}>
+              <p className="text-[10px] text-zinc-500">
                 Aggregated from standardised levelling bands.
               </p>
             </div>
@@ -189,16 +171,16 @@ export default function SalaryCompare() {
             <div style={{ height: 260, minHeight: 260, minWidth: 0 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="2 2" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
                   <XAxis
                     dataKey="levelCategory"
-                    tick={{ fill: "#64748b", fontSize: 10 }}
+                    tick={{ fill: "#71717a", fontSize: 10, fontFamily: "monospace" }}
                     stroke="rgba(255,255,255,0.06)"
                     tickLine={false}
                     axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
                   />
                   <YAxis
-                    tick={{ fill: "#64748b", fontSize: 10, fontFamily: "monospace" }}
+                    tick={{ fill: "#71717a", fontSize: 10, fontFamily: "monospace" }}
                     stroke="transparent"
                     tickLine={false}
                     axisLine={false}
@@ -206,19 +188,19 @@ export default function SalaryCompare() {
                   />
                   <Tooltip
                     contentStyle={{
-                      background: "rgba(8,13,26,0.98)",
+                      background: "rgba(18, 18, 22, 0.95)",
                       border: "1px solid var(--border)",
-                      borderRadius: 6,
+                      borderRadius: 4,
                       fontSize: 11,
                       color: "#fff",
-                      fontFamily: "monospace",
+                      fontFamily: "inherit",
                     }}
-                    cursor={{ fill: "rgba(255,255,255,0.03)" }}
+                    cursor={{ fill: "rgba(255,255,255,0.02)" }}
                     formatter={(value) => [`$${Number(value).toLocaleString()}`]}
                   />
-                  <Legend wrapperStyle={{ fontSize: 11, paddingTop: 14, color: "#64748b" }} />
-                  <Bar dataKey={companyA} fill="var(--accent-cyan)" radius={[3, 3, 0, 0]} opacity={0.85} />
-                  <Bar dataKey={companyB} fill="var(--accent-green)" radius={[3, 3, 0, 0]} opacity={0.85} />
+                  <Legend wrapperStyle={{ fontSize: 9, fontFamily: "monospace", textTransform: "uppercase", paddingTop: 14 }} />
+                  <Bar dataKey={companyA} fill="var(--accent-cyan)" radius={[2, 2, 0, 0]} />
+                  <Bar dataKey={companyB} fill="var(--foreground)" radius={[2, 2, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -226,38 +208,38 @@ export default function SalaryCompare() {
 
           {/* Shield Insights column (1 of 3) */}
           <div
-            className="p-5 rounded-lg flex flex-col gap-4"
+            className="p-5 rounded flex flex-col gap-4"
             style={{
               background: "var(--surface)",
               border: "1px solid var(--border)",
-              borderLeft: "2px solid var(--accent-yellow)",
+              borderLeft: "2px solid var(--accent-cyan)",
             }}
           >
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-1.5">
-                <AlertCircle size={13} style={{ color: "var(--accent-yellow)" }} />
-                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--accent-yellow)" }}>
+                <AlertCircle size={13} className="text-cyan-400" />
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">
                   Shield Insights
                 </span>
               </div>
-              <div style={{ height: 1, background: "linear-gradient(90deg, var(--accent-yellow), transparent)", opacity: 0.3 }} />
+              <div style={{ height: 1, background: "linear-gradient(90deg, var(--accent-cyan), transparent)", opacity: 0.2 }} />
             </div>
 
             {/* Max diff stat */}
             <div className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold text-white">Max Leverage Gap</span>
-              <span className="font-mono tabular-nums text-xl font-bold" style={{ color: "var(--accent-yellow)" }}>
+              <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-zinc-500">Max Leverage Gap</span>
+              <span className="font-mono tabular-nums text-xl font-bold text-cyan-400">
                 ${maxDiff.toLocaleString()}
               </span>
-              <span className="text-xs leading-relaxed" style={{ color: "var(--muted)" }}>
+              <span className="text-xs leading-relaxed text-zinc-400">
                 Largest salary difference across comparable levels.
               </span>
             </div>
 
             {/* Behaviour logging */}
             <div className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold text-white">Behaviour Cadence</span>
-              <span className="text-xs leading-relaxed" style={{ color: "var(--muted)" }}>
+              <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-zinc-500">Behaviour Cadence</span>
+              <span className="text-xs leading-relaxed text-zinc-400">
                 Hover counts and mouse velocities analysed by our client telemetry engine.
               </span>
             </div>
@@ -267,20 +249,16 @@ export default function SalaryCompare() {
               className="mt-auto pt-3 flex items-center justify-between text-xs"
               style={{ borderTop: "1px solid var(--border)" }}
             >
-              <span style={{ color: "var(--muted)" }}>Session:</span>
+              <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-500">Session Status</span>
               <span className="badge badge-allow">Allowed</span>
             </div>
           </div>
         </div>
-      </main>
+        </main>
+      </div>
 
       {/* ── Footer ── */}
-      <footer
-        className="py-4 border-t text-center text-xs"
-        style={{ borderColor: "var(--border)", background: "rgba(13,26,46,0.3)", color: "var(--muted)" }}
-      >
-        Level Shield • Synthetic Salary Model
-      </footer>
+      <Footer />
     </div>
   );
 }

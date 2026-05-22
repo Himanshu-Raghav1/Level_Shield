@@ -60,14 +60,14 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
           <Shield size={20} />
           Level Shield
         </a>
-        <div className="flex items-center gap-2 text-xs" style={{ color: "var(--accent-green)" }}>
+        <div className="flex items-center gap-2 text-xs" style={{ color: "var(--accent-cyan)" }}>
           <span className="live-dot" />
           <span className="ml-2">Analyst View Active</span>
         </div>
       </header>
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8 flex flex-col gap-6">
+      <div style={{ display: "flex", justifyContent: "center", width: "100%", flex: 1 }}>
+        <main className="w-full px-4 py-8 flex flex-col gap-6" style={{ maxWidth: "1024px" }}>
         {/* Navigation Breadcrumb */}
         <div>
           <button
@@ -98,14 +98,14 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
           </div>
 
           {/* Risk gauge block */}
-          <div className="flex items-center gap-4 bg-black/35 px-5 py-3.5 rounded-xl border border-red-500/20 glow-red">
+          <div className="flex items-center gap-4 bg-black/35 px-5 py-3.5 rounded-xl border glow-cyan" style={{ borderColor: "var(--border)" }}>
             <div className="text-center">
               <span className="text-[10px] block uppercase tracking-wider font-semibold" style={{ color: "var(--muted)" }}>Risk Score</span>
               <span className="text-3xl font-extrabold font-mono" style={{ color: getRiskColor(sessionRisk.score) }}>
                 {sessionRisk.score}%
               </span>
             </div>
-            <div className="border-l pl-4 py-1.5" style={{ borderColor: "rgba(28,48,80,0.5)" }}>
+            <div className="border-l pl-4 py-1.5" style={{ borderColor: "var(--border)" }}>
               <span className="text-[9px] block uppercase tracking-wider" style={{ color: "var(--muted)" }}>Engine confidence</span>
               <span className="text-xs font-bold text-white">{(sessionRisk.confidence * 100).toFixed(0)}% Match</span>
             </div>
@@ -125,7 +125,7 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
                 Graph of Intent (User Page Transitions)
               </h2>
 
-              <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#1c3050]">
+              <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-zinc-800">
                 {syntheticEvents.map((evt, idx) => (
                   <div key={evt.id} className="relative flex flex-col gap-1.5">
                     {/* Glowing indicator dot */}
@@ -154,7 +154,7 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
             {/* Browser Fingerprint */}
             <div className="glass-card p-5 flex flex-col gap-4">
               <h2 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <Monitor size={14} style={{ color: "var(--accent-green)" }} />
+                <Monitor size={14} style={{ color: "var(--accent-cyan)" }} />
                 Client-Side Fingerprint Variables
               </h2>
 
@@ -182,7 +182,7 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
             {/* Behavior DNA Cadence */}
             <div className="glass-card p-5 flex flex-col gap-4">
               <h2 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <Cpu size={14} style={{ color: "var(--accent-purple)" }} />
+                <Cpu size={14} style={{ color: "var(--accent-cyan)" }} />
                 Behavior DNA analysis
               </h2>
 
@@ -195,7 +195,7 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
                   <div key={dna.label} className="space-y-1">
                     <div className="flex justify-between text-xs">
                       <span className="font-semibold text-slate-300">{dna.label}</span>
-                      <span className="font-bold text-red-400 font-mono">{dna.val}</span>
+                      <span className="font-bold font-mono" style={{ color: "var(--accent-cyan)" }}>{dna.val}</span>
                     </div>
                     <p className="text-[10px]" style={{ color: "var(--muted)" }}>{dna.desc}</p>
                   </div>
@@ -206,7 +206,7 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
             {/* Verdict Box */}
             <div className="glass-card p-5 flex flex-col gap-3 justify-between">
               <h2 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                <AlertTriangle size={14} style={{ color: "var(--accent-yellow)" }} />
+                <AlertTriangle size={14} style={{ color: "var(--accent-cyan)" }} />
                 Mitigation Verdict
               </h2>
 
@@ -214,7 +214,10 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
                 <p>
                   Based on multiple sequential page views combined with extremely low behavior entropy signals, the engine classified this session as:
                 </p>
-                <div className="p-3 bg-red-950/15 border border-red-900/35 text-red-400 font-bold font-mono rounded text-center">
+                <div 
+                  className="p-3 border font-bold font-mono rounded text-center"
+                  style={{ background: "rgba(6,182,212,0.04)", borderColor: "rgba(6,182,212,0.25)", color: "var(--accent-cyan)" }}
+                >
                   SCRAPER_WEBDRIVER_CONFIRMED
                 </div>
                 <p className="text-[10px]">
@@ -224,12 +227,13 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
             </div>
           </div>
         </div>
-      </main>
+        </main>
+      </div>
 
       {/* Footer */}
       <footer 
         className="py-4 border-t text-center text-xs mt-12" 
-        style={{ borderColor: "var(--border)", background: "rgba(13,26,46,0.3)", color: "var(--muted)" }}
+        style={{ borderColor: "var(--border)", background: "var(--surface)", color: "var(--muted)" }}
       >
         <span>Level Shield Firewall Active • Session Investigation Panel</span>
       </footer>

@@ -83,103 +83,106 @@ export default function HoneyMaze({ params }: MazePageProps) {
         </div>
       </header>
 
-      {/* Main Maze Board */}
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8 flex flex-col gap-6">
-        {/* Banner notifying human observers of active bot traps */}
-        <div className="glass-card p-5 border-l-2 border-l-purple-500 bg-purple-500/[0.03] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <h1 className="text-sm font-bold text-purple-400 uppercase tracking-wider flex items-center gap-1.5">
-              <AlertCircle size={15} />
-              Active Honey Maze Decoy Trap
-            </h1>
-            <p className="text-[11px] leading-relaxed max-w-2xl" style={{ color: "var(--muted)" }}>
-              If you are reading this as a human: **Congratulations!** You landed here by following an invisible link.
-              For automated crawlers, this page acts as an endless database tarpit, serving mathematically generated infinite compensation matrices.
-            </p>
-          </div>
-          <span className="badge badge-maze shrink-0">Bot Captured</span>
-        </div>
-
-        {/* Catalog Table */}
-        <div className="glass-card overflow-hidden">
-          <div className="px-4 py-3 bg-black/20 border-b flex justify-between items-center" style={{ borderColor: "var(--border)" }}>
-            <span className="text-[10px] uppercase font-bold tracking-wider" style={{ color: "var(--muted)" }}>
-              Decoy Compensation Registry (Token: <span className="font-mono text-purple-400">{token.substring(0, 15)}...</span>)
-            </span>
-            <span className="text-[10px] font-mono text-purple-400">Total Rows: ∞</span>
+      {/* Center Wrapper to guarantee horizontal centering */}
+      <div style={{ display: "flex", justifyContent: "center", width: "100%", flex: 1 }}>
+        {/* Main Maze Board */}
+        <main className="w-full px-4 py-8 flex flex-col gap-6" style={{ maxWidth: "1024px" }}>
+          {/* Banner notifying human observers of active bot traps */}
+          <div className="glass-card p-5 border-l-2 border-l-purple-500 bg-purple-500/[0.03] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <h1 className="text-sm font-bold text-purple-400 uppercase tracking-wider flex items-center gap-1.5">
+                <AlertCircle size={15} />
+                Active Honey Maze Decoy Trap
+              </h1>
+              <p className="text-[11px] leading-relaxed max-w-2xl" style={{ color: "var(--muted)" }}>
+                If you are reading this as a human: **Congratulations!** You landed here by following an invisible link.
+                For automated crawlers, this page acts as an endless database tarpit, serving mathematically generated infinite compensation matrices.
+              </p>
+            </div>
+            <span className="badge badge-maze shrink-0">Bot Captured</span>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs text-left">
-              <thead>
-                <tr className="border-b" style={{ borderColor: "var(--border)", background: "rgba(13,26,46,0.3)", color: "var(--muted)" }}>
-                  <th className="py-2.5 px-4 font-semibold">Company</th>
-                  <th className="py-2.5 px-4 font-semibold">Level & Title</th>
-                  <th className="py-2.5 px-4 font-semibold text-right">Total Comp</th>
-                  <th className="py-2.5 px-4 font-semibold text-right">Base / Stock / Bonus</th>
-                  <th className="py-2.5 px-4 font-semibold">Location</th>
-                  <th className="py-2.5 px-4">Action Decoy</th>
-                </tr>
-              </thead>
-              <tbody>
-                {mazeRows.map((r) => {
-                  const nextToken = getNextMazeToken();
-                  return (
-                    <tr 
-                      key={r.id} 
-                      className="border-b hover:bg-white/5 transition-colors cursor-pointer"
-                      style={{ borderColor: "var(--border)" }}
-                      onClick={() => router.push(`/maze/${nextToken}`)}
-                    >
-                      <td className="py-3 px-4 font-bold text-white">{r.company}</td>
-                      <td className="py-3 px-4">
-                        <div className="flex flex-col">
-                          <span className="font-semibold text-white">{r.level}</span>
-                          <span className="text-[10px]" style={{ color: "var(--muted)" }}>{r.title}</span>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-right font-mono font-bold text-purple-400">
-                        {r.totalComp}
-                      </td>
-                      <td className="py-3 px-4 text-right font-mono text-[10px]" style={{ color: "var(--muted)" }}>
-                        {r.base} / {r.stock} / {r.bonus}
-                      </td>
-                      <td className="py-3 px-4" style={{ color: "var(--muted)" }}>{r.location}</td>
-                      <td className="py-3 px-4 text-purple-400 hover:underline text-[10px] font-semibold">
-                        View Level Matrix →
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
+          {/* Catalog Table */}
+          <div className="glass-card overflow-hidden">
+            <div className="px-4 py-3 bg-black/20 border-b flex justify-between items-center" style={{ borderColor: "var(--border)" }}>
+              <span className="text-[10px] uppercase font-bold tracking-wider" style={{ color: "var(--muted)" }}>
+                Decoy Compensation Registry (Token: <span className="font-mono text-purple-400">{token.substring(0, 15)}...</span>)
+              </span>
+              <span className="text-[10px] font-mono text-purple-400">Total Rows: ∞</span>
+            </div>
 
-        {/* Honey Page navigators (endless pagination trap!) */}
-        <div className="flex justify-center items-center gap-2 mt-2">
-          {Array.from({ length: 5 }).map((_, idx) => {
-            const nextToken = getNextMazeToken();
-            return (
-              <button
-                key={idx}
-                onClick={() => router.push(`/maze/${nextToken}`)}
-                className="px-3 py-1.5 rounded border text-[10px] font-mono hover:text-white transition-colors cursor-pointer"
-                style={{ background: "var(--surface)", borderColor: "var(--border)", color: "var(--muted)" }}
-              >
-                Page {idx + 1}
-              </button>
-            );
-          })}
-          <button
-            onClick={() => router.push(`/maze/${getNextMazeToken()}`)}
-            className="px-3 py-1.5 rounded border text-[10px] font-mono hover:text-white transition-colors cursor-pointer"
-            style={{ background: "var(--surface-2)", borderColor: "var(--border)", color: "var(--accent-purple)" }}
-          >
-            Next Page →
-          </button>
-        </div>
-      </main>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead>
+                  <tr className="border-b" style={{ borderColor: "var(--border)", background: "rgba(13,26,46,0.3)", color: "var(--muted)" }}>
+                    <th className="py-2.5 px-4 font-semibold">Company</th>
+                    <th className="py-2.5 px-4 font-semibold">Level & Title</th>
+                    <th className="py-2.5 px-4 font-semibold text-right">Total Comp</th>
+                    <th className="py-2.5 px-4 font-semibold text-right">Base / Stock / Bonus</th>
+                    <th className="py-2.5 px-4 font-semibold">Location</th>
+                    <th className="py-2.5 px-4">Action Decoy</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {mazeRows.map((r) => {
+                    const nextToken = getNextMazeToken();
+                    return (
+                      <tr 
+                        key={r.id} 
+                        className="border-b hover:bg-white/5 transition-colors cursor-pointer"
+                        style={{ borderColor: "var(--border)" }}
+                        onClick={() => router.push(`/maze/${nextToken}`)}
+                      >
+                        <td className="py-3 px-4 font-bold text-white">{r.company}</td>
+                        <td className="py-3 px-4">
+                          <div className="flex flex-col">
+                            <span className="font-semibold text-white">{r.level}</span>
+                            <span className="text-[10px]" style={{ color: "var(--muted)" }}>{r.title}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-4 text-right font-mono font-bold text-purple-400">
+                          {r.totalComp}
+                        </td>
+                        <td className="py-3 px-4 text-right font-mono text-[10px]" style={{ color: "var(--muted)" }}>
+                          {r.base} / {r.stock} / {r.bonus}
+                        </td>
+                        <td className="py-3 px-4" style={{ color: "var(--muted)" }}>{r.location}</td>
+                        <td className="py-3 px-4 text-purple-400 hover:underline text-[10px] font-semibold">
+                          View Level Matrix →
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Honey Page navigators (endless pagination trap!) */}
+          <div className="flex justify-center items-center gap-2 mt-2">
+            {Array.from({ length: 5 }).map((_, idx) => {
+              const nextToken = getNextMazeToken();
+              return (
+                <button
+                  key={idx}
+                  onClick={() => router.push(`/maze/${nextToken}`)}
+                  className="px-3 py-1.5 rounded border text-[10px] font-mono hover:text-white transition-colors cursor-pointer"
+                  style={{ background: "var(--surface)", borderColor: "var(--border)", color: "var(--muted)" }}
+                >
+                  Page {idx + 1}
+                </button>
+              );
+            })}
+            <button
+              onClick={() => router.push(`/maze/${getNextMazeToken()}`)}
+              className="px-3 py-1.5 rounded border text-[10px] font-mono hover:text-white transition-colors cursor-pointer"
+              style={{ background: "var(--surface-2)", borderColor: "var(--border)", color: "var(--accent-purple)" }}
+            >
+              Next Page →
+            </button>
+          </div>
+        </main>
+      </div>
 
       {/* Footer */}
       <footer 

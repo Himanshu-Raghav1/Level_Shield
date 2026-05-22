@@ -36,48 +36,49 @@ export default function RiskScoreChart({ data }: Props) {
       <AreaChart data={data} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
         <defs>
           <linearGradient id="gHuman" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#00ff88" stopOpacity={0.3} />
-            <stop offset="95%" stopColor="#00ff88" stopOpacity={0} />
+            <stop offset="5%" stopColor="#ffffff" stopOpacity={0.15} />
+            <stop offset="95%" stopColor="#ffffff" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="gScraper" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#ff3366" stopOpacity={0.3} />
-            <stop offset="95%" stopColor="#ff3366" stopOpacity={0} />
+            <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.15} />
+            <stop offset="95%" stopColor="#06b6d4" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="gPlaywright" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#a855f7" stopOpacity={0.3} />
-            <stop offset="95%" stopColor="#a855f7" stopOpacity={0} />
+            <stop offset="5%" stopColor="#71717a" stopOpacity={0.15} />
+            <stop offset="95%" stopColor="#71717a" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="#1c3050" />
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.04)" />
         <XAxis
           dataKey="time"
           tickFormatter={formatLabel}
-          tick={{ fill: "#64748b", fontSize: 10 }}
-          axisLine={{ stroke: "#1c3050" }}
+          tick={{ fill: "#71717a", fontSize: 10, fontFamily: "monospace" }}
+          axisLine={{ stroke: "rgba(255, 255, 255, 0.06)" }}
           tickLine={false}
         />
         <YAxis
           domain={[0, 100]}
-          tick={{ fill: "#64748b", fontSize: 10 }}
-          axisLine={{ stroke: "#1c3050" }}
+          tick={{ fill: "#71717a", fontSize: 10, fontFamily: "monospace" }}
+          axisLine={{ stroke: "rgba(255, 255, 255, 0.06)" }}
           tickLine={false}
         />
         <Tooltip
           contentStyle={{
-            background: "#0d1a2e",
-            border: "1px solid #1c3050",
-            borderRadius: 8,
-            fontSize: 12,
-            color: "#e2e8f0",
+            background: "rgba(18, 18, 22, 0.95)",
+            border: "1px solid var(--border)",
+            borderRadius: 4,
+            fontSize: 11,
+            color: "#ffffff",
+            fontFamily: "inherit",
           }}
           labelFormatter={formatLabel}
         />
         <Legend
-          wrapperStyle={{ fontSize: 11, color: "#64748b", paddingTop: 8 }}
+          wrapperStyle={{ fontSize: 10, fontFamily: "monospace", textTransform: "uppercase", color: "#71717a", paddingTop: 8 }}
         />
-        <Area type="monotone" dataKey="human" name="Human" stroke="#00ff88" fill="url(#gHuman)" strokeWidth={2} dot={false} />
-        <Area type="monotone" dataKey="scraper" name="Scraper" stroke="#ff3366" fill="url(#gScraper)" strokeWidth={2} dot={false} />
-        <Area type="monotone" dataKey="playwright" name="Playwright Bot" stroke="#a855f7" fill="url(#gPlaywright)" strokeWidth={2} dot={false} />
+        <Area type="monotone" dataKey="human" name="Human" stroke="#ffffff" fill="url(#gHuman)" strokeWidth={1.5} dot={false} />
+        <Area type="monotone" dataKey="scraper" name="Scraper" stroke="#06b6d4" fill="url(#gScraper)" strokeWidth={1.5} dot={false} />
+        <Area type="monotone" dataKey="playwright" name="Playwright Bot" stroke="#71717a" fill="url(#gPlaywright)" strokeWidth={1.5} dot={false} />
       </AreaChart>
     </ResponsiveContainer>
   );

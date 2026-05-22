@@ -89,11 +89,9 @@ export const mockHoneyMazeHits = [
 ];
 
 export function getRiskColor(score: number): string {
-  if (score <= 35) return "var(--accent-green)";
-  if (score <= 55) return "var(--accent-cyan)";
-  if (score <= 75) return "var(--accent-yellow)";
-  if (score <= 90) return "var(--accent-orange)";
-  return "var(--accent-red)";
+  if (score <= 35) return "var(--muted)";
+  if (score <= 75) return "var(--foreground)";
+  return "var(--accent-cyan)";
 }
 
 export function formatTimeAgo(isoString: string): string {

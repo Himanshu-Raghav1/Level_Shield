@@ -20,7 +20,7 @@ export default function LiveTrafficFeed({ events }: Props) {
           key={evt.id}
           className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs"
           style={{
-            background: "rgba(17, 32, 51, 0.5)",
+            background: "rgba(18, 18, 22, 0.6)",
             borderLeft: "2px solid var(--border-bright)",
             animation: "fadeIn 0.3s ease",
           }}
