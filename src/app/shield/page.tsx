@@ -49,7 +49,7 @@ function ShieldDashboard() {
   const [mounted, setMounted] = useState(false);
 
   // SWR hooks for polling
-  const { metrics, mutate: mutateMetrics } = useDashboardMetrics();
+  const { metrics, riskTimeline, mutate: mutateMetrics } = useDashboardMetrics();
   const { events, mutate: mutateEvents } = useTrafficEvents();
   const { riskResults, mutate: mutateRisk } = useRiskResults();
   const { canaryTokens, mutate: mutateCanary } = useCanaryTokens();
@@ -186,7 +186,7 @@ function ShieldDashboard() {
               {activeTab === "risk" && (
                 <div className="flex flex-col gap-4">
                   <p className="text-xs font-semibold" style={{ color: "var(--muted)" }}>Risk Score Over Time</p>
-                  <RiskScoreChart data={mockRiskTimeline} />
+                  <RiskScoreChart data={riskTimeline || []} />
                   <div>
                     <p className="text-xs font-semibold mb-3" style={{ color: "var(--muted)" }}>Top Sessions by Risk</p>
                     <div className="flex flex-col gap-2">
