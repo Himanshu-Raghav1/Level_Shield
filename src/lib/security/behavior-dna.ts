@@ -1,5 +1,4 @@
 import { BehaviorTelemetry } from '@/types/security';
-import { logBehavior } from '../store/sessionStore';
 import { db } from '../store/db';
 
 export interface BehaviorScore {
@@ -9,9 +8,6 @@ export interface BehaviorScore {
 }
 
 export function evaluateBehaviorTelemetry(sessionId: string, data: BehaviorTelemetry): BehaviorScore {
-  // Store telemetry raw log
-  logBehavior(sessionId, 'telemetry_submission', data);
-
   const reasons: string[] = [];
   let score = 100;
 

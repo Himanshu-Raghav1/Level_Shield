@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { evaluateBehaviorTelemetry } from '@/lib/security/behavior-dna';
 import { BehaviorTelemetry } from '@/types/security';
-import { getOrCreateSession } from '@/lib/store/sessionStore';
+import { getOrCreateSession, logBehavior } from '@/lib/store/sessionStore';
 
 const COOKIE_NAME = 'level_shield_session';
 
@@ -13,6 +13,9 @@ export async function POST(req: NextRequest) {
     const ipAddress = req.headers.get('x-forwarded-for')?.split(',')[0] || '127.0.0.1';
     const fingerprint = req.headers.get('sec-ch-ua') || 'behavior-fp';
     const session = getOrCreateSession(requestedSessionId, userAgent, ipAddress, fingerprint);
+
+    // Store telemetry raw log on client submission
+    logBehavior(session.id, 'telemetry_submission', telemetryData);
 
     // Evaluate the submitted behavior DNA
     const evaluation = evaluateBehaviorTelemetry(session.id, telemetryData);
