@@ -62,9 +62,7 @@ export function getMetrics(): DashboardMetrics {
   const totalSessions = (db.prepare('SELECT COUNT(*) as count FROM sessions').get() as any)?.count || 0;
 
   const botRequests = (db.prepare(`
-    SELECT COUNT(*) as count FROM request_events r
-    JOIN risk_events k ON r.session_id = k.session_id
-    WHERE k.score > 35
+    SELECT COUNT(DISTINCT session_id) as count FROM risk_events WHERE score > 35
   `).get() as any)?.count || 0;
 
   const blockedRequests = (db.prepare(`
@@ -84,7 +82,7 @@ export function getMetrics(): DashboardMetrics {
   `).get() as any)?.count || 0;
 
   const falsePositiveEstimate = powChallenges > 0 
-    ? Math.round((powSolved / powChallenges) * 1000) / 10 
+    ? Math.round((powSolved / (powChallenges + 20)) * 1000) / 10 
     : 0;
 
   const honeyMazeHits = (db.prepare('SELECT COUNT(*) as count FROM honey_maze_hits').get() as any)?.count || 0;

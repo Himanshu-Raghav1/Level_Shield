@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import {
   mockDashboardMetrics,
   mockTrafficEvents,
@@ -167,7 +167,7 @@ function normalizeMetrics(data: DashboardMetrics | BackendMetricsResponse): Dash
       throttledRequests: summary.throttledRequests ?? 0,
       powChallenges: summary.powChallenges ?? 0,
       honeyMazeHits: summary.honeyMazeHits ?? 0,
-      realUsersProtected: Math.max(0, totalRequests - botsDetected),
+      realUsersProtected: Math.max(0, (summary.totalSessions ?? 0) - botsDetected),
     };
   }
 
@@ -428,6 +428,32 @@ export async function resetLocalSimulatorData() {
     window.localStorage.removeItem("ls_honey_maze_hits");
     window.localStorage.removeItem("ls_risk_timeline");
   }
+
+  // Instantly clear the UI cache by mutating SWR states directly to zero
+  mutate("/api/metrics", {
+    summary: {
+      totalRequests: 0,
+      totalSessions: 0,
+      botRequests: 0,
+      blockedRequests: 0,
+      throttledRequests: 0,
+      powChallenges: 0,
+      falsePositiveEstimate: 0,
+      honeyMazeHits: 0,
+    },
+    topSuspicious: [],
+    timelines: {
+      risk: [],
+      defense: [],
+    }
+  }, false);
+
+  mutate("/api/events", {
+    requests: [],
+    riskEvaluations: [],
+    defenses: [],
+    alerts: [],
+  }, false);
 }
 
 // Handles mock local simulation flows for testing and presentation fallback
