@@ -34,7 +34,7 @@ const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
   { id: "sessions",   label: "Sessions",            icon: <ListChecks size={14} /> },
 ];
 
-const STORY_STEPS = [
+const STORY_STEPS_BOT = [
   "Bot attack starts",
   "Risk score rises",
   "Defense activates",
@@ -43,13 +43,23 @@ const STORY_STEPS = [
   "Real users remain allowed",
 ];
 
+const STORY_STEPS_USER = [
+  "Safe user browsing session started",
+  "Behavior DNA evaluated (High Mouse/Keyboard Entropy)",
+  "Zero suspicious scraping patterns detected",
+  "Risk score evaluated: Extremely Low risk (Score <= 18)",
+  "Verification action: Full seamless access allowed",
+  "No interactive challenge (Zero Friction Experience)",
+];
+
 function ShieldDashboard() {
   const [activeTab, setActiveTab] = useState<Tab>("traffic");
   const [currentStep, setCurrentStep] = useState(-1);
+  const [storyType, setStoryType] = useState<"bot" | "user">("bot");
   const [mounted, setMounted] = useState(false);
 
   // SWR hooks for polling
-  const { metrics, mutate: mutateMetrics } = useDashboardMetrics();
+  const { metrics, riskTimeline, mutate: mutateMetrics } = useDashboardMetrics();
   const { events, mutate: mutateEvents } = useTrafficEvents();
   const { riskResults, mutate: mutateRisk } = useRiskResults();
   const { canaryTokens, mutate: mutateCanary } = useCanaryTokens();
@@ -91,15 +101,19 @@ function ShieldDashboard() {
           <SimulatorPanel
             onSimulate={async (type) => {
               console.log("Simulating:", type);
+              const isBot = ["request-scraper", "sequential-scraper", "playwright-bot", "ai-agent", "fake-googlebot"].includes(type);
+              setStoryType(isBot ? "bot" : "user");
+
               await runSimulation(type);
               refreshAll();
 
               // Animate the story panel
               setCurrentStep(0);
               let step = 0;
+              const stepsLength = isBot ? STORY_STEPS_BOT.length : STORY_STEPS_USER.length;
               const story = setInterval(() => {
                 step += 1;
-                if (step >= STORY_STEPS.length) {
+                if (step >= stepsLength) {
                   clearInterval(story);
                   return;
                 }
@@ -186,7 +200,7 @@ function ShieldDashboard() {
               {activeTab === "risk" && (
                 <div className="flex flex-col gap-4">
                   <p className="text-xs font-semibold" style={{ color: "var(--muted)" }}>Risk Score Over Time</p>
-                  <RiskScoreChart data={mockRiskTimeline} />
+                  <RiskScoreChart data={riskTimeline} />
                   <div>
                     <p className="text-xs font-semibold mb-3" style={{ color: "var(--muted)" }}>Top Sessions by Risk</p>
                     <div className="flex flex-col gap-2">
@@ -318,20 +332,31 @@ function ShieldDashboard() {
           {currentStep >= 0 && (
             <div
               className="glass-card p-4 border"
-              style={{ borderColor: "var(--accent-cyan)", boxShadow: "0 0 12px rgba(0,212,255,0.15)" }}
+              style={{
+                borderColor: storyType === "bot" ? "var(--accent-cyan)" : "#22c55e",
+                boxShadow: storyType === "bot" ? "0 0 12px rgba(0,212,255,0.15)" : "0 0 12px rgba(34,197,94,0.15)",
+              }}
             >
-              <p className="text-xs font-semibold mb-3" style={{ color: "var(--accent-cyan)" }}>
-                🎯 Attack Playbook
+              <p className="text-xs font-semibold mb-3" style={{ color: storyType === "bot" ? "var(--accent-cyan)" : "#22c55e" }}>
+                {storyType === "bot" ? "🎯 Bot Attack Playbook" : "✅ Safe User Behavior Validation"}
               </p>
               <div className="flex flex-wrap gap-2">
-                {STORY_STEPS.map((step, i) => (
+                {(storyType === "bot" ? STORY_STEPS_BOT : STORY_STEPS_USER).map((step, i) => (
                   <div
                     key={i}
                     className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs transition-all duration-500"
                     style={{
-                      background: i <= currentStep ? "rgba(0,212,255,0.15)" : "transparent",
-                      border: `1px solid ${i <= currentStep ? "var(--accent-cyan)" : "var(--border)"}`,
-                      color: i <= currentStep ? "var(--accent-cyan)" : "var(--muted)",
+                      background: i <= currentStep 
+                        ? (storyType === "bot" ? "rgba(0,212,255,0.15)" : "rgba(34,197,94,0.15)")
+                        : "transparent",
+                      border: `1px solid ${
+                        i <= currentStep 
+                          ? (storyType === "bot" ? "var(--accent-cyan)" : "#22c55e")
+                          : "var(--border)"
+                      }`,
+                      color: i <= currentStep 
+                        ? (storyType === "bot" ? "var(--accent-cyan)" : "#22c55e")
+                        : "var(--muted)",
                       transform: i === currentStep ? "scale(1.05)" : "scale(1)",
                     }}
                   >

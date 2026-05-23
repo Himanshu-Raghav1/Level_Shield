@@ -4,7 +4,8 @@ import {
   mockTrafficEvents,
   mockRiskResults,
   mockCanaryTokens,
-  mockHoneyMazeHits
+  mockHoneyMazeHits,
+  mockRiskTimeline
 } from "@/data/mock";
 import { DashboardMetrics, TrafficEvent, RiskResult, CanaryToken, HoneyMazeHit } from "@/types";
 
@@ -164,7 +165,7 @@ function normalizeRiskResults(data: RiskResult[] | BackendMetricsResponse): Risk
   return (data.topSuspicious ?? []).map((session) => ({
     sessionId: session.id,
     score: session.score ?? 0,
-    action: (session.score ?? 0) >= 91 ? "block" : (session.score ?? 0) >= 76 ? "honey_maze" : "proof_of_work",
+    action: (session as any).action ?? ((session.score ?? 0) >= 91 ? "block" : (session.score ?? 0) >= 76 ? "honey_maze" : "proof_of_work"),
     reasons: (session.reasons ?? []) as RiskResult["reasons"],
     confidence: 0.9,
     timestamp: new Date().toISOString(),
@@ -175,8 +176,6 @@ function normalizeCanaryTokens(data: CanaryToken[] | BackendEventsResponse): Can
   if (Array.isArray(data)) return data;
 
   const tokens = (data.alerts ?? []).filter((alert) => alert.type === "canary_token");
-
-  if (tokens.length === 0) return localCanaryTokens;
 
   return tokens.map((alert) => ({
     tokenId: alert.token ?? "canary_unknown",
@@ -192,8 +191,6 @@ function normalizeHoneyMazeHits(data: HoneyMazeHit[] | BackendEventsResponse): H
 
   const hits = (data.alerts ?? []).filter((alert) => alert.type === "honey_maze");
 
-  if (hits.length === 0) return localHoneyMazeHits;
-
   return hits.map((alert) => ({
     sessionId: alert.session_id,
     mazePath: `/maze/${alert.token ?? "unknown"}`,
@@ -203,7 +200,7 @@ function normalizeHoneyMazeHits(data: HoneyMazeHit[] | BackendEventsResponse): H
 
 // Hook: get dashboard metrics
 export function useDashboardMetrics() {
-  const { data, error, mutate } = useSWR<DashboardMetrics | BackendMetricsResponse>("/api/metrics", fetcher, {
+  const { data, error, mutate } = useSWR<any>("/api/metrics", fetcher, {
     refreshInterval: 1500,
     revalidateOnFocus: false,
     shouldRetryOnError: false,
@@ -212,6 +209,7 @@ export function useDashboardMetrics() {
   if (error || !data) {
     return {
       metrics: localMetrics,
+      riskTimeline: mockRiskTimeline,
       isLoading: false,
       isError: !!error,
       mutate,
@@ -221,8 +219,18 @@ export function useDashboardMetrics() {
   // Update our local sync copy so we don't jump stats if backend goes offline
   localMetrics = normalizeMetrics(data);
 
+  const riskTimeline = data && data.timelines?.risk && data.timelines.risk.length > 0
+    ? data.timelines.risk.map((item: any) => ({
+        time: item.time,
+        human: item.human ?? 0,
+        scraper: item.scraper ?? 0,
+        playwright: item.playwright ?? 0,
+      }))
+    : mockRiskTimeline;
+
   return {
     metrics: localMetrics,
+    riskTimeline,
     isLoading: false,
     isError: false,
     mutate,
