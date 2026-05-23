@@ -207,9 +207,10 @@ export function useDashboardMetrics() {
   });
 
   if (error || !data) {
+    const hasData = localMetrics.totalRequests > 0;
     return {
       metrics: localMetrics,
-      riskTimeline: mockRiskTimeline,
+      riskTimeline: hasData ? mockRiskTimeline : [],
       isLoading: false,
       isError: !!error,
       mutate,
@@ -219,14 +220,15 @@ export function useDashboardMetrics() {
   // Update our local sync copy so we don't jump stats if backend goes offline
   localMetrics = normalizeMetrics(data);
 
-  const riskTimeline = data && data.timelines?.risk && data.timelines.risk.length > 0
+  const hasData = localMetrics.totalRequests > 0;
+  const riskTimeline = hasData && data && data.timelines?.risk && data.timelines.risk.length > 0
     ? data.timelines.risk.map((item: any) => ({
         time: item.time,
         human: item.human ?? 0,
         scraper: item.scraper ?? 0,
         playwright: item.playwright ?? 0,
       }))
-    : mockRiskTimeline;
+    : (hasData ? mockRiskTimeline : []);
 
   return {
     metrics: localMetrics,

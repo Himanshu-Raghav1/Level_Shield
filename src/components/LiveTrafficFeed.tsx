@@ -7,6 +7,20 @@ interface Props {
   events: TrafficEvent[];
 }
 
+function parseUserAgentFriendly(ua: string): string {
+  if (!ua) return "Unknown Browser";
+  const uaLower = ua.toLowerCase();
+  if (uaLower.includes("edg/")) return "Edge";
+  if (uaLower.includes("chrome") && !uaLower.includes("chromium")) return "Chrome";
+  if (uaLower.includes("safari") && !uaLower.includes("chrome")) return "Safari";
+  if (uaLower.includes("firefox")) return "Firefox";
+  if (uaLower.includes("python-requests")) return "Python Bot";
+  if (uaLower.includes("headless")) return "Headless Browser";
+  if (uaLower.includes("gptbot")) return "GPTBot (AI Bot)";
+  if (uaLower.includes("googlebot")) return "Googlebot";
+  return ua.slice(0, 20) + "...";
+}
+
 export default function LiveTrafficFeed({ events }: Props) {
   return (
     <div className="flex flex-col gap-1 overflow-y-auto max-h-72">
@@ -38,7 +52,7 @@ export default function LiveTrafficFeed({ events }: Props) {
             style={{ color: "var(--muted)" }}
             title={evt.userAgent}
           >
-            {evt.userAgent.slice(0, 24)}…
+            {parseUserAgentFriendly(evt.userAgent)}
           </span>
           <span style={{ color: "var(--muted)" }} className="shrink-0">
             {formatTimeAgo(evt.timestamp)}
