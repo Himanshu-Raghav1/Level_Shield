@@ -56,21 +56,39 @@ export async function GET() {
       LIMIT 10
     `).all() as any[];
 
+    const formatTimestamp = (t: string) => {
+      if (!t) return t;
+      if (t.endsWith('Z') || t.includes('T') || t.includes('+')) return t;
+      return t.replace(' ', 'T') + 'Z';
+    };
+
+    const requestsFormatted = recentRequests.map(r => ({
+      ...r,
+      timestamp: formatTimestamp(r.timestamp),
+    }));
+
     // Format risk reasons in risk logs
     const formattedRisk = recentRiskLogs.map(r => ({
       ...r,
+      timestamp: formatTimestamp(r.timestamp),
       reasons: JSON.parse(r.reasons || '[]'),
+    }));
+
+    const defensesFormatted = recentDefenses.map(d => ({
+      ...d,
+      timestamp: formatTimestamp(d.timestamp),
     }));
 
     // Combine all security alerts into one sorted list
     const alerts = [...mazeHits, ...canaryExposures, ...agentHits]
+      .map(a => ({ ...a, timestamp: formatTimestamp(a.timestamp) }))
       .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
       .slice(0, 20);
 
     return NextResponse.json({
-      requests: recentRequests,
+      requests: requestsFormatted,
       riskEvaluations: formattedRisk,
-      defenses: recentDefenses,
+      defenses: defensesFormatted,
       alerts,
     });
   } catch (error: any) {

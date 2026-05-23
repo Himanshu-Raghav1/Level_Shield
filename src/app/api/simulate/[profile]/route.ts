@@ -154,8 +154,14 @@ export async function POST(
         timezone: 'America/New_York'
       }, 120);
 
-      insertRisk(5, [], 20);
-      insertDefense('allow', 0, 20);
+      insertRisk(12, [], 30);
+      insertRisk(15, [], 25);
+      insertRisk(14, [], 20);
+      insertRisk(18, [], 15);
+      insertRisk(22, [], 10);
+      insertRisk(19, [], 5);
+      insertRisk(15, [], 0);
+      insertDefense('allow', 0, 0);
 
     } else if (cleanProfile === 'power-user') {
       // Faster, heavier human user
@@ -194,8 +200,14 @@ export async function POST(
         timezone: 'Europe/London'
       }, 100);
 
-      insertRisk(18, [], 50);
-      insertDefense('allow', 0, 50);
+      insertRisk(10, [], 30);
+      insertRisk(12, [], 25);
+      insertRisk(15, [], 20);
+      insertRisk(14, [], 15);
+      insertRisk(18, [], 10);
+      insertRisk(16, [], 5);
+      insertRisk(18, [], 0);
+      insertDefense('allow', 0, 0);
 
     } else if (cleanProfile === 'request-scraper') {
       // Rapid requests, no UI telemetry
@@ -205,8 +217,14 @@ export async function POST(
 
       // No behavior events at all! Low behavior entropy score triggered
 
-      insertRisk(68, ['rapid_requests', 'low_behavior_entropy', 'suspicious_user_agent', 'compensation_bulk_access'], 5);
-      insertDefense('proof_of_work', 0, 5);
+      insertRisk(5, [], 30);
+      insertRisk(8, [], 25);
+      insertRisk(20, ['rapid_requests'], 20);
+      insertRisk(45, ['rapid_requests', 'low_behavior_entropy'], 15);
+      insertRisk(85, ['rapid_requests', 'low_behavior_entropy', 'suspicious_user_agent'], 10);
+      insertRisk(95, ['rapid_requests', 'low_behavior_entropy', 'suspicious_user_agent', 'compensation_bulk_access'], 5);
+      insertRisk(98, ['rapid_requests', 'low_behavior_entropy', 'suspicious_user_agent', 'compensation_bulk_access'], 0);
+      insertDefense('proof_of_work', 0, 0);
 
     } else if (cleanProfile === 'sequential-scraper') {
       // Linear access of companies, exact interval matching
@@ -237,8 +255,13 @@ export async function POST(
         VALUES (?, ?, ?, ?)
       `).run(`maze_${nanoid(16)}`, sessionId, mazeToken, new Date(now.getTime() - 10 * 1000).toISOString());
 
-      insertRisk(85, ['sequential_url_access', 'unusual_navigation', 'low_behavior_entropy', 'fingerprint_mismatch', 'honey_link_triggered'], 8);
-      insertDefense('honey_maze', 0, 8);
+      insertRisk(5, [], 30);
+      insertRisk(12, [], 25);
+      insertRisk(25, ['sequential_url_access'], 20);
+      insertRisk(48, ['sequential_url_access', 'unusual_navigation'], 15);
+      insertRisk(70, ['sequential_url_access', 'unusual_navigation', 'low_behavior_entropy'], 10);
+      insertRisk(85, ['sequential_url_access', 'unusual_navigation', 'low_behavior_entropy', 'fingerprint_mismatch', 'honey_link_triggered'], 0);
+      insertDefense('honey_maze', 0, 0);
 
     } else if (cleanProfile === 'playwright-bot') {
       // Linear mouse moves and uniform delay typing cadence
@@ -264,8 +287,14 @@ export async function POST(
         timezone: 'UTC'
       }, 90);
 
-      insertRisk(95, ['suspicious_user_agent', 'low_behavior_entropy', 'perfectly_linear_mouse', 'perfectly_uniform_typing', 'fingerprint_mismatch'], 30);
-      insertDefense('block', 0, 30);
+      insertRisk(0, [], 30);
+      insertRisk(0, [], 25);
+      insertRisk(0, [], 20);
+      insertRisk(12, ['suspicious_user_agent'], 15);
+      insertRisk(40, ['suspicious_user_agent', 'low_behavior_entropy'], 10);
+      insertRisk(80, ['suspicious_user_agent', 'low_behavior_entropy', 'perfectly_linear_mouse'], 5);
+      insertRisk(95, ['suspicious_user_agent', 'low_behavior_entropy', 'perfectly_linear_mouse', 'perfectly_uniform_typing', 'fingerprint_mismatch'], 0);
+      insertDefense('block', 0, 0);
 
     } else if (cleanProfile === 'ai-agent') {
       // Scraped robot beacons, has specific AI User-Agent
@@ -279,16 +308,21 @@ export async function POST(
         VALUES (?, ?, ?, ?)
       `).run(`beacon_${nanoid(16)}`, sessionId, beaconToken, new Date(now.getTime() - 40 * 1000).toISOString());
 
-      insertRisk(90, ['suspicious_user_agent', 'agent_beacon_triggered', 'low_behavior_entropy'], 20);
-      insertDefense('block', 0, 20);
+      insertRisk(5, [], 30);
+      insertRisk(15, [], 20);
+      insertRisk(40, ['suspicious_user_agent'], 10);
+      insertRisk(90, ['suspicious_user_agent', 'agent_beacon_triggered', 'low_behavior_entropy'], 0);
+      insertDefense('block', 0, 0);
 
     } else if (cleanProfile === 'fake-googlebot') {
       // Impersonated googlebot without signature
       insertRequest('/company/google', 'GET', '', 60);
       insertRequest('/company/meta', 'GET', '', 50);
 
-      insertRisk(60, ['suspicious_user_agent', 'low_behavior_entropy'], 15);
-      insertDefense('proof_of_work', 0, 15);
+      insertRisk(10, [], 30);
+      insertRisk(25, ['suspicious_user_agent'], 20);
+      insertRisk(60, ['suspicious_user_agent', 'low_behavior_entropy'], 0);
+      insertDefense('proof_of_work', 0, 0);
 
     } else if (cleanProfile === 'good-bot') {
       // Impersonated googlebot WITH valid signature
@@ -301,8 +335,8 @@ export async function POST(
         VALUES (?, ?)
       `).run(`sim_nonce_${nanoid(10)}`, new Date(now.getTime() - 60 * 1000).toISOString());
 
-      insertRisk(0, ['verified_good_bot'], 10);
-      insertDefense('allow', 0, 10);
+      insertRisk(0, ['verified_good_bot'], 0);
+      insertDefense('allow', 0, 0);
     }
 
     return NextResponse.json({

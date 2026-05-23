@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Shield, Activity, Users, Ban, AlertTriangle, Zap, Layers, ListChecks } from "lucide-react";
+import { Shield, Activity, Users, Ban, AlertTriangle, Zap, Layers, ListChecks, Dna, Network, Fingerprint, Radar, Brain, CheckCircle2 } from "lucide-react";
 import SimulatorPanel from "@/components/SimulatorPanel";
 import LiveTrafficFeed from "@/components/LiveTrafficFeed";
 import dynamic from "next/dynamic";
@@ -34,7 +34,7 @@ const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
   { id: "sessions",   label: "Sessions",            icon: <ListChecks size={14} /> },
 ];
 
-const STORY_STEPS = [
+const STORY_STEPS_BOT = [
   "Bot attack starts",
   "Risk score rises",
   "Defense activates",
@@ -43,13 +43,23 @@ const STORY_STEPS = [
   "Real users remain allowed",
 ];
 
+const STORY_STEPS_USER = [
+  "Safe user browsing session started",
+  "Behavior DNA evaluated (High Mouse/Keyboard Entropy)",
+  "Zero suspicious scraping patterns detected",
+  "Risk score evaluated: Extremely Low risk (Score <= 18)",
+  "Verification action: Full seamless access allowed",
+  "No interactive challenge (Zero Friction Experience)",
+];
+
 function ShieldDashboard() {
   const [activeTab, setActiveTab] = useState<Tab>("traffic");
   const [currentStep, setCurrentStep] = useState(-1);
+  const [storyType, setStoryType] = useState<"bot" | "user">("bot");
   const [mounted, setMounted] = useState(false);
 
   // SWR hooks for polling
-  const { metrics, mutate: mutateMetrics } = useDashboardMetrics();
+  const { metrics, riskTimeline, mutate: mutateMetrics } = useDashboardMetrics();
   const { events, mutate: mutateEvents } = useTrafficEvents();
   const { riskResults, mutate: mutateRisk } = useRiskResults();
   const { canaryTokens, mutate: mutateCanary } = useCanaryTokens();
@@ -91,24 +101,28 @@ function ShieldDashboard() {
           <SimulatorPanel
             onSimulate={async (type) => {
               console.log("Simulating:", type);
+              const isBot = ["request-scraper", "sequential-scraper", "playwright-bot", "ai-agent", "fake-googlebot"].includes(type);
+              setStoryType(isBot ? "bot" : "user");
+
               await runSimulation(type);
               refreshAll();
 
               // Animate the story panel
               setCurrentStep(0);
               let step = 0;
+              const stepsLength = isBot ? STORY_STEPS_BOT.length : STORY_STEPS_USER.length;
               const story = setInterval(() => {
                 step += 1;
-                if (step >= STORY_STEPS.length) {
+                if (step >= stepsLength) {
                   clearInterval(story);
                   return;
                 }
                 setCurrentStep(step);
               }, 800);
             }}
-            onReset={() => {
+            onReset={async () => {
               setCurrentStep(-1);
-              resetLocalSimulatorData();
+              await resetLocalSimulatorData();
               refreshAll();
             }}
           />
@@ -186,7 +200,7 @@ function ShieldDashboard() {
               {activeTab === "risk" && (
                 <div className="flex flex-col gap-4">
                   <p className="text-xs font-semibold" style={{ color: "var(--muted)" }}>Risk Score Over Time</p>
-                  <RiskScoreChart data={mockRiskTimeline} />
+                  <RiskScoreChart data={riskTimeline} />
                   <div>
                     <p className="text-xs font-semibold mb-3" style={{ color: "var(--muted)" }}>Top Sessions by Risk</p>
                     <div className="flex flex-col gap-2">
@@ -253,15 +267,17 @@ function ShieldDashboard() {
 
                   {/* Innovation feature summary cards */}
                   {[
-                    { name: "Behavior DNA",          icon: "🧬", color: "var(--foreground)",  desc: "Mouse entropy, typing cadence, dwell" },
-                    { name: "Graph of Intent",        icon: "🕸️",  color: "var(--accent)",      desc: "Session nav graph: clean = bot" },
-                    { name: "JA4-Style Fingerprint",  icon: "🔬", color: "var(--muted)",  desc: "Header + behavior consistency" },
-                    { name: "AI-Agent Trap Beacon",   icon: "⚡", color: "var(--accent)",      desc: "Hidden link triggers on decoy pages" },
-                    { name: "Adaptive Friction Brain", icon: "🧠", color: "var(--muted)", desc: "allow → throttle → PoW → maze → block" },
-                    { name: "Signed Good-Bot Lane",   icon: "✅", color: "var(--foreground)",  desc: "Cryptographic crawler verification" },
+                    { name: "Behavior DNA",          icon: <Dna size={16} />,          color: "var(--foreground)",  desc: "Mouse entropy, typing cadence, dwell" },
+                    { name: "Graph of Intent",        icon: <Network size={16} />,      color: "var(--accent-cyan)",  desc: "Session nav graph: clean = bot" },
+                    { name: "JA4-Style Fingerprint",  icon: <Fingerprint size={16} />,  color: "var(--muted)",        desc: "Header + behavior consistency" },
+                    { name: "AI-Agent Trap Beacon",   icon: <Radar size={16} />,        color: "var(--accent-cyan)",  desc: "Hidden link triggers on decoy pages" },
+                    { name: "Adaptive Friction Brain", icon: <Brain size={16} />,        color: "var(--muted)",        desc: "allow → throttle → PoW → maze → block" },
+                    { name: "Signed Good-Bot Lane",   icon: <CheckCircle2 size={16} />, color: "var(--foreground)",  desc: "Cryptographic crawler verification" },
                   ].map(({ name, icon, color, desc }) => (
                     <div key={name} className="glass-card p-3 flex items-start gap-3">
-                      <span className="text-xl">{icon}</span>
+                      <span className="shrink-0" style={{ color: color === "var(--muted)" ? "var(--muted)" : color }}>
+                        {icon}
+                      </span>
                       <div>
                         <p className="text-xs font-semibold" style={{ color }}>{name}</p>
                         <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>{desc}</p>
@@ -317,21 +333,32 @@ function ShieldDashboard() {
           {/* Judge Story Panel */}
           {currentStep >= 0 && (
             <div
-              className="glass-card p-4 border glow-red"
-              style={{ borderColor: "var(--border-bright)" }}
+              className={`glass-card p-4 border ${storyType === "bot" ? "glow-red" : ""}`}
+              style={{
+                borderColor: storyType === "bot" ? "var(--border-bright)" : "#22c55e",
+                boxShadow: storyType === "bot" ? undefined : "0 0 12px rgba(34,197,94,0.15)",
+              }}
             >
-              <p className="text-xs font-bold mb-3 text-accent">
-                🎯 Attack Playbook
+              <p className={`text-xs mb-3 ${storyType === "bot" ? "font-bold text-accent" : "font-semibold"}`} style={{ color: storyType === "bot" ? undefined : "#22c55e" }}>
+                {storyType === "bot" ? "🎯 Attack Playbook" : "✅ Safe User Behavior Validation"}
               </p>
               <div className="flex flex-wrap gap-2">
-                {STORY_STEPS.map((step, i) => (
+                {(storyType === "bot" ? STORY_STEPS_BOT : STORY_STEPS_USER).map((step, i) => (
                   <div
                     key={i}
                     className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs transition-all duration-500"
                     style={{
-                      background: i <= currentStep ? "var(--accent-muted)" : "transparent",
-                      border: `1px solid ${i <= currentStep ? "var(--border-bright)" : "var(--border)"}`,
-                      color: i <= currentStep ? "var(--accent)" : "var(--muted)",
+                      background: i <= currentStep 
+                        ? (storyType === "bot" ? "var(--accent-muted)" : "rgba(34,197,94,0.15)")
+                        : "transparent",
+                      border: `1px solid ${
+                        i <= currentStep 
+                          ? (storyType === "bot" ? "var(--border-bright)" : "#22c55e")
+                          : "var(--border)"
+                      }`,
+                      color: i <= currentStep 
+                        ? (storyType === "bot" ? "var(--accent)" : "#22c55e")
+                        : "var(--muted)",
                       transform: i === currentStep ? "scale(1.05)" : "scale(1)",
                     }}
                   >

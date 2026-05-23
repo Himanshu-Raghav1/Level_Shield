@@ -160,20 +160,38 @@ export function getRecentEvents() {
     LIMIT 10
   `).all() as any[];
 
+  const formatTimestamp = (t: string) => {
+    if (!t) return t;
+    if (t.endsWith('Z') || t.includes('T') || t.includes('+')) return t;
+    return t.replace(' ', 'T') + 'Z';
+  };
+
+  const requestsFormatted = recentRequests.map(r => ({
+    ...r,
+    timestamp: formatTimestamp(r.timestamp),
+  }));
+
   const formattedRisk = recentRiskLogs.map(r => ({
     ...r,
+    timestamp: formatTimestamp(r.timestamp),
     reasons: JSON.parse(r.reasons || '[]'),
   }));
 
-  const alerts = [...mazeHits, ...canaryExposures, ...agentHits]
+  const defensesFormatted = recentDefenses.map(d => ({
+    ...d,
+    timestamp: formatTimestamp(d.timestamp),
+  }));
+
+  const alertsFormatted = [...mazeHits, ...canaryExposures, ...agentHits]
+    .map(a => ({ ...a, timestamp: formatTimestamp(a.timestamp) }))
     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     .slice(0, 20);
 
   return {
-    requests: recentRequests,
+    requests: requestsFormatted,
     riskEvaluations: formattedRisk,
-    defenses: recentDefenses,
-    alerts,
+    defenses: defensesFormatted,
+    alerts: alertsFormatted,
   };
 }
 
@@ -238,23 +256,29 @@ export function getSessionDetails(sessionId: string) {
 
   const graphAnalysis = analyzeGraphIntent(sessionId);
 
+  const formatTimestamp = (t: string) => {
+    if (!t) return t;
+    if (t.endsWith('Z') || t.includes('T') || t.includes('+')) return t;
+    return t.replace(' ', 'T') + 'Z';
+  };
+
   return {
     session: {
       id: session.id,
-      createdAt: session.created_at,
+      createdAt: formatTimestamp(session.created_at),
       userAgent: session.user_agent,
       ipAddress: session.ip_address,
       fingerprint: session.fingerprint,
       isGoodBot: session.is_good_bot === 1,
     },
-    requests,
-    behaviors: behaviorsFormatted,
-    risks: risksFormatted,
-    defenses,
+    requests: requests.map(r => ({ ...r, timestamp: formatTimestamp(r.timestamp) })),
+    behaviors: behaviorsFormatted.map(b => ({ ...b, timestamp: formatTimestamp(b.timestamp) })),
+    risks: risksFormatted.map(r => ({ ...r, timestamp: formatTimestamp(r.timestamp) })),
+    defenses: defenses.map(d => ({ ...d, timestamp: formatTimestamp(d.timestamp) })),
     traps: {
-      mazeHits,
-      canaryExposures,
-      agentBeacons,
+      mazeHits: mazeHits.map(h => ({ ...h, timestamp: formatTimestamp(h.timestamp) })),
+      canaryExposures: canaryExposures.map(c => ({ ...c, timestamp: formatTimestamp(c.timestamp) })),
+      agentBeacons: agentBeacons.map(a => ({ ...a, timestamp: formatTimestamp(a.timestamp) })),
     },
     graphAnalysis,
   };
