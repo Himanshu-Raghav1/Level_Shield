@@ -3,7 +3,7 @@ import path from 'path';
 
 // Prevent multiple instances of the database in Next.js hot-reloading
 const globalForDb = global as unknown as { db: Database.Database };
-const dbPath = path.resolve(process.cwd(), 'level_shield.db');
+const dbPath = path.resolve(process.cwd(), '..', 'level_shield.db');
 
 export const db = globalForDb.db || new Database(dbPath);
 

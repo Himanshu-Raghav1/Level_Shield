@@ -7,12 +7,13 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { mockSalaries, SalaryRecord, mockCanaryTokens } from "@/data/mock";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import dynamic from "next/dynamic";
 
 interface CompanyPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export default function CompanyDetail({ params }: CompanyPageProps) {
+function CompanyDetail({ params }: CompanyPageProps) {
   const { slug } = use(params);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
@@ -273,3 +274,5 @@ export default function CompanyDetail({ params }: CompanyPageProps) {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(CompanyDetail), { ssr: false });
