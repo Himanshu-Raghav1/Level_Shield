@@ -1,9 +1,40 @@
 import Database from 'better-sqlite3';
 import path from 'path';
+import fs from 'fs';
 
 // Prevent multiple instances of the database in Next.js hot-reloading
 const globalForDb = global as unknown as { db: Database.Database };
-const dbPath = path.resolve(process.cwd(), '..', 'level_shield.db');
+
+let dbPath = path.resolve(process.cwd(), '..', 'level_shield.db');
+
+// In Netlify or Serverless environments where parent dir is read-only, fallback to /tmp/level_shield.db
+const isServerless = !!process.env.NETLIFY || !!process.env.LAMBDA_TASK_ROOT || (() => {
+  try {
+    const parentDir = path.resolve(process.cwd(), '..');
+    const testFile = path.resolve(parentDir, '.db_write_test');
+    fs.writeFileSync(testFile, 'test');
+    fs.unlinkSync(testFile);
+    return false;
+  } catch (e) {
+    return true;
+  }
+})();
+
+if (isServerless) {
+  const tmpDbPath = path.resolve('/tmp', 'level_shield.db');
+  // Copy packaged seed database to /tmp if not already initialized to keep existing metrics
+  if (!fs.existsSync(tmpDbPath)) {
+    const seedDbPath = path.resolve(process.cwd(), 'level_shield.db');
+    if (fs.existsSync(seedDbPath)) {
+      try {
+        fs.copyFileSync(seedDbPath, tmpDbPath);
+      } catch (e) {
+        console.error('Failed to copy seed database to /tmp:', e);
+      }
+    }
+  }
+  dbPath = tmpDbPath;
+}
 
 export const db = globalForDb.db || new Database(dbPath);
 

@@ -59,8 +59,27 @@ type BackendEventsResponse = {
   }>;
 };
 
+// Helper to safely read from localStorage
+const safeGetItem = (key: string, fallback: any) => {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const item = window.localStorage.getItem(key);
+    return item ? JSON.parse(item) : fallback;
+  } catch (e) {
+    return fallback;
+  }
+};
+
+// Helper to safely write to localStorage
+const safeSetItem = (key: string, value: any) => {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {}
+};
+
 // Keep a local mutable copy of mock data for dynamic UI ticking in mock mode
-let localMetrics: DashboardMetrics = {
+let localMetrics: DashboardMetrics = safeGetItem("ls_metrics", {
   totalRequests: 0,
   botsDetected: 0,
   blockedRequests: 0,
@@ -69,12 +88,12 @@ let localMetrics: DashboardMetrics = {
   powChallenges: 0,
   honeyMazeHits: 0,
   realUsersProtected: 0,
-};
-let localEvents: TrafficEvent[] = [];
-let localRiskResults: RiskResult[] = [];
-let localCanaryTokens: CanaryToken[] = [];
-let localHoneyMazeHits: HoneyMazeHit[] = [];
-let localRiskTimeline: any[] = [];
+});
+let localEvents: TrafficEvent[] = safeGetItem("ls_events", []);
+let localRiskResults: RiskResult[] = safeGetItem("ls_risk_results", []);
+let localCanaryTokens: CanaryToken[] = safeGetItem("ls_canary_tokens", []);
+let localHoneyMazeHits: HoneyMazeHit[] = safeGetItem("ls_honey_maze_hits", []);
+let localRiskTimeline: any[] = safeGetItem("ls_risk_timeline", []);
 
 let lastTickTime = Date.now();
 
@@ -231,10 +250,18 @@ export function useDashboardMetrics() {
   }
 
   // Update our local sync copy so we don't jump stats if backend goes offline
-  localMetrics = normalizeMetrics(data);
+  const parsed = normalizeMetrics(data);
+  if (parsed.totalRequests >= localMetrics.totalRequests || localMetrics.totalRequests === 0) {
+    localMetrics = parsed;
+    safeSetItem("ls_metrics", localMetrics);
+  }
 
   if ("timelines" in data && data.timelines && data.timelines.risk) {
-    localRiskTimeline = data.timelines.risk;
+    const riskTimeline = data.timelines.risk;
+    if (riskTimeline.length >= localRiskTimeline.length || localRiskTimeline.length === 0) {
+      localRiskTimeline = riskTimeline;
+      safeSetItem("ls_risk_timeline", localRiskTimeline);
+    }
   }
 
   return {
@@ -263,7 +290,11 @@ export function useTrafficEvents() {
     };
   }
 
-  localEvents = normalizeEvents(data);
+  const parsedEvents = normalizeEvents(data);
+  if (parsedEvents.length >= localEvents.length || localEvents.length === 0) {
+    localEvents = parsedEvents;
+    safeSetItem("ls_events", localEvents);
+  }
 
   return {
     events: localEvents,
@@ -290,7 +321,11 @@ export function useRiskResults() {
     };
   }
 
-  localRiskResults = normalizeRiskResults(data);
+  const parsedRisk = normalizeRiskResults(data);
+  if (parsedRisk.length >= localRiskResults.length || localRiskResults.length === 0) {
+    localRiskResults = parsedRisk;
+    safeSetItem("ls_risk_results", localRiskResults);
+  }
 
   return {
     riskResults: localRiskResults,
@@ -317,7 +352,11 @@ export function useCanaryTokens() {
     };
   }
 
-  localCanaryTokens = normalizeCanaryTokens(data);
+  const parsedCanary = normalizeCanaryTokens(data);
+  if (parsedCanary.length >= localCanaryTokens.length || localCanaryTokens.length === 0) {
+    localCanaryTokens = parsedCanary;
+    safeSetItem("ls_canary_tokens", localCanaryTokens);
+  }
 
   return {
     canaryTokens: localCanaryTokens,
@@ -344,7 +383,11 @@ export function useHoneyMazeHits() {
     };
   }
 
-  localHoneyMazeHits = normalizeHoneyMazeHits(data);
+  const parsedMaze = normalizeHoneyMazeHits(data);
+  if (parsedMaze.length >= localHoneyMazeHits.length || localHoneyMazeHits.length === 0) {
+    localHoneyMazeHits = parsedMaze;
+    safeSetItem("ls_honey_maze_hits", localHoneyMazeHits);
+  }
 
   return {
     honeyMazeHits: localHoneyMazeHits,
@@ -376,6 +419,15 @@ export async function resetLocalSimulatorData() {
   localCanaryTokens = [];
   localHoneyMazeHits = [];
   localRiskTimeline = [];
+
+  if (typeof window !== "undefined") {
+    window.localStorage.removeItem("ls_metrics");
+    window.localStorage.removeItem("ls_events");
+    window.localStorage.removeItem("ls_risk_results");
+    window.localStorage.removeItem("ls_canary_tokens");
+    window.localStorage.removeItem("ls_honey_maze_hits");
+    window.localStorage.removeItem("ls_risk_timeline");
+  }
 }
 
 // Handles mock local simulation flows for testing and presentation fallback
