@@ -25,6 +25,10 @@ type BackendMetricsResponse = {
     score?: number;
     reasons?: string[];
   }>;
+  timelines?: {
+    risk?: any[];
+    defense?: any[];
+  };
 };
 
 type BackendEventsResponse = {
@@ -56,11 +60,21 @@ type BackendEventsResponse = {
 };
 
 // Keep a local mutable copy of mock data for dynamic UI ticking in mock mode
-let localMetrics: DashboardMetrics = { ...mockDashboardMetrics };
-let localEvents: TrafficEvent[] = [...mockTrafficEvents];
-let localRiskResults: RiskResult[] = [...mockRiskResults];
-let localCanaryTokens: CanaryToken[] = [...mockCanaryTokens];
-let localHoneyMazeHits: HoneyMazeHit[] = [...mockHoneyMazeHits];
+let localMetrics: DashboardMetrics = {
+  totalRequests: 0,
+  botsDetected: 0,
+  blockedRequests: 0,
+  falsePositiveRate: "0%",
+  throttledRequests: 0,
+  powChallenges: 0,
+  honeyMazeHits: 0,
+  realUsersProtected: 0,
+};
+let localEvents: TrafficEvent[] = [];
+let localRiskResults: RiskResult[] = [];
+let localCanaryTokens: CanaryToken[] = [];
+let localHoneyMazeHits: HoneyMazeHit[] = [];
+let localRiskTimeline: any[] = [];
 
 let lastTickTime = Date.now();
 
@@ -207,10 +221,9 @@ export function useDashboardMetrics() {
   });
 
   if (error || !data) {
-    const hasData = localMetrics.totalRequests > 0;
     return {
       metrics: localMetrics,
-      riskTimeline: hasData ? mockRiskTimeline : [],
+      riskTimeline: localRiskTimeline,
       isLoading: false,
       isError: !!error,
       mutate,
@@ -220,19 +233,13 @@ export function useDashboardMetrics() {
   // Update our local sync copy so we don't jump stats if backend goes offline
   localMetrics = normalizeMetrics(data);
 
-  const hasData = localMetrics.totalRequests > 0;
-  const riskTimeline = hasData && data && data.timelines?.risk && data.timelines.risk.length > 0
-    ? data.timelines.risk.map((item: any) => ({
-        time: item.time,
-        human: item.human ?? 0,
-        scraper: item.scraper ?? 0,
-        playwright: item.playwright ?? 0,
-      }))
-    : (hasData ? mockRiskTimeline : []);
+  if ("timelines" in data && data.timelines && data.timelines.risk) {
+    localRiskTimeline = data.timelines.risk;
+  }
 
   return {
     metrics: localMetrics,
-    riskTimeline,
+    riskTimeline: localRiskTimeline,
     isLoading: false,
     isError: false,
     mutate,
@@ -354,11 +361,21 @@ export async function resetLocalSimulatorData() {
   } catch (err) {
     console.error("Failed to reset backend database:", err);
   }
-  localMetrics = { ...mockDashboardMetrics };
-  localEvents = [...mockTrafficEvents];
-  localRiskResults = [...mockRiskResults];
-  localCanaryTokens = [...mockCanaryTokens];
-  localHoneyMazeHits = [...mockHoneyMazeHits];
+  localMetrics = {
+    totalRequests: 0,
+    botsDetected: 0,
+    blockedRequests: 0,
+    falsePositiveRate: "0%",
+    throttledRequests: 0,
+    powChallenges: 0,
+    honeyMazeHits: 0,
+    realUsersProtected: 0,
+  };
+  localEvents = [];
+  localRiskResults = [];
+  localCanaryTokens = [];
+  localHoneyMazeHits = [];
+  localRiskTimeline = [];
 }
 
 // Handles mock local simulation flows for testing and presentation fallback

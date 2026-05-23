@@ -200,7 +200,7 @@ function ShieldDashboard() {
               {activeTab === "risk" && (
                 <div className="flex flex-col gap-4">
                   <p className="text-xs font-semibold" style={{ color: "var(--muted)" }}>Risk Score Over Time</p>
-                  <RiskScoreChart data={riskTimeline} />
+                  <RiskScoreChart data={riskTimeline || []} />
                   <div>
                     <p className="text-xs font-semibold mb-3" style={{ color: "var(--muted)" }}>Top Sessions by Risk</p>
                     <div className="flex flex-col gap-2">
