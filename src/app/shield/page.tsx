@@ -106,9 +106,9 @@ function ShieldDashboard() {
                 setCurrentStep(step);
               }, 800);
             }}
-            onReset={() => {
+            onReset={async () => {
               setCurrentStep(-1);
-              resetLocalSimulatorData();
+              await resetLocalSimulatorData();
               refreshAll();
             }}
           />

@@ -338,7 +338,12 @@ export function useHoneyMazeHits() {
 }
 
 // Reset client simulator data
-export function resetLocalSimulatorData() {
+export async function resetLocalSimulatorData() {
+  try {
+    await fetch("/api/simulate/reset", { method: "POST" });
+  } catch (err) {
+    console.error("Failed to reset backend database:", err);
+  }
   localMetrics = { ...mockDashboardMetrics };
   localEvents = [...mockTrafficEvents];
   localRiskResults = [...mockRiskResults];
