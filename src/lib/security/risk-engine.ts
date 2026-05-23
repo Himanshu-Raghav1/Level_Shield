@@ -79,6 +79,26 @@ export function evaluateSessionRisk(
     reasons.push('suspicious_user_agent');
   }
 
+  // C2. Strict AI Scraping Agent Block (+95)
+  const isAiAgent = 
+    ua.includes('gptbot') ||
+    ua.includes('chatgpt') ||
+    ua.includes('oai-searchbot') ||
+    ua.includes('claudebot') ||
+    ua.includes('claude-web') ||
+    ua.includes('geminibot') ||
+    ua.includes('google-extended') ||
+    ua.includes('applebot-extended') ||
+    ua.includes('bytespider') ||
+    ua.includes('cohere-ai') ||
+    ua.includes('openai') ||
+    ua.includes('anthropic');
+
+  if (isAiAgent) {
+    score += 95;
+    reasons.push('suspicious_user_agent');
+  }
+
   // D. Missing Referrer (+8)
   const referrer = requestHeaders['referer'] || requestHeaders['referrer'] || '';
   // Deep navigation without referrer is highly suspicious for crawlers

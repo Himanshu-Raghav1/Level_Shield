@@ -1,0 +1,36 @@
+# robots.txt for Level Shield
+# Premium AI-Era Dataset Protection
+
+User-agent: *
+Allow: /
+Disallow: /blocked
+Disallow: /challenge/pow
+Disallow: /maze/
+
+# Strict Blocks for AI Scraping Crawlers
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: OAI-SearchBot
+Disallow: /
