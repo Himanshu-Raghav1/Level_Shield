@@ -79,10 +79,7 @@ export const mockRiskTimeline = [
   { time: new Date().toISOString(), human: 15, scraper: 98, playwright: 95 },
 ];
 
-export const mockCanaryTokens = [
-  { tokenId: "canary_row_992", sessionId: "sess_bot2", exposedAt: new Date(Date.now() - 3600000).toISOString(), company: "Meta", fakeSalary: "$420,000" },
-  { tokenId: "canary_row_115", sessionId: "sess_bot5", exposedAt: new Date(Date.now() - 7200000).toISOString(), company: "Amazon", fakeSalary: "$315,000" },
-];
+export const mockCanaryTokens: any[] = [];
 
 export const mockHoneyMazeHits = [
   { sessionId: "sess_agent4", mazePath: "/maze/token123", enteredAt: new Date(Date.now() - 1000).toISOString() },
@@ -160,15 +157,4 @@ export type SalaryRecord = {
   isCanary?: boolean;
 };
 
-export const mockSalaries: SalaryRecord[] = [
-  { id: "sal_1", company: "Google", level: "L3", title: "Software Engineer", base: "$142,000", stock: "$35,000", bonus: "$18,000", totalComp: "$195,000", location: "Mountain View, CA", experience: "1 yr" },
-  { id: "sal_2", company: "Google", level: "L4", title: "Software Engineer II", base: "$175,000", stock: "$55,000", bonus: "$25,000", totalComp: "$255,000", location: "New York, NY", experience: "3 yrs" },
-  { id: "sal_3", company: "Google", level: "L5", title: "Senior Software Engineer", base: "$210,000", stock: "$110,000", bonus: "$40,000", totalComp: "$360,000", location: "Mountain View, CA", experience: "6 yrs" },
-  { id: "sal_4", company: "Meta", level: "IC3", title: "Software Engineer", base: "$138,000", stock: "$45,000", bonus: "$15,000", totalComp: "$198,000", location: "Menlo Park, CA", experience: "0 yrs" },
-  { id: "sal_5", company: "Meta", level: "IC4", title: "Software Engineer II", base: "$168,000", stock: "$72,000", bonus: "$22,000", totalComp: "$262,000", location: "Seattle, WA", experience: "2 yrs" },
-  { id: "sal_6", company: "Meta", level: "IC5", title: "Senior Software Engineer", base: "$205,000", stock: "$140,000", bonus: "$35,000", totalComp: "$380,000", location: "Menlo Park, CA", experience: "5 yrs" },
-  { id: "sal_7", company: "Apple", level: "ICT3", title: "Software Engineer", base: "$145,000", stock: "$40,000", bonus: "$15,000", totalComp: "$200,000", location: "Cupertino, CA", experience: "2 yrs" },
-  { id: "sal_8", company: "Apple", level: "ICT4", title: "Software Engineer II", base: "$182,000", stock: "$65,000", bonus: "$28,000", totalComp: "$275,000", location: "Austin, TX", experience: "4 yrs" },
-  { id: "sal_9", company: "Stripe", level: "L2", title: "Software Engineer", base: "$155,000", stock: "$50,000", bonus: "$20,000", totalComp: "$225,000", location: "San Francisco, CA", experience: "1 yr" },
-  { id: "sal_10", company: "Netflix", level: "Senior", title: "Senior Software Engineer", base: "$450,000", stock: "$0", bonus: "$0", totalComp: "$450,000", location: "Los Gatos, CA", experience: "7 yrs" }
-];
+export const mockSalaries: SalaryRecord[] = [];

@@ -51,8 +51,8 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
   let userAgentPlatform = "Linux x86_64";
   let mouseEntropy = "22% (Highly Linear)";
   let mouseEntropyDesc = "Straight-line pixel transitions indicative of WebDriver scripts.";
-  let keyCadence = "4ms average gap";
-  let keyCadenceDesc = "Super-human typing speeds matching autocomplete copy-pastes.";
+  const keyCadence = "4ms average gap";
+  const keyCadenceDesc = "Super-human typing speeds matching autocomplete copy-pastes.";
   let clickCoherence = "100% exact offsets";
   let clickCoherenceDesc = "No micro-shakes or organic mouse offsets recorded during hover events.";
 

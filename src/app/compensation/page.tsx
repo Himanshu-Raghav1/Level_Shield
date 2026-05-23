@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Shield, Search, SlidersHorizontal, ChevronRight } from "lucide-react";
-import { mockSalaries, SalaryRecord, mockCanaryTokens } from "@/data/mock";
+import { SalaryRecord } from "@/data/mock";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -18,6 +18,9 @@ function CompensationDirectoryContent() {
   const [sortField, setSortField] = useState<"company" | "totalComp" | "experience">("company");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
+  const [salariesList, setSalariesList] = useState<SalaryRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+
   // Telemetry page view beacon
   useEffect(() => {
     fetch("/api/events/page-view", {
@@ -27,37 +30,25 @@ function CompensationDirectoryContent() {
     }).catch(() => {});
   }, []);
 
-  // Filter salaries + dynamic canary row injection!
-  const getFilteredSalaries = (): SalaryRecord[] => {
-    let list = [...mockSalaries];
-
-    // Inject Canary Token as a fake row if there are search matches (simulates active trap exfiltration)
-    const activeCanary = mockCanaryTokens[0];
-    if (activeCanary) {
-      list.push({
-        id: activeCanary.tokenId,
-        company: activeCanary.company,
-        level: "L6-Decoy",
-        title: "Senior Security Architect",
-        base: activeCanary.fakeSalary,
-        stock: "$120,000",
-        bonus: "$60,000",
-        totalComp: activeCanary.fakeSalary,
-        location: "Remote, US",
-        experience: "8 yrs",
-        isCanary: true
+  // Fetch full data from secure backend API
+  useEffect(() => {
+    setLoading(true);
+    fetch(`/api/compensation/search?q=${encodeURIComponent(search)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.results) {
+          setSalariesList(data.results);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
       });
-    }
+  }, [search]);
 
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      list = list.filter(
-        (s) =>
-          s.company.toLowerCase().includes(q) ||
-          s.title.toLowerCase().includes(q) ||
-          s.location.toLowerCase().includes(q)
-      );
-    }
+  // Filter salaries
+  const getFilteredSalaries = (): SalaryRecord[] => {
+    let list = [...salariesList];
 
     if (filterRole !== "all") {
       list = list.filter((s) => s.title.toLowerCase().includes(filterRole.toLowerCase()));
@@ -224,7 +215,16 @@ function CompensationDirectoryContent() {
               </tr>
             </thead>
             <tbody>
-              {filtered.length === 0 ? (
+              {loading ? (
+                <tr>
+                  <td colSpan={8} className="py-12 text-center text-xs" style={{ color: "var(--muted)" }}>
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <div className="w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+                      <span>Verifying session and retrieving salary aggregates...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : filtered.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-12 text-center text-xs" style={{ color: "var(--muted)" }}>
                     No results matched your filters.

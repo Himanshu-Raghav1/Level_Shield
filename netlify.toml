@@ -1,0 +1,28 @@
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noai, noimageai, noarchive, nosnippet"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    Permissions-Policy = "interest-cohort=(), browsing-topics=()"
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "no-store, max-age=0"
+    X-Robots-Tag = "noai, noimageai, noarchive, nosnippet"
+
+[[headers]]
+  for = "/compensation*"
+  [headers.values]
+    Cache-Control = "no-store, max-age=0"
+
+[[headers]]
+  for = "/company*"
+  [headers.values]
+    Cache-Control = "no-store, max-age=0"
+
+[[headers]]
+  for = "/shield*"
+  [headers.values]
+    Cache-Control = "no-store, max-age=0"
