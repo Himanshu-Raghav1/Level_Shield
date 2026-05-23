@@ -117,7 +117,7 @@ export function checkDefenseActionResolved(sessionId: string, action: DefenseAct
     SELECT resolved FROM defense_actions
     WHERE session_id = ? AND action = ?
     ORDER BY timestamp DESC LIMIT 1
-  `).get(sessionId) as any;
+  `).get(sessionId, action) as any;
   return row ? row.resolved === 1 : false;
 }
 
