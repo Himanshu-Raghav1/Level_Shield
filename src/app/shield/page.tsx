@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Shield, Activity, Users, Ban, AlertTriangle, Zap, Layers, ListChecks } from "lucide-react";
+import { Shield, Activity, Users, Ban, AlertTriangle, Zap, Layers, ListChecks, Dna, Network, Fingerprint, Radar, Brain, CheckCircle2 } from "lucide-react";
 import SimulatorPanel from "@/components/SimulatorPanel";
 import LiveTrafficFeed from "@/components/LiveTrafficFeed";
 import dynamic from "next/dynamic";
@@ -267,15 +267,17 @@ function ShieldDashboard() {
 
                   {/* Innovation feature summary cards */}
                   {[
-                    { name: "Behavior DNA",          icon: "🧬", color: "var(--foreground)",  desc: "Mouse entropy, typing cadence, dwell" },
-                    { name: "Graph of Intent",        icon: "🕸️",  color: "var(--accent-cyan)",  desc: "Session nav graph: clean = bot" },
-                    { name: "JA4-Style Fingerprint",  icon: "🔬", color: "var(--muted)",  desc: "Header + behavior consistency" },
-                    { name: "AI-Agent Trap Beacon",   icon: "⚡", color: "var(--accent-cyan)",  desc: "Hidden link triggers on decoy pages" },
-                    { name: "Adaptive Friction Brain", icon: "🧠", color: "var(--muted)", desc: "allow → throttle → PoW → maze → block" },
-                    { name: "Signed Good-Bot Lane",   icon: "✅", color: "var(--foreground)",  desc: "Cryptographic crawler verification" },
+                    { name: "Behavior DNA",          icon: <Dna size={16} />,          color: "var(--foreground)",  desc: "Mouse entropy, typing cadence, dwell" },
+                    { name: "Graph of Intent",        icon: <Network size={16} />,      color: "var(--accent-cyan)",  desc: "Session nav graph: clean = bot" },
+                    { name: "JA4-Style Fingerprint",  icon: <Fingerprint size={16} />,  color: "var(--muted)",        desc: "Header + behavior consistency" },
+                    { name: "AI-Agent Trap Beacon",   icon: <Radar size={16} />,        color: "var(--accent-cyan)",  desc: "Hidden link triggers on decoy pages" },
+                    { name: "Adaptive Friction Brain", icon: <Brain size={16} />,        color: "var(--muted)",        desc: "allow → throttle → PoW → maze → block" },
+                    { name: "Signed Good-Bot Lane",   icon: <CheckCircle2 size={16} />, color: "var(--foreground)",  desc: "Cryptographic crawler verification" },
                   ].map(({ name, icon, color, desc }) => (
                     <div key={name} className="glass-card p-3 flex items-start gap-3">
-                      <span className="text-xl">{icon}</span>
+                      <span className="shrink-0" style={{ color: color === "var(--muted)" ? "var(--muted)" : color }}>
+                        {icon}
+                      </span>
                       <div>
                         <p className="text-xs font-semibold" style={{ color }}>{name}</p>
                         <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>{desc}</p>
