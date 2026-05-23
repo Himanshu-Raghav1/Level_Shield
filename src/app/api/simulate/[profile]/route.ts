@@ -161,6 +161,9 @@ export async function POST(
       insertRisk(22, [], 10);
       insertRisk(19, [], 5);
       insertRisk(15, [], 0);
+
+      // Simulate a false positive challenge that the human successfully solved!
+      insertDefense('proof_of_work', 1, 15);
       insertDefense('allow', 0, 0);
 
     } else if (cleanProfile === 'power-user') {
@@ -207,6 +210,10 @@ export async function POST(
       insertRisk(18, [], 10);
       insertRisk(16, [], 5);
       insertRisk(18, [], 0);
+
+      // Simulate two false positive challenges that this active human power-user successfully solved!
+      insertDefense('proof_of_work', 1, 20);
+      insertDefense('proof_of_work', 1, 10);
       insertDefense('allow', 0, 0);
 
     } else if (cleanProfile === 'request-scraper') {

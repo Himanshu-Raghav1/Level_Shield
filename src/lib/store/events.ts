@@ -84,7 +84,7 @@ export function getMetrics(): DashboardMetrics {
   `).get() as any)?.count || 0;
 
   const falsePositiveEstimate = powChallenges > 0 
-    ? Math.round((powSolved / powChallenges) * 100) 
+    ? Math.round((powSolved / powChallenges) * 1000) / 10 
     : 0;
 
   const honeyMazeHits = (db.prepare('SELECT COUNT(*) as count FROM honey_maze_hits').get() as any)?.count || 0;
