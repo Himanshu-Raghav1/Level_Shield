@@ -47,18 +47,26 @@ async function handleTarpit(sessionId: string): Promise<void> {
 /**
  * Verifies request inside an API Route
  */
-export async function verifyRequest(req: NextRequest): Promise<VerifyResult> {
-  const url = req.nextUrl.pathname;
-  const method = req.method;
+export async function verifyRequest(
+  req: NextRequest,
+  forwardedData?: { path?: string; method?: string; headers?: Record<string, string>; ip?: string }
+): Promise<VerifyResult> {
+  const url = forwardedData?.path || req.nextUrl.pathname;
+  const method = forwardedData?.method || req.method;
   
-  // Extract session ID from cookie
-  const cookieStore = req.cookies;
-  const sessionCookie = cookieStore.get(COOKIE_NAME)?.value;
-
-  const headersList = req.headers;
-  const headers = extractHeaders(headersList);
+  // Extract headers
+  const headers = forwardedData?.headers || extractHeaders(req.headers);
   const userAgent = headers['user-agent'] || 'unknown';
-  const ipAddress = headers['x-forwarded-for']?.split(',')[0] || '127.0.0.1';
+  const ipAddress = forwardedData?.ip || headers['x-forwarded-for']?.split(',')[0] || '127.0.0.1';
+
+  // Extract session ID from cookie
+  let sessionCookie = req.cookies.get(COOKIE_NAME)?.value;
+  if (!sessionCookie && headers['cookie']) {
+    sessionCookie = headers['cookie']
+      .split(';')
+      .find(c => c.trim().startsWith(COOKIE_NAME + '='))
+      ?.split('=')[1];
+  }
   
   // Try to verify Good Bot Lane Signature first
   const botId = headers['x-shield-bot-id'];

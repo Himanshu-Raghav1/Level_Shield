@@ -3,8 +3,11 @@ import { verifyRequest } from '@/lib/security/verify-request';
 
 export async function POST(req: NextRequest) {
   try {
-    // Run full security checks
-    const verification = await verifyRequest(req);
+    const body = await req.json();
+    const isEdgeLog = req.headers.get('x-shield-edge-log') === 'true';
+
+    // Run full security checks, forwarding Edge Middleware payload if present
+    const verification = await verifyRequest(req, isEdgeLog ? body : undefined);
 
     // If blocked or redirected by the mitigation engine, return that response
     if (verification.isBlocked && verification.mitigationResponse) {
