@@ -153,16 +153,18 @@ body {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: var(--accent);
+  background: #10b981;
   animation: pulse-ring 1.5s ease-out infinite;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
 }
 .live-dot {
   position: relative;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent);
+  background: #10b981;
   display: inline-block;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
 }
 
 /* Scan line animation for the hero effect */
