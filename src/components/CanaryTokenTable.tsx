@@ -10,7 +10,7 @@ interface Props {
 export default function CanaryTokenTable({ tokens }: Props) {
   if (tokens.length === 0) {
     return (
-      <p className="text-center py-6 text-xs" style={{ color: "var(--muted)" }}>
+      <p className="text-xs py-1" style={{ color: "var(--muted)" }}>
         No canary tokens exposed yet.
       </p>
     );

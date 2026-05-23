@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Shield, Activity, Users, Ban, AlertTriangle, Zap, Layers, ListChecks, Dna, Network, Fingerprint, Radar, Brain, CheckCircle2 } from "lucide-react";
+import { Shield, Activity, Users, Ban, AlertTriangle, Zap, Layers, ListChecks, Dna, Network, Fingerprint, Radar, Brain, CheckCircle2, KeyRound, Compass } from "lucide-react";
 import SimulatorPanel from "@/components/SimulatorPanel";
 import LiveTrafficFeed from "@/components/LiveTrafficFeed";
 import dynamic from "next/dynamic";
@@ -231,56 +231,70 @@ function ShieldDashboard() {
               {activeTab === "innovation" && (
                 <div className="grid md:grid-cols-2 gap-4">
                   {/* Canary Tokens */}
-                  <div className="glass-card p-4">
-                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: "var(--accent-cyan)" }}>
-                      🪤 Canary Token Attribution
-                    </h3>
-                    <CanaryTokenTable tokens={canaryTokens} />
+                  <div className="glass-card p-3 flex items-start gap-3">
+                    <span className="shrink-0 mt-0.5" style={{ color: "var(--accent-cyan)" }}>
+                      <KeyRound size={16} />
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-xs font-semibold" style={{ color: "var(--foreground)" }}>
+                        Canary Token Attribution
+                      </h3>
+                      <div className="mt-2">
+                        <CanaryTokenTable tokens={canaryTokens} />
+                      </div>
+                    </div>
                   </div>
 
                   {/* Honey Maze */}
-                  <div className="glass-card p-4">
-                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: "var(--accent-cyan)" }}>
-                      🌀 Honey Maze Entries
-                    </h3>
-                    {honeyMazeHits.length === 0 ? (
-                      <p className="text-xs" style={{ color: "var(--muted)" }}>No maze entries yet.</p>
-                    ) : (
-                      <div className="flex flex-col gap-2">
-                        {honeyMazeHits.map((h, i) => (
-                          <div
-                            key={i}
-                            className="flex items-center gap-3 px-3 py-2 rounded-lg"
-                            style={{ background: "rgba(6,182,212,0.04)", border: "1px solid rgba(6,182,212,0.15)" }}
-                          >
-                            <span className="text-xs font-mono" style={{ color: "var(--accent-cyan)" }}>
-                              {h.sessionId.slice(0, 14)}…
-                            </span>
-                            <span className="text-xs ml-auto" style={{ color: "var(--muted)" }}>
-                              {formatTimeAgo(h.enteredAt)}
-                            </span>
+                  <div className="glass-card p-3 flex items-start gap-3">
+                    <span className="shrink-0 mt-0.5" style={{ color: "var(--accent-cyan)" }}>
+                      <Compass size={16} />
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-xs font-semibold" style={{ color: "var(--foreground)" }}>
+                        Honey Maze Entries
+                      </h3>
+                      <div className="mt-2">
+                        {honeyMazeHits.length === 0 ? (
+                          <p className="text-xs py-1" style={{ color: "var(--muted)" }}>No maze entries yet.</p>
+                        ) : (
+                          <div className="flex flex-col gap-1.5">
+                            {honeyMazeHits.slice(0, 3).map((h, i) => (
+                              <div
+                                key={i}
+                                className="flex items-center justify-between px-3 py-1.5 rounded-lg"
+                                style={{ background: "rgba(6,182,212,0.04)", border: "1px solid rgba(6,182,212,0.15)" }}
+                              >
+                                <span className="text-xs font-mono" style={{ color: "var(--accent-cyan)" }}>
+                                  {h.sessionId.slice(0, 14)}…
+                                </span>
+                                <span className="text-xs ml-auto" style={{ color: "var(--muted)" }}>
+                                  {formatTimeAgo(h.enteredAt)}
+                                </span>
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        )}
                       </div>
-                    )}
+                    </div>
                   </div>
 
                   {/* Innovation feature summary cards */}
                   {[
-                    { name: "Behavior DNA",          icon: <Dna size={16} />,          color: "var(--foreground)",  desc: "Mouse entropy, typing cadence, dwell" },
-                    { name: "Graph of Intent",        icon: <Network size={16} />,      color: "var(--accent-cyan)",  desc: "Session nav graph: clean = bot" },
-                    { name: "JA4-Style Fingerprint",  icon: <Fingerprint size={16} />,  color: "var(--muted)",        desc: "Header + behavior consistency" },
-                    { name: "AI-Agent Trap Beacon",   icon: <Radar size={16} />,        color: "var(--accent-cyan)",  desc: "Hidden link triggers on decoy pages" },
-                    { name: "Adaptive Friction Brain", icon: <Brain size={16} />,        color: "var(--muted)",        desc: "allow → throttle → PoW → maze → block" },
-                    { name: "Signed Good-Bot Lane",   icon: <CheckCircle2 size={16} />, color: "var(--foreground)",  desc: "Cryptographic crawler verification" },
-                  ].map(({ name, icon, color, desc }) => (
+                    { name: "Behavior DNA",          icon: <Dna size={16} />,          desc: "Mouse entropy, typing cadence, dwell" },
+                    { name: "Graph of Intent",        icon: <Network size={16} />,      desc: "Session nav graph: clean = bot" },
+                    { name: "JA4-Style Fingerprint",  icon: <Fingerprint size={16} />,  desc: "Header + behavior consistency" },
+                    { name: "AI-Agent Trap Beacon",   icon: <Radar size={16} />,        desc: "Hidden link triggers on decoy pages" },
+                    { name: "Adaptive Friction Brain", icon: <Brain size={16} />,        desc: "allow → throttle → PoW → maze → block" },
+                    { name: "Signed Good-Bot Lane",   icon: <CheckCircle2 size={16} />, desc: "Cryptographic crawler verification" },
+                  ].map(({ name, icon, desc }) => (
                     <div key={name} className="glass-card p-3 flex items-start gap-3">
-                      <span className="shrink-0" style={{ color: color === "var(--muted)" ? "var(--muted)" : color }}>
+                      <span className="shrink-0 mt-0.5" style={{ color: "var(--accent-cyan)" }}>
                         {icon}
                       </span>
-                      <div>
-                        <p className="text-xs font-semibold" style={{ color }}>{name}</p>
-                        <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>{desc}</p>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-xs font-semibold" style={{ color: "var(--foreground)" }}>{name}</h3>
+                        <p className="text-xs mt-1 leading-normal" style={{ color: "var(--muted)" }}>{desc}</p>
                       </div>
                     </div>
                   ))}
