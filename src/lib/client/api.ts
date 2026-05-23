@@ -145,7 +145,7 @@ function normalizeEvents(data: TrafficEvent[] | BackendEventsResponse): TrafficE
   if (Array.isArray(data)) return data;
 
   const defenses = new Map(
-    (data.defenses ?? []).map((defense) => [defense.session_id, defense.action]),
+    [...(data.defenses ?? [])].reverse().map((defense) => [defense.session_id, defense.action]),
   );
 
   return (data.requests ?? []).map((request) => ({

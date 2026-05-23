@@ -106,31 +106,31 @@ export function evaluateSessionRisk(
     reasons.push('compensation_bulk_access');
   }
 
-  // G. Honey Link Clicked (+30)
+  // G. Honey Link Clicked (+80)
   if (hasSessionHitHoneyMaze(sessionId)) {
-    score += 30;
+    score += 80;
     reasons.push('honey_link_triggered');
   }
 
-  // H. Canary Token Exposed (+40)
+  // H. Canary Token Exposed (+95)
   const canaryExposedRow = db.prepare(`
     SELECT COUNT(*) as count FROM canary_tokens
     WHERE session_id = ? AND exposed = 1
   `).get(sessionId) as any;
 
   if (canaryExposedRow && canaryExposedRow.count > 0) {
-    score += 40;
+    score += 95;
     reasons.push('canary_token_exposed');
   }
 
-  // I. AI-Agent Trap Beacon (+35)
+  // I. AI-Agent Trap Beacon (+95)
   const beaconTriggeredRow = db.prepare(`
     SELECT COUNT(*) as count FROM agent_beacons
     WHERE session_id = ?
   `).get(sessionId) as any;
 
   if (beaconTriggeredRow && beaconTriggeredRow.count > 0) {
-    score += 35;
+    score += 95;
     reasons.push('agent_beacon_triggered');
   }
 
