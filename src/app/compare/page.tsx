@@ -6,13 +6,14 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { mockSalaries } from "@/data/mock";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import dynamic from "next/dynamic";
 
 interface CompComparisonPoint {
   levelCategory: string;
   [companyKey: string]: string | number;
 }
 
-export default function SalaryCompare() {
+function SalaryCompare() {
   const [companyA, setCompanyA] = useState("Google");
   const [companyB, setCompanyB] = useState("Meta");
   const [mounted, setMounted] = useState(false);
@@ -262,3 +263,5 @@ export default function SalaryCompare() {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(SalaryCompare), { ssr: false });

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Shield, MessageSquare, ThumbsUp, Eye, Search, AlertTriangle, ArrowUpRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import dynamic from "next/dynamic";
 
 interface ForumThread {
   id: string;
@@ -23,7 +24,7 @@ const CATEGORY_STYLES: Record<string, { color: string; bg: string; border: strin
   Compensation: { color: "var(--muted)",       bg: "var(--surface-2)", border: "var(--border)" },
 };
 
-export default function CommunityForum() {
+function CommunityForum() {
   const [search, setSearch] = useState("");
   const [mounted, setMounted] = useState(false);
 
@@ -290,3 +291,5 @@ export default function CommunityForum() {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(CommunityForum), { ssr: false });

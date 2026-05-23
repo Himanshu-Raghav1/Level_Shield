@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { ShieldAlert, Terminal, Lock, Globe, Server, RefreshCw } from "lucide-react";
+import dynamic from "next/dynamic";
 
-export default function AccessBlocked() {
+function AccessBlocked() {
   const [sessionIp, setSessionIp] = useState("45.143.201.44");
   const [sessionToken, setSessionToken] = useState("");
   const [timestamp, setTimestamp] = useState("");
@@ -125,3 +126,5 @@ export default function AccessBlocked() {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(AccessBlocked), { ssr: false });
