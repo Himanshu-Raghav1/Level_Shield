@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Shield, Activity, Users, Ban, AlertTriangle, Zap, Layers, ListChecks } from "lucide-react";
 import SimulatorPanel from "@/components/SimulatorPanel";
 import LiveTrafficFeed from "@/components/LiveTrafficFeed";
+import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import RiskScoreChart from "@/components/RiskScoreChart";
 import CanaryTokenTable from "@/components/CanaryTokenTable";
@@ -42,7 +43,7 @@ const STORY_STEPS = [
   "Real users remain allowed",
 ];
 
-export default function ShieldDashboard() {
+function ShieldDashboard() {
   const [activeTab, setActiveTab] = useState<Tab>("traffic");
   const [currentStep, setCurrentStep] = useState(-1);
   const [mounted, setMounted] = useState(false);
@@ -345,3 +346,5 @@ export default function ShieldDashboard() {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(ShieldDashboard), { ssr: false });
