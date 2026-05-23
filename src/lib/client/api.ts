@@ -24,6 +24,10 @@ type BackendMetricsResponse = {
     score?: number;
     reasons?: string[];
   }>;
+  timelines?: {
+    risk?: any[];
+    defense?: any[];
+  };
 };
 
 type BackendEventsResponse = {
@@ -69,6 +73,7 @@ let localEvents: TrafficEvent[] = [];
 let localRiskResults: RiskResult[] = [];
 let localCanaryTokens: CanaryToken[] = [];
 let localHoneyMazeHits: HoneyMazeHit[] = [];
+let localRiskTimeline: any[] = [];
 
 let lastTickTime = Date.now();
 
@@ -221,6 +226,7 @@ export function useDashboardMetrics() {
   if (error || !data) {
     return {
       metrics: localMetrics,
+      riskTimeline: localRiskTimeline,
       isLoading: false,
       isError: !!error,
       mutate,
@@ -230,8 +236,13 @@ export function useDashboardMetrics() {
   // Update our local sync copy so we don't jump stats if backend goes offline
   localMetrics = normalizeMetrics(data);
 
+  if ("timelines" in data && data.timelines && data.timelines.risk) {
+    localRiskTimeline = data.timelines.risk;
+  }
+
   return {
     metrics: localMetrics,
+    riskTimeline: localRiskTimeline,
     isLoading: false,
     isError: false,
     mutate,
@@ -367,6 +378,7 @@ export async function resetLocalSimulatorData() {
   localRiskResults = [];
   localCanaryTokens = [];
   localHoneyMazeHits = [];
+  localRiskTimeline = [];
 }
 
 // Handles mock local simulation flows for testing and presentation fallback
