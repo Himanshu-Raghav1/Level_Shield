@@ -12,8 +12,13 @@ export async function GET(
     // Get the unique trap token
     const { token } = await params;
 
-    // Log the AI agent trap hit
-    logAgentBeacon(verification.sessionId, token);
+    // Log the AI agent trap hit or expose canary token
+    if (token.startsWith('canary_')) {
+      const { triggerCanaryExposure } = await import('@/lib/security/canary');
+      triggerCanaryExposure(token);
+    } else {
+      logAgentBeacon(verification.sessionId, token);
+    }
 
     // Re-verify after logging the trap hit so the risk engine is immediately aware of this violation
     const updatedVerification = await verifyRequest(req);

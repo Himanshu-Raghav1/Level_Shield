@@ -14,6 +14,8 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
   const { id } = use(params);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [sessionData, setSessionData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -23,31 +25,97 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ path: `/shield/sessions/${id}`, timestamp: new Date().toISOString() })
     }).catch(() => {});
+
+    // Fetch live session deep-dive metrics
+    setLoading(true);
+    fetch(`/api/sessions/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Session not found");
+        return res.json();
+      })
+      .then((data) => {
+        setSessionData(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.warn("Failed to fetch backend session data, falling back to mock metrics:", err);
+        setLoading(false);
+      });
   }, [id]);
 
   if (!mounted) return null;
 
-  // Retrieve matching risk profile
-  let sessionRisk = mockRiskResults.find((r) => r.sessionId === id);
-  if (!sessionRisk) {
-    // Generate fallback synthetic risk profile if not found, to support all custom simulator session detail routes
-    sessionRisk = {
-      sessionId: id,
-      score: id.includes("bot") || id.includes("sim_request") || id.includes("sim_sequential") || id.includes("sim_playwright") || id.includes("sim_ai") ? 88 : 12,
-      action: id.includes("bot") || id.includes("sim_sequential") || id.includes("sim_ai") ? "block" : id.includes("pow") || id.includes("sim_playwright") ? "proof_of_work" : "allow",
-      reasons: id.includes("bot") || id.includes("sim_sequential") ? ["sequential_url_access", "suspicious_user_agent"] : id.includes("sim_ai") ? ["honey_link_triggered", "agent_beacon_triggered"] : [],
-      confidence: 0.95,
-      timestamp: new Date().toISOString(),
-    };
-  }
+  // Resolve matching risk profile
+  let sessionRisk: any = null;
+  let syntheticEvents: any[] = [];
+  let userAgentPlatform = "Linux x86_64";
+  let mouseEntropy = "22% (Highly Linear)";
+  let mouseEntropyDesc = "Straight-line pixel transitions indicative of WebDriver scripts.";
+  let keyCadence = "4ms average gap";
+  let keyCadenceDesc = "Super-human typing speeds matching autocomplete copy-pastes.";
+  let clickCoherence = "100% exact offsets";
+  let clickCoherenceDesc = "No micro-shakes or organic mouse offsets recorded during hover events.";
 
-  // Retrieve matching traffic events (Graph of Intent)
-  const sessionEvents = mockTrafficEvents.filter((e) => e.sessionId === id);
-  const syntheticEvents = sessionEvents.length > 0 ? sessionEvents : [
-    { id: "syn_evt_1", sessionId: id, path: "/", ip: "45.143.201.44", userAgent: "Mozilla/5.0 (Playwright Bot)", timestamp: new Date(Date.now() - 15000).toISOString(), actionTaken: sessionRisk.action },
-    { id: "syn_evt_2", sessionId: id, path: "/compensation", ip: "45.143.201.44", userAgent: "Mozilla/5.0 (Playwright Bot)", timestamp: new Date(Date.now() - 10000).toISOString(), actionTaken: sessionRisk.action },
-    { id: "syn_evt_3", sessionId: id, path: "/company/google", ip: "45.143.201.44", userAgent: "Mozilla/5.0 (Playwright Bot)", timestamp: new Date(Date.now() - 5000).toISOString(), actionTaken: sessionRisk.action },
-  ];
+  if (sessionData) {
+    const latestRisk = sessionData.risks?.[sessionData.risks.length - 1];
+    const lastDefense = sessionData.defenses?.[sessionData.defenses.length - 1];
+    sessionRisk = {
+      sessionId: sessionData.session.id,
+      score: latestRisk?.score ?? 0,
+      action: lastDefense?.action ?? 'allow',
+      reasons: latestRisk?.reasons ?? [],
+      confidence: latestRisk?.confidence ?? 0.95,
+      timestamp: sessionData.session.createdAt,
+    };
+    
+    syntheticEvents = (sessionData.requests ?? []).map((r: any) => ({
+      id: r.id,
+      sessionId: r.session_id,
+      path: r.url,
+      ip: sessionData.session.ipAddress,
+      userAgent: sessionData.session.userAgent,
+      timestamp: r.timestamp,
+      actionTaken: lastDefense?.action ?? 'allow',
+    }));
+
+    if (sessionData.session.userAgent.includes("Macintosh")) {
+      userAgentPlatform = "macOS (Apple Silicon/Intel)";
+    } else if (sessionData.session.userAgent.includes("Windows")) {
+      userAgentPlatform = "Windows NT (x64)";
+    }
+
+    const entropy = sessionData.innovationLayers?.behaviorDna?.entropy ?? 100;
+    if (entropy < 50) {
+      mouseEntropy = `${entropy}% (Low Entropy)`;
+      mouseEntropyDesc = "Highly linear/robotic cursor movement detected with zero micro-shakes.";
+      clickCoherence = "100% exact offsets";
+      clickCoherenceDesc = "Robotic absolute position offsets with zero pixel variations.";
+    } else {
+      mouseEntropy = `${entropy}% (High Entropy)`;
+      mouseEntropyDesc = "Organic cursor trajectory with micro-shakes, proving human presence.";
+      clickCoherence = "Varying micro-offsets";
+      clickCoherenceDesc = "Organic micro-offsets and micro-hesitations typical of human motor controls.";
+    }
+  } else {
+    sessionRisk = mockRiskResults.find((r) => r.sessionId === id);
+    if (!sessionRisk) {
+      sessionRisk = {
+        sessionId: id,
+        score: id.includes("bot") || id.includes("sim_request") || id.includes("sim_sequential") || id.includes("sim_playwright") || id.includes("sim_ai") ? 88 : 12,
+        action: id.includes("bot") || id.includes("sim_sequential") || id.includes("sim_ai") ? "block" : id.includes("pow") || id.includes("sim_playwright") ? "proof_of_work" : "allow",
+        reasons: id.includes("bot") || id.includes("sim_sequential") ? ["sequential_url_access", "suspicious_user_agent"] : id.includes("sim_ai") ? ["honey_link_triggered", "agent_beacon_triggered"] : [],
+        confidence: 0.95,
+        timestamp: new Date().toISOString(),
+      };
+    }
+
+    const sessionEvents = mockTrafficEvents.filter((e) => e.sessionId === id);
+    syntheticEvents = sessionEvents.length > 0 ? sessionEvents : [
+      { id: "syn_evt_1", sessionId: id, path: "/", ip: "45.143.201.44", userAgent: "Mozilla/5.0 (Playwright Bot)", timestamp: new Date(Date.now() - 15000).toISOString(), actionTaken: sessionRisk.action },
+      { id: "syn_evt_2", sessionId: id, path: "/compensation", ip: "45.143.201.44", userAgent: "Mozilla/5.0 (Playwright Bot)", timestamp: new Date(Date.now() - 10000).toISOString(), actionTaken: sessionRisk.action },
+      { id: "syn_evt_3", sessionId: id, path: "/company/google", ip: "45.143.201.44", userAgent: "Mozilla/5.0 (Playwright Bot)", timestamp: new Date(Date.now() - 5000).toISOString(), actionTaken: sessionRisk.action },
+    ];
+  }
 
   return (
     <div className="min-h-screen flex flex-col justify-between" style={{ background: "var(--background)" }}>
@@ -161,7 +229,7 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
                 {[
                   { label: "User Agent", val: syntheticEvents[0]?.userAgent || "Unknown" },
-                  { label: "OS Platform", val: "Linux x86_64" },
+                  { label: "OS Platform", val: userAgentPlatform },
                   { label: "Timezone Offset", val: "UTC+00:00 (Mismatched)" },
                   { label: "Screen Resolution", val: "1920 x 1080 (Headless)" },
                   { label: "Hardware Concurrency", val: "4 Cores (Synthetic)" },
@@ -175,7 +243,7 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
               </div>
             </div>
           </div>
-
+ 
           {/* Right Column: Behavior DNA Curve and Actions */}
           <div className="flex flex-col gap-6">
             
@@ -185,12 +253,12 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
                 <Cpu size={14} style={{ color: "var(--accent-cyan)" }} />
                 Behavior DNA analysis
               </h2>
-
+ 
               <div className="space-y-4">
                 {[
-                  { label: "Mouse Trajectory Entropy", val: "22% (Highly Linear)", desc: "Straight-line pixel transitions indicative of WebDriver scripts." },
-                  { label: "Keystroke Cadence", val: "4ms average gap", desc: "Super-human typing speeds matching autocomplete copy-pastes." },
-                  { label: "Click Coherence", val: "100% exact offsets", desc: "No micro-shakes or organic mouse offsets recorded during hover events." }
+                  { label: "Mouse Trajectory Entropy", val: mouseEntropy, desc: mouseEntropyDesc },
+                  { label: "Keystroke Cadence", val: keyCadence, desc: keyCadenceDesc },
+                  { label: "Click Coherence", val: clickCoherence, desc: clickCoherenceDesc }
                 ].map((dna) => (
                   <div key={dna.label} className="space-y-1">
                     <div className="flex justify-between text-xs">
@@ -202,26 +270,30 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
                 ))}
               </div>
             </div>
-
+ 
             {/* Verdict Box */}
             <div className="glass-card p-5 flex flex-col gap-3 justify-between">
               <h2 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
                 <AlertTriangle size={14} style={{ color: "var(--accent-cyan)" }} />
                 Mitigation Verdict
               </h2>
-
+ 
               <div className="space-y-3 text-xs leading-relaxed" style={{ color: "var(--muted)" }}>
                 <p>
-                  Based on multiple sequential page views combined with extremely low behavior entropy signals, the engine classified this session as:
+                  Based on multiple sequential page views combined with behavior entropy signals, the engine classified this session as:
                 </p>
                 <div 
-                  className="p-3 border font-bold font-mono rounded text-center"
-                  style={{ background: "rgba(6,182,212,0.04)", borderColor: "rgba(6,182,212,0.25)", color: "var(--accent-cyan)" }}
+                  className="p-3 border font-bold font-mono rounded text-center text-xs"
+                  style={{
+                    background: sessionRisk.action === 'block' ? "rgba(239,68,68,0.04)" : sessionRisk.action === 'honey_maze' ? "rgba(168,85,247,0.04)" : "rgba(6,182,212,0.04)",
+                    borderColor: sessionRisk.action === 'block' ? "rgba(239,68,68,0.25)" : sessionRisk.action === 'honey_maze' ? "rgba(168,85,247,0.25)" : "rgba(6,182,212,0.25)",
+                    color: sessionRisk.action === 'block' ? "#ef4444" : sessionRisk.action === 'honey_maze' ? "#a855f7" : "var(--accent-cyan)"
+                  }}
                 >
-                  SCRAPER_WEBDRIVER_CONFIRMED
+                  {sessionRisk.action === 'block' ? "SCRAPER_AUTOMATED_BLOCKED" : sessionRisk.action === 'honey_maze' ? "CRAWLER_TAR_PIT_REDIRECTED" : sessionRisk.action === 'proof_of_work' ? "CPU_CHALLENGE_REQUIRED" : "HUMAN_SESSION_VERIFIED"}
                 </div>
                 <p className="text-[10px]">
-                  All database exfiltrations associated with this session were tainted with fake Canary row tokens for cryptographic verification.
+                  {sessionRisk.action === 'honey_maze' ? "This session is locked in a recursive, self-referential Honey Maze database trap serving randomized synthetic salary metrics." : "All transaction footprints and behaviors associated with this session are recorded under active threat vectors."}
                 </p>
               </div>
             </div>

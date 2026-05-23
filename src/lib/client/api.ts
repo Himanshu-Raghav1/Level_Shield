@@ -55,11 +55,20 @@ type BackendEventsResponse = {
 };
 
 // Keep a local mutable copy of mock data for dynamic UI ticking in mock mode
-let localMetrics: DashboardMetrics = { ...mockDashboardMetrics };
-let localEvents: TrafficEvent[] = [...mockTrafficEvents];
-let localRiskResults: RiskResult[] = [...mockRiskResults];
-let localCanaryTokens: CanaryToken[] = [...mockCanaryTokens];
-let localHoneyMazeHits: HoneyMazeHit[] = [...mockHoneyMazeHits];
+let localMetrics: DashboardMetrics = {
+  totalRequests: 0,
+  botsDetected: 0,
+  blockedRequests: 0,
+  falsePositiveRate: "0%",
+  throttledRequests: 0,
+  powChallenges: 0,
+  honeyMazeHits: 0,
+  realUsersProtected: 0,
+};
+let localEvents: TrafficEvent[] = [];
+let localRiskResults: RiskResult[] = [];
+let localCanaryTokens: CanaryToken[] = [];
+let localHoneyMazeHits: HoneyMazeHit[] = [];
 
 let lastTickTime = Date.now();
 
@@ -344,11 +353,20 @@ export async function resetLocalSimulatorData() {
   } catch (err) {
     console.error("Failed to reset backend database:", err);
   }
-  localMetrics = { ...mockDashboardMetrics };
-  localEvents = [...mockTrafficEvents];
-  localRiskResults = [...mockRiskResults];
-  localCanaryTokens = [...mockCanaryTokens];
-  localHoneyMazeHits = [...mockHoneyMazeHits];
+  localMetrics = {
+    totalRequests: 0,
+    botsDetected: 0,
+    blockedRequests: 0,
+    falsePositiveRate: "0%",
+    throttledRequests: 0,
+    powChallenges: 0,
+    honeyMazeHits: 0,
+    realUsersProtected: 0,
+  };
+  localEvents = [];
+  localRiskResults = [];
+  localCanaryTokens = [];
+  localHoneyMazeHits = [];
 }
 
 // Handles mock local simulation flows for testing and presentation fallback

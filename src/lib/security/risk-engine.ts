@@ -106,31 +106,34 @@ export function evaluateSessionRisk(
     reasons.push('compensation_bulk_access');
   }
 
-  // G. Honey Link Clicked (+30)
-  if (hasSessionHitHoneyMaze(sessionId)) {
-    score += 30;
+  // G. Honey Link Clicked (+80)
+  const isMazeUrl = currentUrl.toLowerCase().startsWith('/maze/');
+  if (isMazeUrl || hasSessionHitHoneyMaze(sessionId)) {
+    score += 80;
     reasons.push('honey_link_triggered');
   }
 
-  // H. Canary Token Exposed (+40)
+  // H. Canary Token Exposed (+95)
+  const isCanaryUrl = currentUrl.toLowerCase().includes('/api/agent-proof/canary_');
   const canaryExposedRow = db.prepare(`
     SELECT COUNT(*) as count FROM canary_tokens
     WHERE session_id = ? AND exposed = 1
   `).get(sessionId) as any;
 
-  if (canaryExposedRow && canaryExposedRow.count > 0) {
-    score += 40;
+  if (isCanaryUrl || (canaryExposedRow && canaryExposedRow.count > 0)) {
+    score += 95;
     reasons.push('canary_token_exposed');
   }
 
-  // I. AI-Agent Trap Beacon (+35)
+  // I. AI-Agent Trap Beacon (+95)
+  const isAgentProofUrl = currentUrl.toLowerCase().includes('/api/agent-proof/') && !isCanaryUrl;
   const beaconTriggeredRow = db.prepare(`
     SELECT COUNT(*) as count FROM agent_beacons
     WHERE session_id = ?
   `).get(sessionId) as any;
 
-  if (beaconTriggeredRow && beaconTriggeredRow.count > 0) {
-    score += 35;
+  if (isAgentProofUrl || (beaconTriggeredRow && beaconTriggeredRow.count > 0)) {
+    score += 95;
     reasons.push('agent_beacon_triggered');
   }
 
