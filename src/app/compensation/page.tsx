@@ -112,7 +112,7 @@ function CompensationDirectoryContent() {
 
         {/* Page heading */}
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-bold text-white">Software Engineer Compensations</h1>
+          <h1 className="text-xl font-bold text-foreground">Software Engineer Compensations</h1>
           <p className="text-xs" style={{ color: "var(--muted)" }}>
             Explore engineering job levels and total compensation. Real-time anti-scrape protection active.
           </p>
@@ -136,7 +136,7 @@ function CompensationDirectoryContent() {
           {/* Search input */}
           <div
             className="flex items-center gap-2 px-3 py-2 rounded-md w-full sm:w-72"
-            style={{ background: "rgba(0,0,0,0.3)", border: "1px solid var(--border)" }}
+            style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}
           >
             <Search size={13} style={{ color: "var(--muted)", flexShrink: 0 }} />
             <input
@@ -144,8 +144,8 @@ function CompensationDirectoryContent() {
               placeholder="Search company, title, location..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent outline-none w-full text-xs text-white"
-              style={{ caretColor: "var(--accent-cyan)" }}
+              className="bg-transparent outline-none w-full text-xs text-foreground"
+              style={{ caretColor: "var(--accent)" }}
             />
           </div>
 
@@ -163,7 +163,7 @@ function CompensationDirectoryContent() {
               value={filterRole}
               onChange={(e) => setFilterRole(e.target.value)}
               className="rounded-md px-3 py-1.5 text-xs outline-none cursor-pointer"
-              style={{ background: "rgba(0,0,0,0.3)", border: "1px solid var(--border)", color: "#e4e4e7" }}
+              style={{ background: "var(--surface-2)", border: "1px solid var(--border)", color: "var(--foreground)" }}
             >
               <option value="all">All Roles</option>
               <option value="Software Engineer">Software Engineer</option>
@@ -174,7 +174,7 @@ function CompensationDirectoryContent() {
               value={filterLocation}
               onChange={(e) => setFilterLocation(e.target.value)}
               className="rounded-md px-3 py-1.5 text-xs outline-none cursor-pointer"
-              style={{ background: "rgba(0,0,0,0.3)", border: "1px solid var(--border)", color: "#e4e4e7" }}
+              style={{ background: "var(--surface-2)", border: "1px solid var(--border)", color: "var(--foreground)" }}
             >
               <option value="all">All Locations</option>
               {locations.filter((l) => l !== "all").map((l) => (
@@ -198,7 +198,7 @@ function CompensationDirectoryContent() {
                   style={{ color: "var(--muted)", width: "16%" }}
                   onClick={() => toggleSort("company")}
                 >
-                  Company {sortField === "company" && <span className="text-white">{sortOrder === "asc" ? "↑" : "↓"}</span>}
+                  Company {sortField === "company" && <span className="text-accent">{sortOrder === "asc" ? "↑" : "↓"}</span>}
                 </th>
                 <th className="py-2.5 px-4 text-left font-semibold" style={{ color: "var(--muted)", width: "24%" }}>
                   Level / Title
@@ -208,7 +208,7 @@ function CompensationDirectoryContent() {
                   style={{ color: "var(--muted)", width: "12%" }}
                   onClick={() => toggleSort("totalComp")}
                 >
-                  Total Comp {sortField === "totalComp" && <span className="text-white">{sortOrder === "asc" ? "↑" : "↓"}</span>}
+                  Total Comp {sortField === "totalComp" && <span className="text-accent">{sortOrder === "asc" ? "↑" : "↓"}</span>}
                 </th>
                 <th className="py-2.5 px-4 text-right font-semibold whitespace-nowrap" style={{ color: "var(--muted)", width: "10%" }}>Base</th>
                 <th className="py-2.5 px-4 text-right font-semibold whitespace-nowrap" style={{ color: "var(--muted)", width: "16%" }}>Stock / Bonus</th>
@@ -217,7 +217,7 @@ function CompensationDirectoryContent() {
                   style={{ color: "var(--muted)", width: "8%" }}
                   onClick={() => toggleSort("experience")}
                 >
-                  Exp {sortField === "experience" && <span className="text-white">{sortOrder === "asc" ? "↑" : "↓"}</span>}
+                  Exp {sortField === "experience" && <span className="text-accent">{sortOrder === "asc" ? "↑" : "↓"}</span>}
                 </th>
                 <th className="py-2.5 px-4 text-left font-semibold" style={{ color: "var(--muted)", width: "12%" }}>Location</th>
                 <th className="py-2.5 px-4 text-right" style={{ width: "2%" }} />
@@ -233,23 +233,22 @@ function CompensationDirectoryContent() {
               ) : (
                 filtered.map((s) => (
                   <tr
-                    key={s.id}
-                    className="cursor-pointer transition-colors duration-100 group"
-                    style={{
-                      borderBottom: "1px solid rgba(255,255,255,0.04)",
-                      background: s.isCanary ? "rgba(255, 255, 255, 0.02)" : "transparent",
-                    }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLTableRowElement).style.background = "var(--surface)"; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLTableRowElement).style.background = s.isCanary ? "rgba(255, 255, 255, 0.02)" : "transparent"; }}
-                    onClick={() => router.push(`/company/${s.company.toLowerCase()}`)}
+                      key={s.id}
+                      className="cursor-pointer transition-colors duration-100 group border-b border-border-custom"
+                      style={{
+                        background: s.isCanary ? "var(--accent-muted)" : "transparent",
+                      }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLTableRowElement).style.background = "var(--surface-2)"; }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLTableRowElement).style.background = s.isCanary ? "var(--accent-muted)" : "transparent"; }}
+                      onClick={() => router.push(`/company/${s.company.toLowerCase()}`)}
                   >
-                    <td className="py-2.5 px-4 font-semibold whitespace-nowrap text-white" style={{ width: "16%", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    <td className="py-2.5 px-4 font-semibold whitespace-nowrap text-foreground" style={{ width: "16%", overflow: "hidden", textOverflow: "ellipsis" }}>
                       <span className="flex items-center gap-2">
                         {s.company}
                         {s.isCanary && (
                           <span
                             className="text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border"
-                            style={{ background: "rgba(255, 255, 255, 0.06)", borderColor: "var(--border)", color: "var(--foreground)" }}
+                            style={{ background: "var(--accent-muted)", borderColor: "var(--border-bright)", color: "var(--accent)" }}
                           >
                             canary
                           </span>
@@ -257,10 +256,10 @@ function CompensationDirectoryContent() {
                       </span>
                     </td>
                     <td className="py-2.5 px-4" style={{ width: "24%", overflow: "hidden", textOverflow: "ellipsis" }}>
-                      <span className="font-medium text-white">{s.level}</span>
+                      <span className="font-semibold text-foreground">{s.level}</span>
                       <span className="ml-2" style={{ color: "var(--muted)" }}>{s.title}</span>
                     </td>
-                    <td className="py-2.5 px-4 text-right font-mono tabular-nums font-semibold whitespace-nowrap"
+                    <td className="py-2.5 px-4 text-right font-mono tabular-nums font-bold whitespace-nowrap"
                       style={{ color: "var(--foreground)", width: "12%" }}>
                       {s.totalComp}
                     </td>
@@ -273,7 +272,7 @@ function CompensationDirectoryContent() {
                     <td className="py-2.5 px-4 tabular-nums" style={{ color: "var(--muted)", width: "8%" }}>{s.experience}</td>
                     <td className="py-2.5 px-4" style={{ color: "var(--muted)", width: "12%", overflow: "hidden", textOverflow: "ellipsis" }}>{s.location}</td>
                     <td className="py-2.5 px-4 text-right" style={{ width: "2%" }}>
-                      <ChevronRight size={12} style={{ color: "var(--border)" }} className="group-hover:text-zinc-400 transition-colors" />
+                      <ChevronRight size={12} style={{ color: "var(--border)" }} className="group-hover:text-accent transition-colors" />
                     </td>
                   </tr>
                 ))

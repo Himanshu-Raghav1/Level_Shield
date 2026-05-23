@@ -18,9 +18,9 @@ interface ForumThread {
 }
 
 const CATEGORY_STYLES: Record<string, { color: string; bg: string; border: string }> = {
-  Negotiation:  { color: "var(--foreground)", bg: "rgba(255,255,255,0.04)", border: "rgba(255,255,255,0.12)" },
-  Promotions:   { color: "var(--accent-cyan)", bg: "rgba(6,182,212,0.04)",  border: "rgba(6,182,212,0.15)" },
-  Compensation: { color: "var(--muted)",       bg: "rgba(255,255,255,0.02)", border: "rgba(255,255,255,0.08)" },
+  Negotiation:  { color: "var(--foreground)", bg: "var(--surface-2)", border: "var(--border)" },
+  Promotions:   { color: "var(--accent)",     bg: "var(--accent-muted)", border: "var(--border-bright)" },
+  Compensation: { color: "var(--muted)",       bg: "var(--surface-2)", border: "var(--border)" },
 };
 
 export default function CommunityForum() {
@@ -106,8 +106,8 @@ export default function CommunityForum() {
         {/* Page heading + search */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-bold text-white flex items-center gap-2">
-              <MessageSquare size={20} style={{ color: "var(--accent-cyan)" }} />
+            <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
+              <MessageSquare size={20} style={{ color: "var(--accent)" }} />
               Community Discussions
             </h1>
             <p className="text-xs" style={{ color: "var(--muted)" }}>
@@ -118,7 +118,7 @@ export default function CommunityForum() {
           {/* Search */}
           <div
             className="flex items-center gap-2 px-3 py-2 rounded-md w-full sm:w-64 flex-shrink-0"
-            style={{ background: "rgba(0,0,0,0.3)", border: "1px solid var(--border)" }}
+            style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}
           >
             <Search size={13} style={{ color: "var(--muted)", flexShrink: 0 }} />
             <input
@@ -126,8 +126,8 @@ export default function CommunityForum() {
               placeholder="Search discussions..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent outline-none w-full text-xs text-white"
-              style={{ caretColor: "var(--accent-cyan)" }}
+              className="bg-transparent outline-none w-full text-xs text-foreground"
+              style={{ caretColor: "var(--accent)" }}
             />
           </div>
         </div>
@@ -169,14 +169,14 @@ export default function CommunityForum() {
             ) : (
               filteredThreads.map((thread) => {
                 const cat = CATEGORY_STYLES[thread.category] ?? {
-                  color: "var(--muted)", bg: "rgba(100,100,100,0.08)", border: "rgba(100,100,100,0.2)"
+                  color: "var(--muted)", bg: "var(--surface-2)", border: "var(--border)"
                 };
                 return (
                   <div
                     key={thread.id}
-                    className="flex flex-col gap-3 px-4 py-4 cursor-pointer group transition-colors duration-100"
-                    style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = "var(--surface)"; }}
+                    className="flex flex-col gap-3 px-4 py-4 cursor-pointer group transition-colors duration-100 border-b border-border-custom"
+                    style={{ borderBottom: "1px solid var(--border)" }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = "var(--surface-2)"; }}
                     onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
                   >
                     {/* Top row: category pill + time */}
@@ -194,9 +194,9 @@ export default function CommunityForum() {
 
                     {/* Title + excerpt */}
                     <div className="flex flex-col gap-1.5">
-                      <h3 className="text-sm font-semibold text-white flex items-center gap-1.5 group-hover:text-cyan-400 transition-colors">
+                      <h3 className="text-sm font-semibold text-foreground flex items-center gap-1.5 group-hover:text-accent transition-colors">
                         {thread.title}
-                        <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" style={{ color: "var(--accent-cyan)" }} />
+                        <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" style={{ color: "var(--accent)" }} />
                       </h3>
                       <p className="text-xs leading-relaxed line-clamp-2" style={{ color: "var(--muted)" }}>
                         {thread.excerpt}
@@ -208,7 +208,7 @@ export default function CommunityForum() {
                       <div className="flex items-center gap-2">
                         <span
                           className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold uppercase"
-                          style={{ background: "rgba(6,182,212,0.12)", color: "var(--accent-cyan)", border: "1px solid rgba(6,182,212,0.2)" }}
+                          style={{ background: "var(--accent-muted)", color: "var(--accent)", border: "1px solid var(--border-bright)" }}
                         >
                           {thread.author[0]}
                         </span>
@@ -235,12 +235,12 @@ export default function CommunityForum() {
               style={{
                 background: "var(--surface)",
                 border: "1px solid var(--border)",
-                borderLeft: "2px solid var(--accent-cyan)",
+                borderLeft: "2px solid var(--accent)",
               }}
             >
               <div className="flex items-center gap-1.5">
-                <Shield size={13} style={{ color: "var(--accent-cyan)" }} />
-                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--accent-cyan)" }}>
+                <Shield size={13} style={{ color: "var(--accent)" }} />
+                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--accent)" }}>
                   Cyber-Defense Notice
                 </span>
               </div>
@@ -254,7 +254,7 @@ export default function CommunityForum() {
               className="p-4 rounded-lg flex flex-col gap-3"
               style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
             >
-              <span className="text-xs font-semibold text-white">Trending Topics</span>
+              <span className="text-xs font-semibold text-foreground">Trending Topics</span>
               <ul className="flex flex-col gap-1">
                 {[
                   { tag: "#FAANGOfferNegotiations", views: "1.2k views" },
@@ -266,8 +266,8 @@ export default function CommunityForum() {
                     className="flex items-center justify-between px-2 py-2 rounded-md cursor-pointer text-xs transition-colors duration-100"
                     style={{ color: "var(--muted)" }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLLIElement).style.background = "rgba(255,255,255,0.04)";
-                      (e.currentTarget as HTMLLIElement).style.color = "#e4e4e7";
+                      (e.currentTarget as HTMLLIElement).style.background = "var(--surface-2)";
+                      (e.currentTarget as HTMLLIElement).style.color = "var(--foreground)";
                     }}
                     onMouseLeave={(e) => {
                       (e.currentTarget as HTMLLIElement).style.background = "transparent";

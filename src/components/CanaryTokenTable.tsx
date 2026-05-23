@@ -36,7 +36,7 @@ export default function CanaryTokenTable({ tokens }: Props) {
               style={{ borderColor: "var(--border)" }}
             >
               <td className="py-2.5 pr-4">
-                <span className="flex items-center gap-1.5 font-mono text-xs font-semibold" style={{ color: "var(--accent-cyan)" }}>
+                <span className="flex items-center gap-1.5 font-mono text-xs font-semibold" style={{ color: "var(--accent)" }}>
                   <KeyRound size={11} />
                   {t.tokenId}
                 </span>

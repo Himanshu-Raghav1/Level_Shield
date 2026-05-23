@@ -125,37 +125,37 @@ export default function CompanyDetail({ params }: CompanyPageProps) {
         </a>
 
         {/* Company Header Block */}
-        <div className="glass-card p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 glow-cyan">
+        <div className="glass-card p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 glow-red">
           <div className="flex items-center gap-4">
             <div 
               className="w-14 h-14 rounded-lg flex items-center justify-center border"
               style={{ background: "var(--surface-2)", borderColor: "var(--border)" }}
             >
-              <Building2 size={28} className="text-cyan-400" />
+              <Building2 size={28} className="text-accent" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white flex items-center gap-2">
+              <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
                 {companyName}
-                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded border uppercase tracking-wider bg-cyan-950/20 text-cyan-400 border-cyan-500/25">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded border uppercase tracking-wider bg-accent-muted text-accent border-border-bright">
                   Verified
                 </span>
               </h1>
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-muted-custom">
                 Software Engineer leveling structure and breakdown stats.
               </p>
             </div>
           </div>
 
           <div className="flex gap-4 flex-wrap">
-            <div className="bg-zinc-900/60 px-4 py-2.5 rounded border text-left" style={{ borderColor: "var(--border)" }}>
-              <span className="text-[10px] block uppercase tracking-wider font-mono font-bold text-zinc-500">Average Comp</span>
-              <span className="text-lg font-bold font-mono text-white">
+            <div className="bg-surface-2 px-4 py-2.5 rounded border text-left" style={{ borderColor: "var(--border)" }}>
+              <span className="text-[10px] block uppercase tracking-wider font-mono font-bold text-muted-custom">Average Comp</span>
+              <span className="text-lg font-bold font-mono text-foreground">
                 ${avgSalary.toLocaleString()}
               </span>
             </div>
-            <div className="bg-zinc-900/60 px-4 py-2.5 rounded border text-left" style={{ borderColor: "var(--border)" }}>
-              <span className="text-[10px] block uppercase tracking-wider font-mono font-bold text-zinc-500">Max Level Comp</span>
-              <span className="text-lg font-bold font-mono text-cyan-400">
+            <div className="bg-surface-2 px-4 py-2.5 rounded border text-left" style={{ borderColor: "var(--border)" }}>
+              <span className="text-[10px] block uppercase tracking-wider font-mono font-bold text-muted-custom">Max Level Comp</span>
+              <span className="text-lg font-bold font-mono text-accent">
                 ${maxSalary.toLocaleString()}
               </span>
             </div>
@@ -167,11 +167,11 @@ export default function CompanyDetail({ params }: CompanyPageProps) {
           {/* Left Column: Recharts Stacking Bar Chart */}
           <div className="glass-card p-5 flex flex-col gap-4">
             <div>
-              <h2 className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                <Award size={14} className="text-cyan-400" />
+              <h2 className="text-xs font-mono font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
+                <Award size={14} className="text-accent" />
                 Level Salary Distribution
               </h2>
-              <p className="text-[10px] text-zinc-500">
+              <p className="text-[10px] text-muted-custom">
                 Total breakdown showing Base, Stock, and Bonus combinations.
               </p>
             </div>
@@ -179,23 +179,23 @@ export default function CompanyDetail({ params }: CompanyPageProps) {
             <div className="h-64 mt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.04)" />
-                  <XAxis dataKey="level" tick={{ fill: "#71717a", fontSize: 10, fontFamily: "monospace" }} stroke="rgba(255, 255, 255, 0.06)" />
-                  <YAxis tick={{ fill: "#71717a", fontSize: 10, fontFamily: "monospace" }} stroke="rgba(255, 255, 255, 0.06)" tickFormatter={(v) => `$${v/1000}k`} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis dataKey="level" tick={{ fill: "var(--muted)", fontSize: 10, fontFamily: "monospace" }} stroke="var(--border)" />
+                  <YAxis tick={{ fill: "var(--muted)", fontSize: 10, fontFamily: "monospace" }} stroke="var(--border)" tickFormatter={(v) => `$${v/1000}k`} />
                   <Tooltip 
                     contentStyle={{
-                      background: "rgba(18, 18, 22, 0.95)",
+                      background: "var(--surface)",
                       border: "1px solid var(--border)",
                       borderRadius: 4,
                       fontSize: 11,
-                      color: "#ffffff",
+                      color: "var(--foreground)",
                     }}
                     formatter={(value) => [`$${Number(value).toLocaleString()}`]}
                   />
                   <Legend wrapperStyle={{ fontSize: 9, fontFamily: "monospace", textTransform: "uppercase" }} />
-                  <Bar dataKey="Base" stackId="a" fill="#71717a" />
-                  <Bar dataKey="Stock" stackId="a" fill="#06b6d4" />
-                  <Bar dataKey="Bonus" stackId="a" fill="#ffffff" />
+                  <Bar dataKey="Base" stackId="a" fill="var(--muted)" />
+                  <Bar dataKey="Stock" stackId="a" fill="var(--accent)" />
+                  <Bar dataKey="Bonus" stackId="a" fill="var(--foreground)" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -204,11 +204,11 @@ export default function CompanyDetail({ params }: CompanyPageProps) {
           {/* Right Column: Mini Salary Detail Table */}
           <div className="glass-card p-5 flex flex-col justify-between">
             <div className="flex flex-col gap-1 mb-3">
-              <h2 className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                <Database size={14} className="text-cyan-400" />
+              <h2 className="text-xs font-mono font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
+                <Database size={14} className="text-accent" />
                 Active Salary Database
               </h2>
-              <p className="text-[10px] text-zinc-500">
+              <p className="text-[10px] text-muted-custom">
                 All records matching {companyName}. Active canary detection layer applied.
               </p>
             </div>
@@ -227,30 +227,30 @@ export default function CompanyDetail({ params }: CompanyPageProps) {
                   {allRows.map((r) => (
                     <tr 
                       key={r.id} 
-                      className="border-b transition-colors hover:bg-white/[0.02]"
+                      className="border-b transition-colors hover:bg-foreground/[0.02]"
                       style={{ 
                         borderColor: "var(--border)",
-                        background: r.isCanary ? "rgba(255, 255, 255, 0.02)" : "transparent"
+                        background: r.isCanary ? "var(--accent-muted)" : "transparent"
                       }}
                     >
                       <td className="py-3 px-3">
                         <div className="flex flex-col">
-                          <span className="font-bold text-white flex items-center gap-1.5">
+                          <span className="font-bold text-foreground flex items-center gap-1.5">
                             {r.level}
                             {r.isCanary && (
                               <span title="Decoy Canary Token Injected">
-                                <Lock size={10} className="text-cyan-400" />
+                                <Lock size={10} className="text-accent" />
                               </span>
                             )}
                           </span>
-                          <span className="text-[9px] text-zinc-500 font-mono uppercase tracking-wider">{r.title}</span>
+                          <span className="text-[9px] text-muted-custom font-mono uppercase tracking-wider">{r.title}</span>
                         </div>
                       </td>
-                      <td className="py-3 px-3 text-zinc-300">{r.experience}</td>
-                      <td className="py-3 px-3 text-right font-mono text-[10px] text-zinc-500">
+                      <td className="py-3 px-3 text-foreground">{r.experience}</td>
+                      <td className="py-3 px-3 text-right font-mono text-[10px] text-muted-custom">
                         {r.base} / {r.stock}
                       </td>
-                      <td className="py-3 px-3 text-right font-bold font-mono text-white">
+                      <td className="py-3 px-3 text-right font-bold font-mono text-foreground">
                         {r.totalComp}
                       </td>
                     </tr>
@@ -259,8 +259,8 @@ export default function CompanyDetail({ params }: CompanyPageProps) {
               </table>
             </div>
 
-            <div className="mt-4 flex items-center gap-2 text-[10px] bg-zinc-900/60 p-2.5 rounded border border-zinc-800 text-zinc-400 font-mono">
-              <Lock size={12} className="text-cyan-400 shrink-0" />
+            <div className="mt-4 flex items-center gap-2 text-[10px] bg-surface-2 p-2.5 rounded border border-border-custom text-muted-custom font-mono">
+              <Lock size={12} className="text-accent shrink-0" />
               <span>Canary signature active. Scraping is traced back to specific sessions.</span>
             </div>
           </div>

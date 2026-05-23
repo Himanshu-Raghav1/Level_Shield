@@ -114,14 +114,14 @@ export default function ShieldDashboard() {
         </aside>
 
         {/* ─── Main Content ──────────────────────────────────────────── */}
-        <main className="flex-1 overflow-y-auto p-5 flex flex-col gap-4">
-          {/* KPI Cards Row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <main className="flex-1 overflow-y-auto p-5 flex flex-col gap-5">
+          {/* KPI Cards Row (Spacious Spacing: gap-5) */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
             {[
-              { label: "Total Requests",      value: metrics.totalRequests.toLocaleString(),  icon: <Activity size={16} />, color: "var(--accent-cyan)" },
+              { label: "Total Requests",      value: metrics.totalRequests.toLocaleString(),  icon: <Activity size={16} />, color: "var(--accent)" },
               { label: "Bots Detected",       value: metrics.botsDetected.toLocaleString(),   icon: <AlertTriangle size={16} />, color: "var(--foreground)" },
               { label: "Blocked Requests",    value: metrics.blockedRequests.toLocaleString(), icon: <Ban size={16} />, color: "var(--foreground)" },
-              { label: "False Positive Rate", value: metrics.falsePositiveRate,               icon: <Zap size={16} />, color: "var(--accent-cyan)" },
+              { label: "False Positive Rate", value: metrics.falsePositiveRate,               icon: <Zap size={16} />, color: "var(--accent)" },
             ].map(({ label, value, icon, color }) => (
               <div key={label} className="glass-card p-4 flex flex-col gap-2">
                 <div className="flex items-center justify-between">
@@ -133,12 +133,12 @@ export default function ShieldDashboard() {
             ))}
           </div>
 
-          {/* Secondary stats row */}
-          <div className="grid grid-cols-4 gap-3">
+          {/* Secondary stats row (Spacious Spacing: gap-5) */}
+          <div className="grid grid-cols-4 gap-5">
             {[
               { label: "Throttled",     value: metrics.throttledRequests, color: "var(--muted)" },
               { label: "PoW Challenges", value: metrics.powChallenges,    color: "var(--muted)" },
-              { label: "Honey Maze Hits", value: metrics.honeyMazeHits,  color: "var(--accent-cyan)" },
+              { label: "Honey Maze Hits", value: metrics.honeyMazeHits,  color: "var(--accent)" },
               { label: "Real Users Protected", value: metrics.realUsersProtected, color: "var(--foreground)" },
             ].map(({ label, value, color }) => (
               <div key={label} className="glass-card px-4 py-3 flex items-center justify-between">
@@ -155,11 +155,11 @@ export default function ShieldDashboard() {
                 <button
                   key={id}
                   onClick={() => setActiveTab(id)}
-                  className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-t-lg transition-all duration-200"
+                  className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-t-lg transition-all duration-200 cursor-pointer"
                   style={{
-                    background: activeTab === id ? "var(--surface)" : "transparent",
-                    color: activeTab === id ? "var(--accent-cyan)" : "var(--muted)",
-                    borderBottom: activeTab === id ? "2px solid var(--accent-cyan)" : "2px solid transparent",
+                    background: activeTab === id ? "var(--surface-2)" : "transparent",
+                    color: activeTab === id ? "var(--accent)" : "var(--muted)",
+                    borderBottom: activeTab === id ? "2px solid var(--accent)" : "2px solid transparent",
                   }}
                 >
                   {icon}
@@ -174,7 +174,7 @@ export default function ShieldDashboard() {
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-2">
                     <span className="live-dot" />
-                    <span className="text-xs font-semibold ml-2" style={{ color: "var(--accent-cyan)" }}>Live Feed</span>
+                    <span className="text-xs font-semibold ml-2" style={{ color: "var(--accent)" }}>Live Feed</span>
                     <span className="text-xs ml-auto" style={{ color: "var(--muted)" }}>{events.length} events</span>
                   </div>
                   <LiveTrafficFeed events={events} />
@@ -193,11 +193,11 @@ export default function ShieldDashboard() {
                         <div
                           key={r.sessionId}
                           className="flex items-center gap-3 px-3 py-2 rounded-lg"
-                          style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+                          style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}
                         >
                           <RiskScore score={r.score} size="sm" />
                           <div className="flex flex-col flex-1 min-w-0">
-                            <span className="text-xs font-mono truncate" style={{ color: "var(--accent-cyan)" }}>
+                            <span className="text-xs font-mono truncate" style={{ color: "var(--accent)" }}>
                               {r.sessionId}
                             </span>
                             <span className="text-xs" style={{ color: "var(--muted)" }}>
@@ -217,7 +217,7 @@ export default function ShieldDashboard() {
                 <div className="grid md:grid-cols-2 gap-4">
                   {/* Canary Tokens */}
                   <div className="glass-card p-4">
-                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: "var(--accent-cyan)" }}>
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: "var(--accent)" }}>
                       🪤 Canary Token Attribution
                     </h3>
                     <CanaryTokenTable tokens={canaryTokens} />
@@ -225,7 +225,7 @@ export default function ShieldDashboard() {
 
                   {/* Honey Maze */}
                   <div className="glass-card p-4">
-                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: "var(--accent-cyan)" }}>
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: "var(--accent)" }}>
                       🌀 Honey Maze Entries
                     </h3>
                     {honeyMazeHits.length === 0 ? (
@@ -236,9 +236,9 @@ export default function ShieldDashboard() {
                           <div
                             key={i}
                             className="flex items-center gap-3 px-3 py-2 rounded-lg"
-                            style={{ background: "rgba(6,182,212,0.04)", border: "1px solid rgba(6,182,212,0.15)" }}
+                            style={{ background: "var(--accent-muted)", border: "1px solid var(--border-bright)" }}
                           >
-                            <span className="text-xs font-mono" style={{ color: "var(--accent-cyan)" }}>
+                            <span className="text-xs font-mono" style={{ color: "var(--accent)" }}>
                               {h.sessionId.slice(0, 14)}…
                             </span>
                             <span className="text-xs ml-auto" style={{ color: "var(--muted)" }}>
@@ -253,9 +253,9 @@ export default function ShieldDashboard() {
                   {/* Innovation feature summary cards */}
                   {[
                     { name: "Behavior DNA",          icon: "🧬", color: "var(--foreground)",  desc: "Mouse entropy, typing cadence, dwell" },
-                    { name: "Graph of Intent",        icon: "🕸️",  color: "var(--accent-cyan)",  desc: "Session nav graph: clean = bot" },
+                    { name: "Graph of Intent",        icon: "🕸️",  color: "var(--accent)",      desc: "Session nav graph: clean = bot" },
                     { name: "JA4-Style Fingerprint",  icon: "🔬", color: "var(--muted)",  desc: "Header + behavior consistency" },
-                    { name: "AI-Agent Trap Beacon",   icon: "⚡", color: "var(--accent-cyan)",  desc: "Hidden link triggers on decoy pages" },
+                    { name: "AI-Agent Trap Beacon",   icon: "⚡", color: "var(--accent)",      desc: "Hidden link triggers on decoy pages" },
                     { name: "Adaptive Friction Brain", icon: "🧠", color: "var(--muted)", desc: "allow → throttle → PoW → maze → block" },
                     { name: "Signed Good-Bot Lane",   icon: "✅", color: "var(--foreground)",  desc: "Cryptographic crawler verification" },
                   ].map(({ name, icon, color, desc }) => (
@@ -277,21 +277,21 @@ export default function ShieldDashboard() {
                     <table className="w-full text-xs">
                       <thead>
                         <tr style={{ color: "var(--muted)", borderBottom: "1px solid var(--border)" }}>
-                          <th className="text-left py-2 pr-4 font-medium">Session</th>
-                          <th className="text-left py-2 pr-4 font-medium">Risk</th>
-                          <th className="text-left py-2 pr-4 font-medium">Action</th>
-                          <th className="text-left py-2 font-medium">Top Signals</th>
+                          <th className="text-left py-2 pr-4 font-semibold">Session</th>
+                          <th className="text-left py-2 pr-4 font-semibold">Risk</th>
+                          <th className="text-left py-2 pr-4 font-semibold">Action</th>
+                          <th className="text-left py-2 font-semibold">Top Signals</th>
                         </tr>
                       </thead>
                       <tbody>
                         {[...riskResults].sort((a, b) => b.score - a.score).map((r) => (
                           <tr
                             key={r.sessionId}
-                            className="border-b hover:bg-white/5 transition-colors cursor-pointer"
+                            className="border-b hover:bg-foreground/[0.02] transition-colors cursor-pointer"
                             style={{ borderColor: "var(--border)" }}
                             onClick={() => (window.location.href = `/shield/sessions/${r.sessionId}`)}
                           >
-                            <td className="py-3 pr-4 font-mono" style={{ color: "var(--accent-cyan)" }}>
+                            <td className="py-3 pr-4 font-mono font-bold" style={{ color: "var(--accent)" }}>
                               {r.sessionId}
                             </td>
                             <td className="py-3 pr-4">
@@ -316,10 +316,10 @@ export default function ShieldDashboard() {
           {/* Judge Story Panel */}
           {currentStep >= 0 && (
             <div
-              className="glass-card p-4 border"
-              style={{ borderColor: "var(--accent-cyan)", boxShadow: "0 0 12px rgba(0,212,255,0.15)" }}
+              className="glass-card p-4 border glow-red"
+              style={{ borderColor: "var(--border-bright)" }}
             >
-              <p className="text-xs font-semibold mb-3" style={{ color: "var(--accent-cyan)" }}>
+              <p className="text-xs font-bold mb-3 text-accent">
                 🎯 Attack Playbook
               </p>
               <div className="flex flex-wrap gap-2">
@@ -328,9 +328,9 @@ export default function ShieldDashboard() {
                     key={i}
                     className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs transition-all duration-500"
                     style={{
-                      background: i <= currentStep ? "rgba(0,212,255,0.15)" : "transparent",
-                      border: `1px solid ${i <= currentStep ? "var(--accent-cyan)" : "var(--border)"}`,
-                      color: i <= currentStep ? "var(--accent-cyan)" : "var(--muted)",
+                      background: i <= currentStep ? "var(--accent-muted)" : "transparent",
+                      border: `1px solid ${i <= currentStep ? "var(--border-bright)" : "var(--border)"}`,
+                      color: i <= currentStep ? "var(--accent)" : "var(--muted)",
                       transform: i === currentStep ? "scale(1.05)" : "scale(1)",
                     }}
                   >

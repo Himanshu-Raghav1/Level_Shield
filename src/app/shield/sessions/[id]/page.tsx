@@ -56,13 +56,13 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
         className="flex items-center justify-between px-6 py-3 border-b"
         style={{ borderColor: "var(--border)", background: "var(--surface)" }}
       >
-        <a href="/" className="flex items-center gap-2 font-bold text-base" style={{ color: "var(--accent-cyan)" }}>
+        <a href="/" className="flex items-center gap-2 font-bold text-base hover:text-accent transition-colors" style={{ color: "var(--accent)" }}>
           <Shield size={20} />
           Level Shield
         </a>
-        <div className="flex items-center gap-2 text-xs" style={{ color: "var(--accent-cyan)" }}>
+        <div className="flex items-center gap-2 text-xs" style={{ color: "var(--accent)" }}>
           <span className="live-dot" />
-          <span className="ml-2">Analyst View Active</span>
+          <span className="ml-2 font-semibold">Analyst View Active</span>
         </div>
       </header>
 
@@ -72,7 +72,7 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
         <div>
           <button
             onClick={() => router.push("/shield")}
-            className="flex items-center gap-1.5 text-xs transition-colors hover:text-white mb-4 cursor-pointer"
+            className="flex items-center gap-1.5 text-xs transition-colors hover:text-foreground mb-4 cursor-pointer"
             style={{ color: "var(--muted)" }}
           >
             <ChevronLeft size={14} />
@@ -81,24 +81,24 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
         </div>
 
         {/* Header Block */}
-        <div className="glass-card p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 glow-cyan">
+        <div className="glass-card p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 glow-red">
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-2.5">
-              <span className="text-xs font-semibold px-2 py-0.5 rounded border uppercase tracking-wider bg-black/40" style={{ color: "var(--accent-cyan)", borderColor: "var(--border)" }}>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded border uppercase tracking-wider bg-accent-muted" style={{ color: "var(--accent)", borderColor: "var(--border-bright)" }}>
                 Session ID: {sessionRisk.sessionId}
               </span>
               <span className={getActionBadgeClass(sessionRisk.action)}>
                 {getActionLabel(sessionRisk.action)}
               </span>
             </div>
-            <h1 className="text-2xl font-extrabold text-white">Session Security Deep-Dive</h1>
+            <h1 className="text-2xl font-extrabold text-foreground">Session Security Deep-Dive</h1>
             <p className="text-xs" style={{ color: "var(--muted)" }}>
               Detailed timeline, fingerprinting anomalies, and behavior cadence analysis.
             </p>
           </div>
 
           {/* Risk gauge block */}
-          <div className="flex items-center gap-4 bg-black/35 px-5 py-3.5 rounded-xl border glow-cyan" style={{ borderColor: "var(--border)" }}>
+          <div className="flex items-center gap-4 bg-surface-2 px-5 py-3.5 rounded-xl border glow-red" style={{ borderColor: "var(--border)" }}>
             <div className="text-center">
               <span className="text-[10px] block uppercase tracking-wider font-semibold" style={{ color: "var(--muted)" }}>Risk Score</span>
               <span className="text-3xl font-extrabold font-mono" style={{ color: getRiskColor(sessionRisk.score) }}>
@@ -107,7 +107,7 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
             </div>
             <div className="border-l pl-4 py-1.5" style={{ borderColor: "var(--border)" }}>
               <span className="text-[9px] block uppercase tracking-wider" style={{ color: "var(--muted)" }}>Engine confidence</span>
-              <span className="text-xs font-bold text-white">{(sessionRisk.confidence * 100).toFixed(0)}% Match</span>
+              <span className="text-xs font-bold text-foreground">{(sessionRisk.confidence * 100).toFixed(0)}% Match</span>
             </div>
           </div>
         </div>
@@ -120,31 +120,31 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
             
             {/* Graph of Intent */}
             <div className="glass-card p-5 flex flex-col gap-4">
-              <h2 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <Terminal size={14} style={{ color: "var(--accent-cyan)" }} />
+              <h2 className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
+                <Terminal size={14} style={{ color: "var(--accent)" }} />
                 Graph of Intent (User Page Transitions)
               </h2>
 
-              <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-zinc-800">
+              <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-border-custom">
                 {syntheticEvents.map((evt, idx) => (
                   <div key={evt.id} className="relative flex flex-col gap-1.5">
                     {/* Glowing indicator dot */}
                     <div 
-                      className="absolute -left-6 top-1 w-2.5 h-2.5 rounded-full border-2 bg-black"
-                      style={{ borderColor: idx === syntheticEvents.length - 1 ? "var(--accent-cyan)" : "var(--muted)" }}
+                      className="absolute -left-6 top-1 w-2.5 h-2.5 rounded-full border-2 bg-background"
+                      style={{ borderColor: idx === syntheticEvents.length - 1 ? "var(--accent)" : "var(--muted)" }}
                     />
                     
                     <div className="flex justify-between items-start">
-                      <span className="text-xs font-bold text-white font-mono">{evt.path}</span>
-                      <span className="text-[10px] text-slate-400 font-mono">
+                      <span className="text-xs font-bold text-foreground font-mono">{evt.path}</span>
+                      <span className="text-[10px] text-muted-custom font-mono">
                         {new Date(evt.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2.5 text-[10px]" style={{ color: "var(--muted)" }}>
-                      <span>IP: <span className="text-slate-300 font-semibold">{evt.ip}</span></span>
+                      <span>IP: <span className="text-foreground font-semibold">{evt.ip}</span></span>
                       <span>•</span>
-                      <span>Action Taken: <span className="text-slate-300 capitalize">{evt.actionTaken}</span></span>
+                      <span>Action Taken: <span className="text-foreground capitalize">{evt.actionTaken}</span></span>
                     </div>
                   </div>
                 ))}
@@ -153,8 +153,8 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
 
             {/* Browser Fingerprint */}
             <div className="glass-card p-5 flex flex-col gap-4">
-              <h2 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <Monitor size={14} style={{ color: "var(--accent-cyan)" }} />
+              <h2 className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
+                <Monitor size={14} style={{ color: "var(--accent)" }} />
                 Client-Side Fingerprint Variables
               </h2>
 
@@ -167,9 +167,9 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
                   { label: "Hardware Concurrency", val: "4 Cores (Synthetic)" },
                   { label: "Canvas Signature", val: "b548b2ad3e77 (Bot Match)" },
                 ].map((item) => (
-                  <div key={item.label} className="bg-black/30 p-3 rounded-lg border flex flex-col gap-1" style={{ borderColor: "var(--border)" }}>
+                  <div key={item.label} className="bg-surface-2 p-3 rounded-lg border flex flex-col gap-1" style={{ borderColor: "var(--border)" }}>
                     <span className="text-[9px] uppercase font-bold" style={{ color: "var(--muted)" }}>{item.label}</span>
-                    <span className="text-white text-[11px] truncate" title={item.val}>{item.val}</span>
+                    <span className="text-foreground text-[11px] truncate" title={item.val}>{item.val}</span>
                   </div>
                 ))}
               </div>
@@ -181,8 +181,8 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
             
             {/* Behavior DNA Cadence */}
             <div className="glass-card p-5 flex flex-col gap-4">
-              <h2 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <Cpu size={14} style={{ color: "var(--accent-cyan)" }} />
+              <h2 className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
+                <Cpu size={14} style={{ color: "var(--accent)" }} />
                 Behavior DNA analysis
               </h2>
 
@@ -194,8 +194,8 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
                 ].map((dna) => (
                   <div key={dna.label} className="space-y-1">
                     <div className="flex justify-between text-xs">
-                      <span className="font-semibold text-slate-300">{dna.label}</span>
-                      <span className="font-bold font-mono" style={{ color: "var(--accent-cyan)" }}>{dna.val}</span>
+                      <span className="font-semibold text-muted-custom">{dna.label}</span>
+                      <span className="font-bold font-mono" style={{ color: "var(--accent)" }}>{dna.val}</span>
                     </div>
                     <p className="text-[10px]" style={{ color: "var(--muted)" }}>{dna.desc}</p>
                   </div>
@@ -205,8 +205,8 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
 
             {/* Verdict Box */}
             <div className="glass-card p-5 flex flex-col gap-3 justify-between">
-              <h2 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                <AlertTriangle size={14} style={{ color: "var(--accent-cyan)" }} />
+              <h2 className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
+                <AlertTriangle size={14} style={{ color: "var(--accent)" }} />
                 Mitigation Verdict
               </h2>
 
@@ -216,7 +216,7 @@ export default function SessionAnalyst({ params }: SessionPageProps) {
                 </p>
                 <div 
                   className="p-3 border font-bold font-mono rounded text-center"
-                  style={{ background: "rgba(6,182,212,0.04)", borderColor: "rgba(6,182,212,0.25)", color: "var(--accent-cyan)" }}
+                  style={{ background: "var(--accent-muted)", borderColor: "var(--border-bright)", color: "var(--accent)" }}
                 >
                   SCRAPER_WEBDRIVER_CONFIRMED
                 </div>

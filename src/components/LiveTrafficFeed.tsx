@@ -28,7 +28,7 @@ export default function LiveTrafficFeed({ events }: Props) {
           <ActionBadge action={evt.actionTaken} />
           <span
             className="font-mono truncate flex-1"
-            style={{ color: "var(--accent-cyan)" }}
+            style={{ color: "var(--accent)" }}
             title={evt.path}
           >
             {evt.path}

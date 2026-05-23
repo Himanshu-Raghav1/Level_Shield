@@ -73,9 +73,9 @@ export default function SalaryCompare() {
   const maxDiff = Math.max(entryDiff, midDiff, seniorDiff);
 
   const selectStyle: React.CSSProperties = {
-    background: "rgba(18, 18, 22, 0.8)",
+    background: "var(--surface-2)",
     border: "1px solid var(--border)",
-    color: "#ffffff",
+    color: "var(--foreground)",
     outline: "none",
     cursor: "pointer",
   };
@@ -92,11 +92,11 @@ export default function SalaryCompare() {
 
         {/* Page heading */}
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-bold text-white flex items-center gap-2">
-            <Scale size={20} className="text-cyan-400" />
+          <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
+            <Scale size={20} className="text-accent" />
             Compare Compensations
           </h1>
-          <p className="text-xs text-zinc-400">
+          <p className="text-xs text-muted-custom">
             Side-by-side total compensation across levels. Interactions trigger client-side telemetry.
           </p>
         </div>
@@ -117,7 +117,7 @@ export default function SalaryCompare() {
           style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
         >
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-500">Compare</span>
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-muted-custom">Compare</span>
 
             <select
               value={companyA}
@@ -130,7 +130,7 @@ export default function SalaryCompare() {
               ))}
             </select>
 
-            <span className="text-xs font-bold font-mono text-zinc-500">vs</span>
+            <span className="text-xs font-bold font-mono text-muted-custom">vs</span>
 
             <select
               value={companyB}
@@ -144,7 +144,7 @@ export default function SalaryCompare() {
             </select>
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs text-cyan-400 sm:ml-auto">
+          <div className="flex items-center gap-1.5 text-xs text-accent sm:ml-auto font-semibold">
             <Sparkles size={12} />
             Hover bars to analyse
           </div>
@@ -159,11 +159,11 @@ export default function SalaryCompare() {
             style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
           >
             <div className="flex flex-col gap-0.5">
-              <p className="text-xs font-mono font-bold uppercase tracking-wider text-white flex items-center gap-2">
-                <TrendingUp size={15} className="text-cyan-400" />
+              <p className="text-xs font-mono font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
+                <TrendingUp size={15} className="text-accent" />
                 Total Compensation by Level (USD)
               </p>
-              <p className="text-[10px] text-zinc-500">
+              <p className="text-[10px] text-muted-custom">
                 Aggregated from standardised levelling bands.
               </p>
             </div>
@@ -171,16 +171,16 @@ export default function SalaryCompare() {
             <div style={{ height: 260, minHeight: 260, minWidth: 0 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
                   <XAxis
                     dataKey="levelCategory"
-                    tick={{ fill: "#71717a", fontSize: 10, fontFamily: "monospace" }}
-                    stroke="rgba(255,255,255,0.06)"
+                    tick={{ fill: "var(--muted)", fontSize: 10, fontFamily: "monospace" }}
+                    stroke="var(--border)"
                     tickLine={false}
-                    axisLine={{ stroke: "rgba(255,255,255,0.06)" }}
+                    axisLine={{ stroke: "var(--border)" }}
                   />
                   <YAxis
-                    tick={{ fill: "#71717a", fontSize: 10, fontFamily: "monospace" }}
+                    tick={{ fill: "var(--muted)", fontSize: 10, fontFamily: "monospace" }}
                     stroke="transparent"
                     tickLine={false}
                     axisLine={false}
@@ -188,18 +188,18 @@ export default function SalaryCompare() {
                   />
                   <Tooltip
                     contentStyle={{
-                      background: "rgba(18, 18, 22, 0.95)",
+                      background: "var(--surface)",
                       border: "1px solid var(--border)",
                       borderRadius: 4,
                       fontSize: 11,
-                      color: "#fff",
+                      color: "var(--foreground)",
                       fontFamily: "inherit",
                     }}
-                    cursor={{ fill: "rgba(255,255,255,0.02)" }}
+                    cursor={{ fill: "var(--foreground)", opacity: 0.02 }}
                     formatter={(value) => [`$${Number(value).toLocaleString()}`]}
                   />
                   <Legend wrapperStyle={{ fontSize: 9, fontFamily: "monospace", textTransform: "uppercase", paddingTop: 14 }} />
-                  <Bar dataKey={companyA} fill="var(--accent-cyan)" radius={[2, 2, 0, 0]} />
+                  <Bar dataKey={companyA} fill="var(--accent)" radius={[2, 2, 0, 0]} />
                   <Bar dataKey={companyB} fill="var(--foreground)" radius={[2, 2, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -212,34 +212,34 @@ export default function SalaryCompare() {
             style={{
               background: "var(--surface)",
               border: "1px solid var(--border)",
-              borderLeft: "2px solid var(--accent-cyan)",
+              borderLeft: "2px solid var(--accent)",
             }}
           >
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-1.5">
-                <AlertCircle size={13} className="text-cyan-400" />
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">
+                <AlertCircle size={13} className="text-accent" />
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-accent">
                   Shield Insights
                 </span>
               </div>
-              <div style={{ height: 1, background: "linear-gradient(90deg, var(--accent-cyan), transparent)", opacity: 0.2 }} />
+              <div style={{ height: 1, background: "linear-gradient(90deg, var(--accent), transparent)", opacity: 0.2 }} />
             </div>
 
             {/* Max diff stat */}
             <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-zinc-500">Max Leverage Gap</span>
-              <span className="font-mono tabular-nums text-xl font-bold text-cyan-400">
+              <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-muted-custom">Max Leverage Gap</span>
+              <span className="font-mono tabular-nums text-xl font-bold text-accent">
                 ${maxDiff.toLocaleString()}
               </span>
-              <span className="text-xs leading-relaxed text-zinc-400">
+              <span className="text-xs leading-relaxed text-muted-custom">
                 Largest salary difference across comparable levels.
               </span>
             </div>
 
             {/* Behaviour logging */}
             <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-zinc-500">Behaviour Cadence</span>
-              <span className="text-xs leading-relaxed text-zinc-400">
+              <span className="text-[10px] uppercase font-mono tracking-wider font-bold text-muted-custom">Behaviour Cadence</span>
+              <span className="text-xs leading-relaxed text-muted-custom">
                 Hover counts and mouse velocities analysed by our client telemetry engine.
               </span>
             </div>
@@ -249,7 +249,7 @@ export default function SalaryCompare() {
               className="mt-auto pt-3 flex items-center justify-between text-xs"
               style={{ borderTop: "1px solid var(--border)" }}
             >
-              <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-500">Session Status</span>
+              <span className="text-[10px] uppercase font-mono tracking-wider text-muted-custom">Session Status</span>
               <span className="badge badge-allow">Allowed</span>
             </div>
           </div>

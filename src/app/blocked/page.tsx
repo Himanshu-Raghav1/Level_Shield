@@ -31,35 +31,35 @@ export default function AccessBlocked() {
     >
       {/* Pulse background grid effect */}
       <div 
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
         style={{
-          backgroundImage: "radial-gradient(circle, var(--accent-cyan) 1px, transparent 1px)",
+          backgroundImage: "radial-gradient(circle, var(--accent) 1px, transparent 1px)",
           backgroundSize: "24px 24px"
         }}
       />
 
-      <div className="glass-card max-w-lg w-full p-8 text-center glow-cyan relative overflow-hidden" style={{ border: "1px solid var(--border)" }}>
-        {/* Cyan Glow Banner */}
-        <div className="absolute top-0 inset-x-0 h-1.5 bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.4)]" />
+      <div className="glass-card max-w-lg w-full p-8 text-center glow-red relative overflow-hidden" style={{ border: "1px solid var(--border)" }}>
+        {/* Red Glow Banner */}
+        <div className="absolute top-0 inset-x-0 h-1.5 bg-accent shadow-[0_0_10px_rgba(225,29,72,0.4)]" />
 
         <div className="flex flex-col items-center gap-5 relative z-10">
           {/* Logo icon */}
           <div 
             className="w-14 h-14 rounded-full flex items-center justify-center mb-1"
             style={{ 
-              background: "rgba(6, 182, 212, 0.08)", 
-              border: "1px solid var(--accent-cyan)",
-              boxShadow: "0 0 15px rgba(6, 182, 212, 0.2)"
+              background: "var(--accent-muted)", 
+              border: "1px solid var(--border-bright)",
+              boxShadow: "0 0 15px var(--accent-muted)"
             }}
           >
-            <ShieldAlert size={28} style={{ color: "var(--accent-cyan)" }} />
+            <ShieldAlert size={28} style={{ color: "var(--accent)" }} />
           </div>
 
           <div className="space-y-1">
-            <h1 className="text-xl font-extrabold text-white tracking-tight flex items-center justify-center gap-2">
+            <h1 className="text-xl font-extrabold text-foreground tracking-tight flex items-center justify-center gap-2">
               ACCESS TERMINATED
             </h1>
-            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--accent-cyan)" }}>
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent">
               Malicious Automation / Scraping Detected
             </p>
           </div>
@@ -69,53 +69,52 @@ export default function AccessBlocked() {
           </p>
 
           {/* Details terminal */}
-          <div className="w-full text-left font-mono text-[10px] space-y-2 bg-black/45 border rounded-lg p-4" style={{ borderColor: "var(--border)" }}>
+          <div className="w-full text-left font-mono text-[10px] space-y-2 bg-surface-2 border rounded-lg p-4" style={{ borderColor: "var(--border)" }}>
             <div className="flex justify-between border-b pb-1.5" style={{ borderColor: "var(--border)" }}>
               <span style={{ color: "var(--muted)" }}>SECURITY EVENT LOG ID:</span>
-              <span className="font-bold" style={{ color: "var(--accent-cyan)" }}>{sessionToken}</span>
+              <span className="font-bold text-accent">{sessionToken}</span>
             </div>
             
             <div className="grid grid-cols-2 gap-y-1.5 pt-1">
-              <div className="flex items-center gap-1.5 text-slate-400">
+              <div className="flex items-center gap-1.5 text-muted-custom">
                 <Globe size={11} style={{ color: "var(--muted)" }} />
                 <span>CLIENT IP:</span>
               </div>
-              <span className="text-white text-right font-bold">{sessionIp}</span>
+              <span className="text-foreground text-right font-bold">{sessionIp}</span>
 
-              <div className="flex items-center gap-1.5 text-slate-400">
+              <div className="flex items-center gap-1.5 text-muted-custom">
                 <Server size={11} style={{ color: "var(--muted)" }} />
                 <span>FIREWALL STATUS:</span>
               </div>
-              <span className="text-right font-bold" style={{ color: "var(--foreground)" }}>PERMANENT BAN</span>
+              <span className="text-right font-bold text-accent">PERMANENT BAN</span>
 
-              <div className="flex items-center gap-1.5 text-slate-400">
+              <div className="flex items-center gap-1.5 text-muted-custom">
                 <Terminal size={11} style={{ color: "var(--muted)" }} />
                 <span>TRIGGERS:</span>
               </div>
-              <span className="text-right font-bold" style={{ color: "var(--muted)" }}>LOW_BEHAVIOR_ENTROPY</span>
+              <span className="text-right font-bold text-muted-custom">LOW_BEHAVIOR_ENTROPY</span>
 
-              <div className="flex items-center gap-1.5 text-slate-400">
+              <div className="flex items-center gap-1.5 text-muted-custom">
                 <Lock size={11} style={{ color: "var(--muted)" }} />
                 <span>CAPTURED VIA:</span>
               </div>
-              <span className="text-right font-bold" style={{ color: "var(--accent-cyan)" }}>CANARY_EXFILTRATION</span>
+              <span className="text-right font-bold text-accent">CANARY_EXFILTRATION</span>
             </div>
 
             <div className="border-t pt-2 mt-2" style={{ borderColor: "var(--border)" }}>
               <span style={{ color: "var(--muted)" }}>TIMESTAMP:</span>
-              <span className="text-slate-300 block mt-0.5">{timestamp}</span>
+              <span className="text-muted-custom block mt-0.5">{timestamp}</span>
             </div>
           </div>
 
-          <div className="w-full text-left rounded-lg p-3 text-[10px] leading-relaxed" style={{ background: "var(--surface)", border: "1px solid var(--border)", color: "var(--muted)" }}>
+          <div className="w-full text-left rounded-lg p-3 text-[10px] leading-relaxed bg-surface border border-border-custom text-muted-custom">
             <strong>System Notice:</strong> Attempting to bypass this barrier using proxies or headers rotation will result in cryptographical honeypot tarpitting, consuming client execution threads automatically.
           </div>
 
           <div className="pt-2">
             <button 
               onClick={() => window.location.reload()}
-              className="px-4 py-2 border rounded text-[11px] font-bold tracking-wider hover:text-white uppercase transition-all flex items-center gap-1.5 cursor-pointer"
-              style={{ borderColor: "var(--border)", color: "var(--muted)" }}
+              className="px-4 py-2 border border-border-custom rounded text-[11px] font-bold tracking-wider hover:bg-surface-2 uppercase transition-all flex items-center gap-1.5 cursor-pointer text-muted-custom"
             >
               <RefreshCw size={12} />
               Re-Verify Connection

@@ -58,12 +58,12 @@ export default function ProofOfWorkChallenge() {
       className="min-h-screen flex items-center justify-center p-4" 
       style={{ background: "var(--background)" }}
     >
-      <div className="glass-card max-w-md w-full p-6 text-center glow-cyan border relative overflow-hidden">
+      <div className="glass-card max-w-md w-full p-6 text-center glow-red border relative overflow-hidden" style={{ borderColor: "var(--border)" }}>
         {/* Futuristic Grid Effect */}
         <div 
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          className="absolute inset-0 opacity-[0.04] pointer-events-none"
           style={{
-            backgroundImage: "radial-gradient(circle, var(--accent-cyan) 1px, transparent 1px)",
+            backgroundImage: "radial-gradient(circle, var(--accent) 1px, transparent 1px)",
             backgroundSize: "20px 20px"
           }}
         />
@@ -73,41 +73,41 @@ export default function ProofOfWorkChallenge() {
           <div 
             className="w-12 h-12 rounded-full flex items-center justify-center mb-1"
             style={{ 
-              background: "rgba(6, 182, 212, 0.1)", 
-              border: "1px solid var(--accent-cyan)",
-              boxShadow: "0 0 15px rgba(6, 182, 212, 0.2)"
+              background: "var(--accent-muted)", 
+              border: "1px solid var(--border-bright)",
+              boxShadow: "0 0 15px var(--accent-muted)"
             }}
           >
-            <Shield size={22} style={{ color: "var(--accent-cyan)" }} />
+            <Shield size={22} style={{ color: "var(--accent)" }} />
           </div>
 
           <div>
-            <h1 className="text-lg font-bold text-white tracking-tight">Security Check Required</h1>
+            <h1 className="text-lg font-bold text-foreground tracking-tight">Security Check Required</h1>
             <p className="text-[11px] mt-1" style={{ color: "var(--muted)" }}>
               Resolving cryptographic proof-of-work challenge to verify your session.
             </p>
           </div>
 
           {/* Cryptographic challenge details */}
-          <div className="bg-black/40 border rounded-lg p-3 w-full text-left font-mono text-[10px] space-y-1.5" style={{ borderColor: "var(--border)" }}>
+          <div className="bg-surface-2 border rounded-lg p-3 w-full text-left font-mono text-[10px] space-y-1.5" style={{ borderColor: "var(--border)" }}>
             <div className="flex justify-between">
               <span style={{ color: "var(--muted)" }}>CHALLENGE ID:</span>
-              <span className="text-white font-bold">{sessionToken || "GENERATING..."}</span>
+              <span className="text-foreground font-bold">{sessionToken || "GENERATING..."}</span>
             </div>
             <div className="flex justify-between">
               <span style={{ color: "var(--muted)" }}>DIFFICULTY:</span>
-              <span style={{ color: "var(--accent-cyan)" }}>{difficulty}</span>
+              <span style={{ color: "var(--accent)" }}>{difficulty}</span>
             </div>
             <div className="flex justify-between">
               <span style={{ color: "var(--muted)" }}>ALGORITHM:</span>
-              <span className="text-white">SHA-256 (Client-Bound)</span>
+              <span className="text-foreground">SHA-256 (Client-Bound)</span>
             </div>
             <div className="flex justify-between">
               <span style={{ color: "var(--muted)" }}>STATUS:</span>
               <span 
                 className="font-bold"
                 style={{ 
-                  color: status === "solving" ? "var(--foreground)" : status === "success" ? "var(--accent-cyan)" : "var(--muted)" 
+                  color: status === "solving" ? "var(--foreground)" : status === "success" ? "var(--accent)" : "var(--muted)" 
                 }}
               >
                 {status.toUpperCase()}
@@ -131,7 +131,7 @@ export default function ProofOfWorkChallenge() {
                 cx="56"
                 cy="56"
                 r="48"
-                stroke="var(--accent-cyan)"
+                stroke="var(--accent)"
                 strokeWidth="6"
                 fill="transparent"
                 strokeDasharray={301.6}
@@ -144,8 +144,8 @@ export default function ProofOfWorkChallenge() {
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               {status === "solving" && (
                 <>
-                  <span className="text-lg font-bold font-mono text-white">{progress}%</span>
-                  <span className="text-[9px] uppercase tracking-wider text-white font-semibold flex items-center gap-1">
+                  <span className="text-lg font-bold font-mono text-foreground">{progress}%</span>
+                  <span className="text-[9px] uppercase tracking-wider text-muted-custom font-semibold flex items-center gap-1">
                     <RefreshCw size={8} className="animate-spin" />
                     Solving
                   </span>
@@ -153,8 +153,8 @@ export default function ProofOfWorkChallenge() {
               )}
               {status === "success" && (
                 <div className="flex flex-col items-center gap-0.5">
-                  <CheckCircle size={24} style={{ color: "var(--accent-cyan)" }} />
-                  <span className="text-[9px] uppercase tracking-wider font-extrabold" style={{ color: "var(--accent-cyan)" }}>Verified</span>
+                  <CheckCircle size={24} style={{ color: "var(--accent)" }} />
+                  <span className="text-[9px] uppercase tracking-wider font-extrabold" style={{ color: "var(--accent)" }}>Verified</span>
                 </div>
               )}
             </div>
@@ -164,11 +164,11 @@ export default function ProofOfWorkChallenge() {
           <div className="text-[10px]" style={{ color: "var(--muted)" }}>
             {status === "solving" && (
               <span className="font-mono">
-                Computing: <span className="text-white font-bold">{hashesSolved.toLocaleString()}</span> hashes evaluated
+                Computing: <span className="text-foreground font-bold">{hashesSolved.toLocaleString()}</span> hashes evaluated
               </span>
             )}
             {status === "success" && (
-              <span style={{ color: "var(--accent-cyan)" }}>
+              <span style={{ color: "var(--accent)" }}>
                 Cryptographic signature generated successfully! Redirecting...
               </span>
             )}
